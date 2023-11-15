@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="https://gmpg.org/xfn/11">
+		<link rel="pingback" href="https://nickcdryan.com/xmlrpc.php">
+		<script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+<title>Root-Finding Algorithms Tutorial in Python: Line Search, Bisection, Secant, Newton-Raphson, Inverse Quadratic Interpolation, Brent&#8217;s Method &#8211; Nick Ryan</title>
+<script type="text/javascript">
+  WebFontConfig = {"google":{"families":["Libre+Baskerville:r:latin,latin-ext"]},"api_url":"https:\/\/fonts-api.wp.com\/css"};
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = 'https://s0.wp.com/wp-content/plugins/custom-fonts/js/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+	})();
+</script><style id="jetpack-custom-fonts-css">.wf-active .site-title, .wf-active .post-navigation .post-title, .wf-active .comments-title, .wf-active .comment-reply-title, .wf-active .page-title{font-family:"Libre Baskerville",serif;font-style:normal;font-weight:400}.wf-active .widget .widget-title, .wf-active .entry-content .portfolio-entry-title{font-family:"Libre Baskerville",serif;font-style:normal;font-weight:400}.wf-active .entry-title{font-family:"Libre Baskerville",serif;font-style:normal;font-weight:400}.wf-active .format-aside .entry-title, .wf-active .format-image .entry-title, .wf-active .format-video .entry-title, .wf-active .format-quote .entry-title, .wf-active .format-gallery .entry-title, .wf-active .format-status .entry-title, .wf-active .format-link .entry-title, .wf-active .format-audio .entry-title, .wf-active .format-chat .entry-title{font-style:normal;font-weight:400}@media screen and (min-width: 44.375em){.wf-active .site-title, .wf-active .post-navigation .post-title{font-style:normal;font-weight:400}}@media screen and (min-width: 44.375em){.wf-active .entry-title{font-style:normal;font-weight:400}}@media screen and (min-width: 61.5625em){.wf-active .entry-title{font-style:normal;font-weight:400}}@media screen and (min-width: 61.5625em){.wf-active .format-aside .entry-title, .wf-active .format-image .entry-title, .wf-active .format-video .entry-title, .wf-active .format-quote .entry-title, .wf-active .format-gallery .entry-title, .wf-active .format-status .entry-title, .wf-active .format-link .entry-title, .wf-active .format-audio .entry-title, .wf-active .format-chat .entry-title{font-style:normal;font-weight:400}}</style>
+<meta name='robots' content='max-image-preview:large' />
+
+<!-- Async WordPress.com Remote Login -->
+<script id="wpcom_remote_login_js">
+var wpcom_remote_login_extra_auth = '';
+function wpcom_remote_login_remove_dom_node_id( element_id ) {
+	var dom_node = document.getElementById( element_id );
+	if ( dom_node ) { dom_node.parentNode.removeChild( dom_node ); }
+}
+function wpcom_remote_login_remove_dom_node_classes( class_name ) {
+	var dom_nodes = document.querySelectorAll( '.' + class_name );
+	for ( var i = 0; i < dom_nodes.length; i++ ) {
+		dom_nodes[ i ].parentNode.removeChild( dom_nodes[ i ] );
+	}
+}
+function wpcom_remote_login_final_cleanup() {
+	wpcom_remote_login_remove_dom_node_classes( "wpcom_remote_login_msg" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_validate" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_js" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_iframe" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_styles" );
+}
+
+// Watch for messages back from the remote login
+window.addEventListener( "message", function( e ) {
+	if ( e.origin === "https://r-login.wordpress.com" ) {
+		var data = {};
+		try {
+			data = JSON.parse( e.data );
+		} catch( e ) {
+			wpcom_remote_login_final_cleanup();
+			return;
+		}
+
+		if ( data.msg === 'LOGIN' ) {
+			// Clean up the login check iframe
+			wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+
+			var id_regex = new RegExp( /^[0-9]+$/ );
+			var token_regex = new RegExp( /^.*|.*|.*$/ );
+			if (
+				token_regex.test( data.token )
+				&& id_regex.test( data.wpcomid )
+			) {
+				// We have everything we need to ask for a login
+				var script = document.createElement( "script" );
+				script.setAttribute( "id", "wpcom_remote_login_validate" );
+				script.src = '/remote-login.php?wpcom_remote_login=validate'
+					+ '&wpcomid=' + data.wpcomid
+					+ '&token=' + encodeURIComponent( data.token )
+					+ '&host=' + window.location.protocol
+					+ '//' + window.location.hostname
+					+ '&postid=3595'
+					+ '&is_singular=1';
+				document.body.appendChild( script );
+			}
+
+			return;
+		}
+
+		// Safari ITP, not logged in, so redirect
+		if ( data.msg === 'LOGIN-REDIRECT' ) {
+			window.location = 'https://wordpress.com/log-in?redirect_to=' + window.location.href;
+			return;
+		}
+
+		// Safari ITP, storage access failed, remove the request
+		if ( data.msg === 'LOGIN-REMOVE' ) {
+			var css_zap = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } @media screen and ( max-width: 782px ) { html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } }';
+			var style_zap = document.createElement( 'style' );
+			style_zap.type = 'text/css';
+			style_zap.appendChild( document.createTextNode( css_zap ) );
+			document.body.appendChild( style_zap );
+
+			var e = document.getElementById( 'wpcom_request_access_iframe' );
+			e.parentNode.removeChild( e );
+
+			document.cookie = 'wordpress_com_login_access=denied; path=/; max-age=31536000';
+
+			return;
+		}
+
+		// Safari ITP
+		if ( data.msg === 'REQUEST_ACCESS' ) {
+			console.log( 'request access: safari' );
+
+			// Check ITP iframe enable/disable knob
+			if ( wpcom_remote_login_extra_auth !== 'safari_itp_iframe' ) {
+				return;
+			}
+
+			// If we are in a "private window" there is no ITP.
+			var private_window = false;
+			try {
+				var opendb = window.openDatabase( null, null, null, null );
+			} catch( e ) {
+				private_window = true;
+			}
+
+			if ( private_window ) {
+				console.log( 'private window' );
+				return;
+			}
+
+			var iframe = document.createElement( 'iframe' );
+			iframe.id = 'wpcom_request_access_iframe';
+			iframe.setAttribute( 'scrolling', 'no' );
+			iframe.setAttribute( 'sandbox', 'allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-top-navigation-by-user-activation' );
+			iframe.src = 'https://r-login.wordpress.com/remote-login.php?wpcom_remote_login=request_access&origin=' + encodeURIComponent( data.origin ) + '&wpcomid=' + encodeURIComponent( data.wpcomid );
+
+			var css = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 46px !important; } * html body { margin-top: 46px !important; } @media screen and ( max-width: 660px ) { html { margin-top: 71px !important; } * html body { margin-top: 71px !important; } #wpcom_request_access_iframe { display: block; height: 71px !important; } } #wpcom_request_access_iframe { border: 0px; height: 46px; position: fixed; top: 0; left: 0; width: 100%; min-width: 100%; z-index: 99999; background: #23282d; } ';
+
+			var style = document.createElement( 'style' );
+			style.type = 'text/css';
+			style.id = 'wpcom_request_access_styles';
+			style.appendChild( document.createTextNode( css ) );
+			document.body.appendChild( style );
+
+			document.body.appendChild( iframe );
+		}
+
+		if ( data.msg === 'DONE' ) {
+			wpcom_remote_login_final_cleanup();
+		}
+	}
+}, false );
+
+// Inject the remote login iframe after the page has had a chance to load
+// more critical resources
+window.addEventListener( "DOMContentLoaded", function( e ) {
+	var iframe = document.createElement( "iframe" );
+	iframe.style.display = "none";
+	iframe.setAttribute( "scrolling", "no" );
+	iframe.setAttribute( "id", "wpcom_remote_login_key" );
+	iframe.src = "https://r-login.wordpress.com/remote-login.php"
+		+ "?wpcom_remote_login=key"
+		+ "&origin=aHR0cHM6Ly9uaWNrY2RyeWFuLmNvbQ%3D%3D"
+		+ "&wpcomid=122804722"
+		+ "&time=1700089390";
+	document.body.appendChild( iframe );
+}, false );
+</script>
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//wordpress.com' />
+<link href='https://fonts.gstatic.com' crossorigin rel='preconnect' />
+<link rel="alternate" type="application/rss+xml" title="Nick Ryan &raquo; Feed" href="https://nickcdryan.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Nick Ryan &raquo; Comments Feed" href="https://nickcdryan.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Nick Ryan &raquo; Root-Finding Algorithms Tutorial in Python: Line Search, Bisection, Secant, Newton-Raphson, Inverse Quadratic Interpolation, Brent&#8217;s&nbsp;Method Comments Feed" href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/feed/" />
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+	<script>
+window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s0.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1677072837i&ver=6.4.1-RC1-57094"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+</script>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-0-1' href='https://s0.wp.com/_static/??-eJyVjNEKwjAMRX/IGopszAfxW0oXZrekCSZl+vc6EQQfBF8uHLjnwKohS3WsDtyCUptKNZjRNeXlzcAi24yN0MAvyBhchAyysCYHX5/+3crNEes+m+3g/+4VKTmOQcX8i34lqSz4Cb9ou5/5FPuhi4c4HLv5AVz8Vwo=&cssminify=yes' type='text/css' media='all' />
+<style id='wp-emoji-styles-inline-css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-2-1' href='https://s0.wp.com/_static/??-eJyljEEKgCAQAD9UbnaoPERvSVvM2jRcLfp90hc6DcPAwH3WJviEPsFJ2TrPYHNRjdGWEhEu2YtGtKCzowU0BbPX5HSc4wOcHkJhmCv4N0orHt9oOkbZKTUMqmB7ASSiOGw=&cssminify=yes' type='text/css' media='all' />
+<style id='wp-block-library-inline-css'>
+.has-text-align-justify {
+	text-align:justify;
+}
+.wp-block-cover__image-background.has-parallax {
+	background-size: cover;
+}
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-4-1' href='https://s0.wp.com/_static/??-eJyVjcEKwjAQRH/IdFstggfxW9LNsqTdpCGbIPl740l7ETw+Zt4MPJPxEaU6UlgVAjlvSShQLAdIYhtlI8QW2xB8HFD1BL/0nn3zQcI9lncnSWUfFbh2XCizWWTHrY9RSRY302/3Wgxn70BLE/p/ItviI+tHf4T7dJ0v53G8TfP6AjdwYUY=&cssminify=yes' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-6-1' href='https://s0.wp.com/_static/??-eJx9y0EOwjAMRNELYRxQpbJBnKVJLDCqUyt2KMfH7BGbWYz+w12hbM2pOcoAXcedm2HZOsUvujhGIVR5oZUksmMxO+BvtmsYyFk7mUGs8BDwR0D7517U8xCsbI7cKr2/8U2upzmlNJ0v8/T8AE2BPn4=&cssminify=yes' type='text/css' media='all' />
+<style id='global-styles-inline-css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #fff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--dark-gray: #1a1a1a;--wp--preset--color--medium-gray: #686868;--wp--preset--color--light-gray: #e5e5e5;--wp--preset--color--blue-gray: #4d545c;--wp--preset--color--bright-blue: #007acc;--wp--preset--color--light-blue: #9adffd;--wp--preset--color--dark-brown: #402b30;--wp--preset--color--medium-brown: #774e24;--wp--preset--color--dark-red: #640c1f;--wp--preset--color--bright-red: #ff675f;--wp--preset--color--yellow: #ffef8e;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-family--albert-sans: 'Albert Sans';--wp--preset--font-family--alegreya: Alegreya;--wp--preset--font-family--arvo: Arvo;--wp--preset--font-family--bodoni-moda: 'Bodoni Moda';--wp--preset--font-family--cabin: Cabin;--wp--preset--font-family--chivo: Chivo;--wp--preset--font-family--commissioner: Commissioner;--wp--preset--font-family--cormorant: Cormorant;--wp--preset--font-family--courier-prime: 'Courier Prime';--wp--preset--font-family--crimson-pro: 'Crimson Pro';--wp--preset--font-family--dm-mono: 'DM Mono';--wp--preset--font-family--dm-sans: 'DM Sans';--wp--preset--font-family--domine: Domine;--wp--preset--font-family--eb-garamond: 'EB Garamond';--wp--preset--font-family--epilogue: Epilogue;--wp--preset--font-family--figtree: Figtree;--wp--preset--font-family--fira-sans: 'Fira Sans';--wp--preset--font-family--fraunces: Fraunces;--wp--preset--font-family--ibm-plex-mono: 'IBM Plex Mono';--wp--preset--font-family--ibm-plex-sans: 'IBM Plex Sans';--wp--preset--font-family--inter: Inter;--wp--preset--font-family--josefin-sans: 'Josefin Sans';--wp--preset--font-family--jost: Jost;--wp--preset--font-family--libre-baskerville: 'Libre Baskerville';--wp--preset--font-family--libre-franklin: 'Libre Franklin';--wp--preset--font-family--literata: Literata;--wp--preset--font-family--lora: Lora;--wp--preset--font-family--merriweather: Merriweather;--wp--preset--font-family--montserrat: Montserrat;--wp--preset--font-family--newsreader: Newsreader;--wp--preset--font-family--nunito: Nunito;--wp--preset--font-family--open-sans: 'Open Sans';--wp--preset--font-family--overpass: Overpass;--wp--preset--font-family--petrona: Petrona;--wp--preset--font-family--piazzolla: Piazzolla;--wp--preset--font-family--playfair-display: 'Playfair Display';--wp--preset--font-family--plus-jakarta-sans: 'Plus Jakarta Sans';--wp--preset--font-family--poppins: Poppins;--wp--preset--font-family--raleway: Raleway;--wp--preset--font-family--roboto-slab: 'Roboto Slab';--wp--preset--font-family--roboto: Roboto;--wp--preset--font-family--rubik: Rubik;--wp--preset--font-family--sora: Sora;--wp--preset--font-family--source-sans-pro: 'Source Sans Pro';--wp--preset--font-family--source-serif-pro: 'Source Serif Pro';--wp--preset--font-family--space-mono: 'Space Mono';--wp--preset--font-family--texturina: Texturina;--wp--preset--font-family--work-sans: 'Work Sans';--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-8-1' href='https://s0.wp.com/_static/??-eJyNkNEOwiAMRX9IbGam0QfjpxhG6mSDQqDL3N9bnDGL+rC33sPt7Q0wRmUCMRKDH1R0Q2spgwneC1LO9igqf5GtkA1YoMBWtvNnmB8WmXxHLwlxaIBHAVO2D0YkuIkhg8eU7IhabKkcz8oXLlTzrC2V3OA065/wReEOOWrTvzX4EAiusgstEqa55N9xfePMk8P19vJpjQumf524+HN1OO6r3amu6+4JoVGOtA==&cssminify=yes' type='text/css' media='all' />
+<style id='twentysixteen-style-inline-css'>
+.byline { clip: rect(1px, 1px, 1px, 1px); height: 1px; position: absolute; overflow: hidden; width: 1px; }
+</style>
+<!--[if lt IE 10]>
+<link rel='stylesheet' id='twentysixteen-ie-css' href='https://s0.wp.com/wp-content/themes/pub/twentysixteen/css/ie.css?m=1448353951i&#038;ver=20170530' media='all' />
+<![endif]-->
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentysixteen-ie8-css' href='https://s0.wp.com/wp-content/themes/pub/twentysixteen/css/ie8.css?m=1493067000i&#038;ver=20170530' media='all' />
+<![endif]-->
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='twentysixteen-ie7-css' href='https://s0.wp.com/wp-content/themes/pub/twentysixteen/css/ie7.css?m=1448353951i&#038;ver=20170530' media='all' />
+<![endif]-->
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-14-1' href='https://s0.wp.com/_static/??-eJx9j1EKwjAMQC9kDUMm80M8S9fGmtk2ZU2pu72dDNzXfkJe4D0I1KQMR8EoIC8MmCGVEaS2w5LpI4gRTM6QZfGoajIczo1PsBNDUckXRzHDhJK0eW8MgXkdtvgWrmQdSkuxIe1VQEtaUYts9aOuQ1aejRZqwT2op9c0H6kzjp5dW93vkT+u0iPcu+vQd5duuPXTF8UpZV8=&cssminify=yes' type='text/css' media='all' />
+<style id='jetpack-global-styles-frontend-style-inline-css'>
+:root { --font-headings: unset; --font-base: unset; --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;}
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-16-1' href='https://s0.wp.com/_static/??-eJyNjcEKAjEMRH/IGkTdrgfxUySmpe2aNsW0LP69u+JFvHgZ5sHwBuZqSErzpUHupnIPqShMvlWk+4chi6zhOnsFjfjwDp17vmsqYUuqG/jfdE2FQIUSsmEJol/wY2vR5+U3HiCw3JDXwSWfd8PJ2v3RjuP0AlGeSTs=&cssminify=yes' type='text/css' media='all' />
+<script id="jetpack_related-posts-js-extra">
+var related_posts_js_options = {"post_heading":"h4"};
+</script>
+<script id="media-video-jwt-bridge-js-extra">
+var videopressAjax = {"ajaxUrl":"https:\/\/nickcdryan.wordpress.com\/wp-admin\/admin-ajax.php","bridgeUrl":"\/wp-content\/mu-plugins\/jetpack-plugin\/moon\/jetpack_vendor\/automattic\/jetpack-videopress\/build\/lib\/token-bridge.js","post_id":"3595"};
+</script>
+<script id="wpcom-actionbar-placeholder-js-extra">
+var actionbardata = {"siteID":"122804722","postID":"3595","siteURL":"https:\/\/nickcdryan.com","xhrURL":"https:\/\/nickcdryan.com\/wp-admin\/admin-ajax.php","nonce":"495790dfd5","isLoggedIn":"","statusMessage":"","subsEmailDefault":"instantly","proxyScriptUrl":"https:\/\/s0.wp.com\/wp-content\/js\/wpcom-proxy-request.js?ver=20211021","shortlink":"https:\/\/wp.me\/p8jh7k-VZ","i18n":{"followedText":"New posts from this site will now appear in your <a href=\"https:\/\/wordpress.com\/read\">Reader<\/a>","foldBar":"Collapse this bar","unfoldBar":"Expand this bar"}};
+</script>
+<script crossorigin='anonymous' type='text/javascript' src='https://s0.wp.com/_static/??-eJyVT0EOwjAM+xAl44AQB8RTULeGkdEmVZMO+D1FmhBw42jHjm24ZTcIG7LBpJCkp4iuKhY/Ns4Rn2U96Qo+dKm6HOtIrDChZT9cF9zswnAiHqCvFAMUjN4wuCxq+o3Wifj3cStQorlc5P74vdkFEyrk2oPdGvFQuhsiv0wXS3H7Z8uFO83IQQr4apK8GQ1v9UwBJRdUXdZEatlyRXZ9oTBiSzymw2bXdd1us9130xNdJHzk'></script>
+<script id="rlt-proxy-js-after">
+	window.addEventListener( 'DOMContentLoaded', function() {
+		rltInitialize( {"token":null,"iframeOrigins":["https:\/\/widgets.wp.com"]} );
+	} );
+</script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://nickcdryan.wordpress.com/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress.com" />
+<link rel="canonical" href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/" />
+<link rel='shortlink' href='https://wp.me/p8jh7k-VZ' />
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fnickcdryan.com%2F2017%2F09%2F13%2Froot-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fnickcdryan.com%2F2017%2F09%2F13%2Froot-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents%2F&amp;for=wpcom-auto-discovery" />
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Root-Finding Algorithms Tutorial in Python: Line Search, Bisection, Secant, Newton-Raphson, Inverse Quadratic Interpolation, Brent&#8217;s Method" />
+<meta property="og:url" content="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/" />
+<meta property="og:description" content="Motivation How do you find the roots of a continuous polynomial function? Well, if we want to find the roots of something like: $latex f(x) = x^2 + 3x &#8211; 4$" />
+<meta property="article:published_time" content="2017-09-13T17:56:30+00:00" />
+<meta property="article:modified_time" content="2017-09-16T21:28:51+00:00" />
+<meta property="og:site_name" content="Nick Ryan" />
+<meta property="og:image" content="https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png" />
+<meta property="og:image:width" content="320" />
+<meta property="og:image:height" content="319" />
+<meta property="og:image:alt" content="" />
+<meta property="og:locale" content="en_US" />
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+<meta name="twitter:text:title" content="Root-Finding Algorithms Tutorial in Python: Line Search, Bisection, Secant, Newton-Raphson, Inverse Quadratic Interpolation, Brent&#8217;s&nbsp;Method" />
+<meta name="twitter:image" content="https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png?w=640" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- End Jetpack Open Graph Tags -->
+<link rel="shortcut icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48" />
+<link rel="icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48" />
+<link rel="apple-touch-icon" href="https://s0.wp.com/i/webclip.png" />
+<link rel="search" type="application/opensearchdescription+xml" href="https://nickcdryan.com/osd.xml" title="Nick Ryan" />
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com" />
+<meta name="theme-color" content="#545454" />
+<meta name="application-name" content="Nick Ryan" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-tooltip" content="NLP, deep learning, etc." /><meta name="msapplication-task" content="name=Subscribe;action-uri=https://nickcdryan.com/feed/;icon-uri=https://s0.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=https://s0.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=https://s0.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=https://s0.wp.com/i/favicon.ico" /><meta name="description" content="Motivation How do you find the roots of a continuous polynomial function? Well, if we want to find the roots of something like: $latex f(x) = x^2 + 3x - 4$ you might remember the quadratic formula from middle school, and for similarly low-degree polynomial functions, various analytical methods are at your disposal. However, for&hellip;" />
+<style id="custom-background-css">
+body.custom-background { background-color: #545454; }
+</style>
+	<style type="text/css" id="custom-colors-css">	input[type="text"],
+	input[type="email"],
+	input[type="url"],
+	input[type="password"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="number"],
+	textarea {
+		background: #f7f7f7;
+		color: #686868;
+	}
+
+	input[type="text"]:focus,
+	input[type="email"]:focus,
+	input[type="url"]:focus,
+	input[type="password"]:focus,
+	input[type="search"]:focus,
+	input[type="tel"]:focus,
+	input[type="number"]:focus,
+	textarea:focus {
+		background-color: #fff;
+		color: #1a1a1a;
+	}
+body { background-color: #545454;}
+</style>
+<!-- Your Google Analytics Plugin is missing the tracking ID -->
+</head>
+
+<body class="post-template-default single single-post postid-3595 single-format-standard custom-background wp-embed-responsive customizer-styles-applied author-hidden custom-colors">
+<div id="page" class="site">
+	<div class="site-inner">
+		<a class="skip-link screen-reader-text" href="#content">
+			Skip to content		</a>
+
+		<header id="masthead" class="site-header">
+			<div class="site-header-main">
+				<div class="site-branding">
+					<a href="https://nickcdryan.com/" class="site-logo-link" rel="home" itemprop="url"></a>
+											<p class="site-title"><a href="https://nickcdryan.com/" rel="home">Nick Ryan</a></p>
+												<p class="site-description">NLP, deep learning, etc.</p>
+									</div><!-- .site-branding -->
+
+									<button id="menu-toggle" class="menu-toggle">Menu</button>
+
+					<div id="site-header-menu" class="site-header-menu">
+													<nav id="site-navigation" class="main-navigation" aria-label="Primary Menu">
+								<div class="menu-primary-container"><ul id="menu-primary" class="primary-menu"><li id="menu-item-8" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8"><a href="/">Home</a></li>
+<li id="menu-item-9" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9"><a rel="about" href="https://nickcdryan.com/about/">About</a></li>
+<li id="menu-item-10" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10"><a href="https://nickcdryan.com/contact/">Contact</a></li>
+<li id="menu-item-395" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-395"><a target="_blank" rel="noopener" href="https://nickcdryan.files.wordpress.com/2023/07/7-2023-resume.pdf">CV</a></li>
+</ul></div>							</nav><!-- .main-navigation -->
+						
+													<nav id="social-navigation" class="social-navigation" aria-label="Social Links Menu">
+								<div class="menu-social-media-container"><ul id="menu-social-media" class="social-links-menu"><li id="menu-item-281" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-281"><a href="http://www.github.com/nickcdryan"><span class="screen-reader-text">Github</span></a></li>
+<li id="menu-item-282" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-282"><a href="https://www.linkedin.com/in/nick-ryan-a687ba64"><span class="screen-reader-text">LinkedIn</span></a></li>
+</ul></div>							</nav><!-- .social-navigation -->
+											</div><!-- .site-header-menu -->
+							</div><!-- .site-header-main -->
+
+					</header><!-- .site-header -->
+
+		<div id="content" class="site-content">
+
+<div id="primary" class="content-area">
+	<main id="main" class="site-main">
+		
+<article id="post-3595" class="post-3595 post type-post status-publish format-standard hentry category-uncategorized tag-algorithms tag-machine-learning tag-math tag-optimization tag-python tag-root-finding">
+	<header class="entry-header">
+		<h1 class="entry-title">Root-Finding Algorithms Tutorial in Python: Line Search, Bisection, Secant, Newton-Raphson, Inverse Quadratic Interpolation, Brent&#8217;s&nbsp;Method</h1>	</header><!-- .entry-header -->
+
+	
+	
+	<div class="entry-content">
+		<p><strong>Motivation</strong></p>
+<p>How do you find the roots of a continuous polynomial function? Well, if we want to find the roots of something like:</p>
+<p><img src="https://s0.wp.com/latex.php?latex=f%28x%29+%3D+x%5E2+%2B+3x+-+4&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=f%28x%29+%3D+x%5E2+%2B+3x+-+4&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=f%28x%29+%3D+x%5E2+%2B+3x+-+4&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="f(x) = x^2 + 3x - 4" class="latex" /></p>
+<p><span id="more-3595"></span></p>
+<p>you might remember the quadratic formula from middle school, and for similarly low-degree polynomial functions, various analytical methods are at your disposal.</p>
+<p>However, for higher-degree polynomials (<a href="https://en.wikipedia.org/wiki/Abel%E2%80%93Ruffini_theorem">five or higher</a>) where there are no general analytic solutions or for complicated functions (or sets of functions), it is often necessary or easier to resort to numeric methods &#8211; this is where root-finding algorithms come in.</p>
+<p>Root-finding algorithms share a very straightforward and intuitive approach to approximating roots. The general structure goes something like: a) start with an initial guess, b) calculate the result of the guess, c) update the guess based on the result and some further conditions, d) repeat until you&#8217;re satisfied with the result.</p>
+<p><img data-attachment-id="3928" data-permalink="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/6a010534b1db25970b0120a6248f18970c/" data-orig-file="https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png" data-orig-size="320,319" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="6a010534b1db25970b0120a6248f18970c" data-image-description="" data-image-caption="" data-medium-file="https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png?w=300" data-large-file="https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png?w=320" class="alignnone size-full wp-image-3928" src="https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png?w=840" alt="6a010534b1db25970b0120a6248f18970c"   srcset="https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png 320w, https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png?w=150&amp;h=150 150w, https://nickcdryan.files.wordpress.com/2017/09/6a010534b1db25970b0120a6248f18970c.png?w=300&amp;h=300 300w" sizes="(max-width: 320px) 85vw, 320px" /></p>
+<p>For example, how would you go about calculating the square root of 20 by hand? You&#8217;d begin with something like 4.5 (you have the luxury of knowing what a good first guess is &#8211; this is not always the case), square it to get 20.25, reduce 4.5 by some small amount since the result is greater than 20, recalculate, etc. until you get an answer you&#8217;re satisfied with. Our naive root-finding algorithm looks something like this:</p>
+<p><strong>Naive Method / Line Search</strong></p>
+<pre class="brush: python; title: ; notranslate" title="">
+def naive_root(f, x_guess, tolerance, step_size):
+
+    steps_taken = 0
+
+    while abs(f(x_guess)) &gt; tolerance:
+        if f(x_guess) &gt; 0:
+            x_guess -= step_size
+        elif f(x_guess) &lt; 0:
+            x_guess += step_size
+        else:
+            return x_guess
+
+        steps_taken += 1
+
+    return x_guess, steps_taken
+
+f = lambda x: x**2 - 20
+root, steps = naive_root(f, x_guess=4.5, tolerance=.01, step_size=.001)
+print &quot;root is:&quot;, root
+print &quot;steps taken:&quot;, steps
+</pre>
+<pre class="brush: python; title: ; notranslate" title="">
+root is: 4.473
+steps taken: 27
+</pre>
+<p>Not bad &#8211; we approximated one root of our function to the desired specificity. We&#8217;ve essentially re-invented a line-search method:</p>
+<p><img src="https://s0.wp.com/latex.php?latex=x_%7Bn%2B1%7D+%3D+x_n+%2B+%5Calpha_n+p_n&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x_%7Bn%2B1%7D+%3D+x_n+%2B+%5Calpha_n+p_n&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x_%7Bn%2B1%7D+%3D+x_n+%2B+%5Calpha_n+p_n&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x_{n+1} = x_n + &#92;alpha_n p_n" class="latex" /></p>
+<p>where each guess is a function of the previous guess, plus some step size <img src="https://s0.wp.com/latex.php?latex=%5Calpha&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=%5Calpha&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=%5Calpha&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="&#92;alpha" class="latex" /> and direction p.</p>
+<p>But there are a few unsatisfactory things about the algorithm. First, if you run the algorithm with a tolerance of .001 (precision down to one more decimal place) you&#8217;ll find that execution never completes. This is because our step size is too large: at some point f(x-guess) bounces back and forth over the &#8220;true&#8221; root between a guess that&#8217;s too small and a guess that&#8217;s too large, both of which are greater than the absolute value of our tolerance. So we need to be careful about the balance between the step size and our tolerance, and we&#8217;d likely need to set a limit on the maximum number of iterations in our loop to halt the program should this occur again.</p>
+<p>The second related problem has to do with our step size. If we had started with an initial guess of 5 instead of 4.5, we would have to do 527 iterations instead of 27 iterations in order to find a root. Surely the step size could be improved by taking into account just how far we are from the root; for example, we might factor in something like <img src="https://s0.wp.com/latex.php?latex=f%28x_%7Bguess%7D%29%5E2&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=f%28x_%7Bguess%7D%29%5E2&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=f%28x_%7Bguess%7D%29%5E2&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="f(x_{guess})^2" class="latex" /> so that guesses farther away from the root receive quadratically larger step sizes than those closer to the root. Notice that this would help with our first problem in that guesses very close to the root would have a small step size, decreasing the chance that we jump back and forth over the root because our step size is too large for our given tolerance.</p>
+<p>While factoring the squared error into our step size doesn&#8217;t work very well in practice, this fundamental idea of finding new ways to optimize step size (and direction) is the foundation for the root-finding algorithms that follow. Having developed an intuition for the naive method of root finding, remaining algorithms are variations on a theme.</p>
+<p><strong>Bisection Method</strong></p>
+<p>The bisection method introduces a simple idea to hone in on the root. Start with two guesses such that f(guess_1) and f(guess_2) are of opposite sign. This means that we have one guess that&#8217;s too large and another guess that&#8217;s too small. The idea is to gradually squeeze the guess that&#8217;s too high and the guess that&#8217;s too low towards zero until we&#8217;re satisfied that the range between the two is small enough or equal to zero.</p>
+<p>At each step we take the midpoint of the two guesses. If the midpoint is zero (the guesses are the same) or if the guesses are sufficiently close to one another, we return the midpoint. Otherwise, if the f(midpoint) is negative, then we replace the lower bound with the midpoint, and if f(midpoint) is positive, then we replace the upper bound with the midpoint. And, of course, repeat.</p>
+<pre class="brush: python; title: ; notranslate" title="">
+from __future__ import division&lt;span 				data-mce-type=&quot;bookmark&quot; 				id=&quot;mce_SELREST_start&quot; 				data-mce-style=&quot;overflow:hidden;line-height:0&quot; 				style=&quot;overflow:hidden;line-height:0&quot; 			&gt;&lt;/span&gt;
+
+def bisection(f, lower, upper, max_iters=50, tolerance=1e-5):
+
+    steps_taken = 0
+
+    while steps_taken &lt; max_iters:
+        m = (lower + upper) / 2.0
+
+        if m == 0 or abs(upper-lower) &lt; tolerance:             return m, steps_taken                 if f(m) &gt; 0:
+            upper = m
+        else:
+            lower = m
+
+        steps_taken += 1
+
+    final_estimate = (lower + upper) / 2.0
+    return final_estimate, steps_taken
+
+f = lambda x: x**2 - 20
+
+root, steps = bisection(f, 1, 8)
+print &quot;root is:&quot;, root
+print &quot;steps taken:&quot;, steps
+</pre>
+<pre class="brush: python; title: ; notranslate" title="">
+root is: 4.47213888168
+steps taken: 20
+</pre>
+<p><strong>Newton-Raphson Method</strong></p>
+<p>You&#8217;ve probably guessed that the derivative is an obvious candidate for improving step sizes: the derivative tells us about the direction and step size to take on reasonably convex, continuous, well-behaved functions; all we need to do is find a point on the curve where the derivative is zero.</p>
+<p>For Newton-Raphson, we supply an initial guess, calculate the derivative of f at the initial guess, calculate where the derivative intersects the x-axis, and use that as our next guess. For this code we approximate the derivative of univariate f at x so that you can play around with the function without having to calculate the derivatives, but you can easily substitute in the actual derivative function to get similar results. The method can be extended to n dimensions with the Jacobian and/or higher orders of the Taylor series expansion, but for now we&#8217;ll keep it simple.</p>
+<pre class="brush: python; title: ; notranslate" title="">
+from __future__ import division
+
+def discrete_method_approx(f, x, h=.00000001):
+    return (f(x+h) - f(x)) / h
+
+def newton_raphson(f, x, tolerance=.001):
+    steps_taken = 0
+
+    while abs(f(x)) &gt; tolerance:
+        df = discrete_method_approx(f, x)
+        x = x - f(x)/df
+        steps_taken += 1
+    return x, steps_taken
+
+f = lambda x: x**2 - 20
+
+root, steps = newton_raphson(f, 8)
+print &quot;root is:&quot;, root
+print &quot;steps taken:&quot;, steps
+</pre>
+<pre class="brush: python; title: ; notranslate" title="">
+root is: 4.47213597002
+steps taken: 4
+</pre>
+<p>Note that the update rule:</p>
+<p><img src="https://s0.wp.com/latex.php?latex=x_%7Bn%2B1%7D+%3D+x_%7Bn%7D+-+%5Bdf%28x_%7Bn%7D%29%5D%5E%7B-1%7D+f%28x_%7Bn%7D%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x_%7Bn%2B1%7D+%3D+x_%7Bn%7D+-+%5Bdf%28x_%7Bn%7D%29%5D%5E%7B-1%7D+f%28x_%7Bn%7D%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x_%7Bn%2B1%7D+%3D+x_%7Bn%7D+-+%5Bdf%28x_%7Bn%7D%29%5D%5E%7B-1%7D+f%28x_%7Bn%7D%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x_{n+1} = x_{n} - [df(x_{n})]^{-1} f(x_{n})" class="latex" /></p>
+<p>just solves the tangent line for y=0.</p>
+<p>As we can see, this method takes far fewer iterations than the Bisection Method, and returns an estimate far more accurate than our imposed tolerance (Python gives the square root of 20 as 4.47213595499958).</p>
+<p>The drawback with Newton&#8217;s Method is that we need to compute the derivative at each iteration. While it wasn&#8217;t a big deal for our toy problem, computing gradients and higher order derivatives for large, complex systems of equations can be very expensive. So while Newton&#8217;s Method may find a root in fewer iterations than Algorithm B, if each of those iterations takes ten times as long as iterations in Algorithm B then we have a problem. To remedy this, let&#8217;s look at some Quasi-Newtonian methods</p>
+<p><strong>Quasi-Newtonian: Secant Method</strong></p>
+<p>The idea of the Quasi-Newtonian Secant Method and other Quasi-Newtonian methods is to substitute the expensive calculation of the derivative/Jacobian/Hessian at each step with an inexpensive but good-enough approximation. All of the more popular methods (BFGS, Secant, Broyden, etc.) have the same basic form, save for different rules about how best to approximate the gradient and update the guess.</p>
+<p>You can think of the Secant Method as derivative-lite. Instead of computing the derivative, we approximate it using two points (x0, f(x0)) and (x1, f(x1)), calculate where the line intercepts the x-axis, and use that as one of our new points. This provides a fast way to generate a line that should approximate the tangent line to the function somewhere between these two points</p>
+<p>Given our two initial guesses <img src="https://s0.wp.com/latex.php?latex=x_%7B0%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x_%7B0%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x_%7B0%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x_{0}" class="latex" /> and <img src="https://s0.wp.com/latex.php?latex=x_%7B1%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x_%7B1%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x_%7B1%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x_{1}" class="latex" />, the secant line in slope-intercept form is:</p>
+<p><img src="https://s0.wp.com/latex.php?latex=y+%3D+%5Cfrac%7Bf%28x_%7Bn-1%7D%29+-f%28x_%7Bn-2%7D%29%7D%7Bx_%7Bn-1%7D+-+x_%7Bn-2%7D%7D+%28x+-+x_%7Bn-1%7D%29+%2B+f%28x_%7Bn-1%7D%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=y+%3D+%5Cfrac%7Bf%28x_%7Bn-1%7D%29+-f%28x_%7Bn-2%7D%29%7D%7Bx_%7Bn-1%7D+-+x_%7Bn-2%7D%7D+%28x+-+x_%7Bn-1%7D%29+%2B+f%28x_%7Bn-1%7D%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=y+%3D+%5Cfrac%7Bf%28x_%7Bn-1%7D%29+-f%28x_%7Bn-2%7D%29%7D%7Bx_%7Bn-1%7D+-+x_%7Bn-2%7D%7D+%28x+-+x_%7Bn-1%7D%29+%2B+f%28x_%7Bn-1%7D%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="y = &#92;frac{f(x_{n-1}) -f(x_{n-2})}{x_{n-1} - x_{n-2}} (x - x_{n-1}) + f(x_{n-1})" class="latex" /></p>
+<p>Setting y to 0 (our new guess is where the line intercepts the x-axis), we get:</p>
+<p><img src="https://s0.wp.com/latex.php?latex=x+%3D+x_%7Bn-1%7D+-+f%28x_%7Bn-1%7D%29+%5Cfrac%7Bx_%7Bn-1%7D+-+x_%7Bn-2%7D%7D+%C2%A0%7Bf%28x_%7Bn-1%7D%29+-+f%28x_%7Bn-2%7D%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x+%3D+x_%7Bn-1%7D+-+f%28x_%7Bn-1%7D%29+%5Cfrac%7Bx_%7Bn-1%7D+-+x_%7Bn-2%7D%7D+%C2%A0%7Bf%28x_%7Bn-1%7D%29+-+f%28x_%7Bn-2%7D%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x+%3D+x_%7Bn-1%7D+-+f%28x_%7Bn-1%7D%29+%5Cfrac%7Bx_%7Bn-1%7D+-+x_%7Bn-2%7D%7D+%C2%A0%7Bf%28x_%7Bn-1%7D%29+-+f%28x_%7Bn-2%7D%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x = x_{n-1} - f(x_{n-1}) &#92;frac{x_{n-1} - x_{n-2}}  {f(x_{n-1}) - f(x_{n-2})}" class="latex" /></p>
+<pre class="brush: python; title: ; notranslate" title="">
+def secant_method(f, x0, x1, max_iter=100, tolerance = 1e-5):
+    steps_taken = 1
+    while steps_taken &lt; max_iter and abs(x1-x0) &gt; tolerance:
+        x2 = x1 - ( (f(x1) * (x1 - x0)) / (f(x1) - f(x0)) )
+        x1, x0 = x2, x1
+        steps_taken += 1
+    return x2, steps_taken
+
+f = lambda x: x**2 - 20
+
+root, steps = secant_method(f, 2, 8)
+print &quot;root is:&quot;, root
+print &quot;steps taken:&quot;, steps
+</pre>
+<pre class="brush: python; title: ; notranslate" title="">
+root is: 4.4721359553
+steps taken: 7
+</pre>
+<p><strong>Inverse Quadratic Interpolation and Lagrange Polynomials</strong></p>
+<p>This method is similar to the secant method but instead is initialized with three points, interpolates a polynomial curve based on those points, calculates where the curve intercepts the x-axis and uses this point as the new guess in the next iteration.</p>
+<p>The quadratic interpolation method is the Lagrange polynomial:</p>
+<p><img src="https://s0.wp.com/latex.php?latex=L%28x%29+%3D+%5Csum_%7Bj%3D0%7D%5E%7Bk%7D+y_j+l_j+%28x%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=L%28x%29+%3D+%5Csum_%7Bj%3D0%7D%5E%7Bk%7D+y_j+l_j+%28x%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=L%28x%29+%3D+%5Csum_%7Bj%3D0%7D%5E%7Bk%7D+y_j+l_j+%28x%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="L(x) = &#92;sum_{j=0}^{k} y_j l_j (x)" class="latex" /></p>
+<p>where</p>
+<p><img src="https://s0.wp.com/latex.php?latex=l_j%28x%29+%3D+%5Cprod_%7B0+%5Cleq+m+%5Cleq+k+%2C+m+%5Cneq+j%7D+%5Cfrac%7Bx+-+x_m%7D%7Bx_j+-+x_m%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=l_j%28x%29+%3D+%5Cprod_%7B0+%5Cleq+m+%5Cleq+k+%2C+m+%5Cneq+j%7D+%5Cfrac%7Bx+-+x_m%7D%7Bx_j+-+x_m%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=l_j%28x%29+%3D+%5Cprod_%7B0+%5Cleq+m+%5Cleq+k+%2C+m+%5Cneq+j%7D+%5Cfrac%7Bx+-+x_m%7D%7Bx_j+-+x_m%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="l_j(x) = &#92;prod_{0 &#92;leq m &#92;leq k , m &#92;neq j} &#92;frac{x - x_m}{x_j - x_m}" class="latex" /></p>
+<p>is carried out with three points to get a second degree polynomial curve. Basically, in this instance we create three basic <img src="https://s0.wp.com/latex.php?latex=l%28x%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=l%28x%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=l%28x%29&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="l(x)" class="latex" /> degree two polynomial curves, where each curve is zero when m != j and approximates the f(m) value otherwise. The Lagrange polynomial is designed to do exactly this. You get three curves that each pass through one of the points to be interpolated and is zero at all other points, then take the linear combination of those curves for an interpolation that passes through all desired points. Here&#8217;s an example of a third degree polynomial interpolation:</p>
+<p><img data-attachment-id="3982" data-permalink="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/743px-lagrange_polynomial-svg/" data-orig-file="https://nickcdryan.files.wordpress.com/2017/09/743px-lagrange_polynomial-svg.png" data-orig-size="743,503" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="743px-lagrange_polynomial-svg" data-image-description="" data-image-caption="" data-medium-file="https://nickcdryan.files.wordpress.com/2017/09/743px-lagrange_polynomial-svg.png?w=300" data-large-file="https://nickcdryan.files.wordpress.com/2017/09/743px-lagrange_polynomial-svg.png?w=743" class="alignnone size-full wp-image-3982" src="https://nickcdryan.files.wordpress.com/2017/09/743px-lagrange_polynomial-svg.png?w=840" alt="743px-lagrange_polynomial-svg"   srcset="https://nickcdryan.files.wordpress.com/2017/09/743px-lagrange_polynomial-svg.png 743w, https://nickcdryan.files.wordpress.com/2017/09/743px-lagrange_polynomial-svg.png?w=150&amp;h=102 150w, https://nickcdryan.files.wordpress.com/2017/09/743px-lagrange_polynomial-svg.png?w=300&amp;h=203 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px" /></p>
+<pre class="brush: python; title: ; notranslate" title="">
+def inverse_quadratic_interpolation(f, x0, x1, x2, max_iter=20, tolerance=1e-5):
+    steps_taken = 0
+    while steps_taken &lt; max_iter and abs(x1-x0) &gt; tolerance: # last guess and new guess are v close
+        fx0 = f(x0)
+        fx1 = f(x1)
+        fx2 = f(x2)
+        L0 = (x0 * fx1 * fx2) / ((fx0 - fx1) * (fx0 - fx2))
+        L1 = (x1 * fx0 * fx2) / ((fx1 - fx0) * (fx1 - fx2))
+        L2 = (x2 * fx1 * fx0) / ((fx2 - fx0) * (fx2 - fx1))
+        new = L0 + L1 + L2
+        x0, x1, x2 = new, x0, x1
+        steps_taken += 1
+    return x0, steps_taken
+
+f = lambda x: x**2 - 20
+
+root, steps = inverse_quadratic_interpolation(f, 4.3, 4.4, 4.5)
+print &quot;root is:&quot;, root
+print &quot;steps taken:&quot;, steps
+</pre>
+<pre class="brush: python; title: ; notranslate" title="">
+root is: 4.4721359579
+steps taken: 2
+</pre>
+<p><strong>Brent&#8217;s Method</strong></p>
+<p>Brent&#8217;s Method seeks to combine the robustness of the bisection method with the fast convergence of inverse quadratic interpolation. The basic idea is to switch between inverse quadratic interpolation and bisection based on the step performed in the previous iteration and based on inequalities gauging the difference between guesses:</p>
+<pre class="brush: python; title: ; notranslate" title="">
+def brents(f, x0, x1, max_iter=50, tolerance=1e-5):
+
+    fx0 = f(x0)
+    fx1 = f(x1)
+
+    assert (fx0 * fx1) &lt;= 0, &quot;Root not bracketed&quot;  
+
+    if abs(fx0) &lt; abs(fx1):
+        x0, x1 = x1, x0
+        fx0, fx1 = fx1, fx0
+
+    x2, fx2 = x0, fx0
+
+    mflag = True
+    steps_taken = 0
+
+    while steps_taken &lt; max_iter and abs(x1-x0) &gt; tolerance:
+        fx0 = f(x0)
+        fx1 = f(x1)
+        fx2 = f(x2)
+
+        if fx0 != fx2 and fx1 != fx2:
+            L0 = (x0 * fx1 * fx2) / ((fx0 - fx1) * (fx0 - fx2))
+            L1 = (x1 * fx0 * fx2) / ((fx1 - fx0) * (fx1 - fx2))
+            L2 = (x2 * fx1 * fx0) / ((fx2 - fx0) * (fx2 - fx1))
+            new = L0 + L1 + L2
+
+        else:
+            new = x1 - ( (fx1 * (x1 - x0)) / (fx1 - fx0) )
+
+        if ((new &lt; ((3 * x0 + x1) / 4) or new &gt; x1) or
+            (mflag == True and (abs(new - x1)) &gt;= (abs(x1 - x2) / 2)) or
+            (mflag == False and (abs(new - x1)) &gt;= (abs(x2 - d) / 2)) or
+            (mflag == True and (abs(x1 - x2)) &lt; tolerance) or
+            (mflag == False and (abs(x2 - d)) &lt; tolerance)):
+            new = (x0 + x1) / 2
+            mflag = True
+
+        else:
+            mflag = False
+
+        fnew = f(new)
+        d, x2 = x2, x1
+
+        if (fx0 * fnew) &lt; 0:
+            x1 = new
+        else:
+            x0 = new
+
+        if abs(fx0) &lt; abs(fx1):
+            x0, x1 = x1, x0
+
+        steps_taken += 1
+
+    return x1, steps_taken
+
+f = lambda x: x**2 - 20
+
+root, steps = brents(f, 2, 5, tolerance=10e-5)
+print &quot;root is:&quot;, root
+print &quot;steps taken:&quot;, steps
+</pre>
+<pre class="brush: python; title: ; notranslate" title="">
+root is: 4.472135955
+steps taken: 16
+</pre>
+<p><strong>Which should I use?</strong></p>
+<p>How should we evaluate these algorithms? In general, we need to care about an algorithm&#8217;s:</p>
+<ul>
+<li>convergence rate (how fast it gets to an answer)</li>
+<li>what guarantees we have that the algorithm will converge at all</li>
+<li>computational expense in each step of the iteration</li>
+</ul>
+<p>Quotient convergence is defined in terms of the ratio of successive error terms, or how much the error decreases per iteration. If <img src="https://s0.wp.com/latex.php?latex=x%5E%2A&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x%5E%2A&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x%5E%2A&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x^*" class="latex" /> is the true root and <img src="https://s0.wp.com/latex.php?latex=x%5E%7B%28n%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x%5E%7B%28n%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x%5E%7B%28n%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x^{(n)}" class="latex" /> is the estimate at iteration n, then error at iteration <img src="https://s0.wp.com/latex.php?latex=x%5E%7B%28n%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=x%5E%7B%28n%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=x%5E%7B%28n%29%7D&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="x^{(n)}" class="latex" /> is <img src="https://s0.wp.com/latex.php?latex=%7Cx%5E%2A+-+x%5E%7B%28n%29%7D%7C&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=%7Cx%5E%2A+-+x%5E%7B%28n%29%7D%7C&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=%7Cx%5E%2A+-+x%5E%7B%28n%29%7D%7C&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="|x^* - x^{(n)}|" class="latex" />, and is said to converge with rate k if:</p>
+<p><img src="https://s0.wp.com/latex.php?latex=%5Clim_%7Bn%5Cto%5Cinfty%7D+f%28x%29+%5Cfrac%7B%7Cx%5E%2A+-+x%5E%7B%28n%2B1%29%7D%7C%7D%7B%7Cx%5E%2A+-+x%5E%7B%28n%29%7D%7C%5Ek%7D+%3D+C&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002" srcset="https://s0.wp.com/latex.php?latex=%5Clim_%7Bn%5Cto%5Cinfty%7D+f%28x%29+%5Cfrac%7B%7Cx%5E%2A+-+x%5E%7B%28n%2B1%29%7D%7C%7D%7B%7Cx%5E%2A+-+x%5E%7B%28n%29%7D%7C%5Ek%7D+%3D+C&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002 1x, https://s0.wp.com/latex.php?latex=%5Clim_%7Bn%5Cto%5Cinfty%7D+f%28x%29+%5Cfrac%7B%7Cx%5E%2A+-+x%5E%7B%28n%2B1%29%7D%7C%7D%7B%7Cx%5E%2A+-+x%5E%7B%28n%29%7D%7C%5Ek%7D+%3D+C&#038;bg=ffffff&#038;fg=1a1a1a&#038;s=0&#038;c=20201002&#038;zoom=4.5 4x" alt="&#92;lim_{n&#92;to&#92;infty} f(x) &#92;frac{|x^* - x^{(n+1)}|}{|x^* - x^{(n)}|^k} = C" class="latex" /></p>
+<p>where C is finite and positive. Now, if:</p>
+<ul>
+<li>k=1 and C&lt;1, the convergence rate is linear</li>
+<li>1&lt;k&lt;2, the convergence rate is superlinear</li>
+<li>k=2, the convergence rate is quadratic</li>
+</ul>
+<p>In other words, does the algorithm get better at a constant rate, a quadratic rate, or something inbetween?</p>
+<p>I won&#8217;t go into great detail about the respective performance of each algorithm, but will give some general guidelines that should help you gain an intuition about which perform best under which conditions.</p>
+<ul>
+<li><strong>Bisection </strong>is very robust and guaranteed to find an approximation in a fixed number of iterations, but is very slow: linear convergence. Each iteration is fast since we don&#8217;t compute any gradients, but convergence can be very slow. This method also works for non-continuous functions, so long as they can be evaluated at every point in the initial interval.</li>
+<li><strong>Newton-Raphson</strong> converges very fast (quadratically), but requires good initial guesses. Since it uses the derivative, the function must be differentiable, the derivative must be supplied (or approximated, which can be a little expensive and slows convergence), and there is an assumption of convexity if we&#8217;re searching for a global minimum. The method can be expanded to n dimensions, and typically makes use of the Hessian (second term in Taylor expansion) to exploit information about curvature and to detect saddle points: the method works if the Hessian is positive definite and not ill-conditioned, but even in the case where it is semidefinite, mixed, or  ill-conditioned, there are methods for regularizing the Hessian (see <a href="http://www.deeplearningbook.org/contents/optimization.html">Section 8.6</a>). In general though, the biggest drawback is calculating, inverting, and updating the Hessian, where inversion is O(n^3) for a n*n dimension matrix, repeated at every iteration.</li>
+<li><strong>Secant Method</strong> has superlinear convergence, but is typically faster than Newton&#8217;s due to relatively inexpensive computation at each iteration. Like Newton&#8217;s, it requires good initial guesses.</li>
+<li><strong>Inverse Quadratic Interpolation </strong>isn&#8217;t really used as a root-finding method on its own and is not recommended as such, but is important in discussing Brent&#8217;s.</li>
+<li><strong>Brent&#8217;s </strong>is essentially the Bisection method augmented with IQI whenever such a step is safe. At it&#8217;s worst case it converges linearly and equal to Bisection, but in general it performs superlinearly; it combines the robustness of Bisection with the speedy convergence and inexpensive computation of Quasi-Newtonian methods. Because of this, you&#8217;re likely to find Brent&#8217;s as a default root-finding algorithm in popular libraries. For example, MATLAB&#8217;s fzero, used to find the root of a nonlinear function, <a href="https://www.mathworks.com/help/matlab/ref/fzero.html#btoc6lj-17">employs a variation of Brent&#8217;s</a>.</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Some Excellent Resources:</strong></p>
+<ul>
+<li><a href="http://www.karenkopecky.net/Teaching/eco613614/Notes_RootFindingMethods.pdf" rel="nofollow">http://www.karenkopecky.net/Teaching/eco613614/Notes_RootFindingMethods.pdf</a></li>
+<li>Chapter 8 and Chapter 4 of <a href="http://www.deeplearningbook.org/">Deep Learning</a></li>
+<li><a href="http://heath.cs.illinois.edu/scicomp/notes/index.html" rel="nofollow">http://heath.cs.illinois.edu/scicomp/notes/index.html</a></li>
+<li><a href="http://people.duke.edu/~ccc14/sta-663-2016/11_OptimizationOneDimension.html" rel="nofollow">http://people.duke.edu/~ccc14/sta-663-2016/11_OptimizationOneDimension.html</a></li>
+<li><a href="https://www.brianheinold.net/notes/An_Intuitive_Guide_to_Numerical_Methods_Heinold.pdf" rel="nofollow">https://www.brianheinold.net/notes/An_Intuitive_Guide_to_Numerical_Methods_Heinold.pdf</a></li>
+<li>And, of course, Wikipedia</li>
+</ul>
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow noopener noreferrer" data-shared="sharing-twitter-3595" class="share-twitter sd-button share-icon" href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/?share=twitter" target="_blank" title="Click to share on Twitter" ><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-3595" class="share-facebook sd-button share-icon" href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/?share=facebook" target="_blank" title="Click to share on Facebook" ><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div><div class='sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded' id='like-post-wrapper-122804722-3595-65554e2f00c5b' data-src='//widgets.wp.com/likes/index.html?ver=20230906#blog_id=122804722&amp;post_id=3595&amp;origin=nickcdryan.wordpress.com&amp;obj_id=122804722-3595-65554e2f00c5b&amp;domain=nickcdryan.com' data-name='like-post-frame-122804722-3595-65554e2f00c5b' data-title='Like or Reblog'><h3 class='sd-title'>Like this:</h3><div class='likes-widget-placeholder post-likes-widget-placeholder' style='height: 55px;'><span class='button'><span>Like</span></span> <span class="loading">Loading...</span></div><span class='sd-text-color'></span><a class='sd-link-color'></a></div>
+<div id='jp-relatedposts' class='jp-relatedposts' >
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+</div></div>	</div><!-- .entry-content -->
+
+	<footer class="entry-footer">
+		<span class="byline"><span class="author vcard"><img alt='' src='https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=49&#038;d=identicon&#038;r=G' srcset='https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=49&#038;d=identicon&#038;r=G 1x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=74&#038;d=identicon&#038;r=G 1.5x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=98&#038;d=identicon&#038;r=G 2x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=147&#038;d=identicon&#038;r=G 3x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=196&#038;d=identicon&#038;r=G 4x' class='avatar avatar-49' height='49' width='49' loading='lazy' decoding='async' /><span class="screen-reader-text">Author </span> <a class="url fn n" href="https://nickcdryan.com/author/nickcdryan/">nickcdryan</a></span></span><span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/" rel="bookmark"><time class="entry-date published" datetime="2017-09-13T17:56:30+00:00">September 13, 2017</time><time class="updated" datetime="2017-09-16T21:28:51+00:00">September 16, 2017</time></a></span><span class="tags-links"><span class="screen-reader-text">Tags </span><a href="https://nickcdryan.com/tag/algorithms/" rel="tag">algorithms</a>, <a href="https://nickcdryan.com/tag/machine-learning/" rel="tag">machine learning</a>, <a href="https://nickcdryan.com/tag/math/" rel="tag">math</a>, <a href="https://nickcdryan.com/tag/optimization/" rel="tag">optimization</a>, <a href="https://nickcdryan.com/tag/python/" rel="tag">python</a>, <a href="https://nickcdryan.com/tag/root-finding/" rel="tag">root-finding</a></span>			</footer><!-- .entry-footer -->
+</article><!-- #post-3595 -->
+
+<div id="comments" class="comments-area">
+
+			<h2 class="comments-title">
+			2 thoughts on &ldquo;Root-Finding Algorithms Tutorial in Python: Line Search, Bisection, Secant, Newton-Raphson, Inverse Quadratic Interpolation, Brent&#8217;s&nbsp;Method&rdquo;		</h2>
+
+		
+		<ol class="comment-list">
+					<li id="comment-2517" class="comment even thread-even depth-1 parent">
+			<article id="div-comment-2517" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://0.gravatar.com/avatar/f526cde102e7cac281d8a1cc22ea437400c8927652b0458f6469c599783265cd?s=42&#038;d=identicon&#038;r=G' srcset='https://0.gravatar.com/avatar/f526cde102e7cac281d8a1cc22ea437400c8927652b0458f6469c599783265cd?s=42&#038;d=identicon&#038;r=G 1x, https://0.gravatar.com/avatar/f526cde102e7cac281d8a1cc22ea437400c8927652b0458f6469c599783265cd?s=63&#038;d=identicon&#038;r=G 1.5x, https://0.gravatar.com/avatar/f526cde102e7cac281d8a1cc22ea437400c8927652b0458f6469c599783265cd?s=84&#038;d=identicon&#038;r=G 2x, https://0.gravatar.com/avatar/f526cde102e7cac281d8a1cc22ea437400c8927652b0458f6469c599783265cd?s=126&#038;d=identicon&#038;r=G 3x, https://0.gravatar.com/avatar/f526cde102e7cac281d8a1cc22ea437400c8927652b0458f6469c599783265cd?s=168&#038;d=identicon&#038;r=G 4x' class='avatar avatar-42' height='42' width='42' loading='lazy' decoding='async' />						<b class="fn">Eddie McCarthy</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/#comment-2517"><time datetime="2023-10-29T23:05:01+00:00">October 29, 2023 at 11:05 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Line 12 (x2, fx2 = x0, fx0) means that line 22 (if fx0 != fx2&#8230;) can never be satisfied since x2 is given the value of x0. This would suggest that IQI is never executed in this code. If I am right in this, how should it be corrected? Thank you.</p>
+<p id="comment-like-2517" data-liked=comment-not-liked class="comment-likes comment-not-liked"><a href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/?like_comment=2517&#038;_wpnonce=e4c8a539b4" class="comment-like-link needs-login" rel="nofollow" data-blog="122804722"><span>Like</span></a><span id="comment-like-count-2517" class="comment-like-feedback">Like</span></p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/?replytocom=2517#respond' data-commentid="2517" data-postid="3595" data-belowelement="div-comment-2517" data-respondelement="respond" data-replyto="Reply to Eddie McCarthy" aria-label='Reply to Eddie McCarthy'>Reply</a></div>			</article><!-- .comment-body -->
+		<ol class="children">
+		<li id="comment-2519" class="comment byuser comment-author-nickcdryan bypostauthor odd alt depth-2">
+			<article id="div-comment-2519" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=42&#038;d=identicon&#038;r=G' srcset='https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=42&#038;d=identicon&#038;r=G 1x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=63&#038;d=identicon&#038;r=G 1.5x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=84&#038;d=identicon&#038;r=G 2x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=126&#038;d=identicon&#038;r=G 3x, https://2.gravatar.com/avatar/25808c30281c1c6acb7a89d317764a3e16f643c23fd79dd62d7fe27c41a97585?s=168&#038;d=identicon&#038;r=G 4x' class='avatar avatar-42' height='42' width='42' loading='lazy' decoding='async' />						<b class="fn"><a href="https://nickcdryan.wordpress.com" class="url" rel="ugc external nofollow">nickcdryan</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/#comment-2519"><time datetime="2023-11-03T13:54:48+00:00">November 3, 2023 at 1:54 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Hi Eddie, it seems to work for me. Mentally tracking the variable names is very confusing (I wish I&#8217;d named them better when I wrote this). If you put a print statement inside the conditional on line 22 you&#8217;ll see that the IQI code is executed:</p>
+<p>IQI loop hit on step: 2<br />
+IQI loop hit on step: 3<br />
+IQI loop hit on step: 4<br />
+IQI loop hit on step: 8<br />
+IQI loop hit on step: 9<br />
+IQI loop hit on step: 10<br />
+IQI loop hit on step: 11<br />
+root is: 4.47213595499958<br />
+steps taken: 16</p>
+<p>Remember that on every pass the variable names are updated. So while IQI code doesn&#8217;t execute on the first pass it does on later passes as the variables x0, x2, etc. get updated.</p>
+<p id="comment-like-2519" data-liked=comment-not-liked class="comment-likes comment-not-liked"><a href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/?like_comment=2519&#038;_wpnonce=becceb8bbf" class="comment-like-link needs-login" rel="nofollow" data-blog="122804722"><span>Like</span></a><span id="comment-like-count-2519" class="comment-like-feedback">Like</span></p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/?replytocom=2519#respond' data-commentid="2519" data-postid="3595" data-belowelement="div-comment-2519" data-respondelement="respond" data-replyto="Reply to nickcdryan" aria-label='Reply to nickcdryan'>Reply</a></div>			</article><!-- .comment-body -->
+		</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		
+	
+	
+		<div id="respond" class="comment-respond">
+		<h2 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/#respond" style="display:none;">Cancel reply</a></small></h2><form action="https://nickcdryan.com/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate>
+
+
+<div id="comment-form__verbum" class="transparent"></div><div class="verbum-form-meta"><input type='hidden' name='comment_post_ID' value='3595' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+
+			<input type="hidden" name="highlander_comment_nonce" id="highlander_comment_nonce" value="d8f31f8449" /></div><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="82b9e2d329" /></p><p style="display: none !important;"><label>&#916;<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="193"/><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p></form>	</div><!-- #respond -->
+	
+</div><!-- .comments-area -->
+
+	<nav class="navigation post-navigation" aria-label="Posts">
+		<h2 class="screen-reader-text">Post navigation</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="https://nickcdryan.com/2017/06/18/statistical-learning-theory-vc-dimension/" rel="prev"><span class="meta-nav" aria-hidden="true">Previous</span> <span class="screen-reader-text">Previous post:</span> <span class="post-title">Statistical Learning Theory: VC Dimension, Structural Risk&nbsp;Minimization</span></a></div><div class="nav-next"><a href="https://nickcdryan.com/2017/09/16/broydens-method-in-python/" rel="next"><span class="meta-nav" aria-hidden="true">Next</span> <span class="screen-reader-text">Next post:</span> <span class="post-title">Broyden&#8217;s Method in&nbsp;Python</span></a></div></div>
+	</nav>
+	</main><!-- .site-main -->
+
+	
+</div><!-- .content-area -->
+
+
+	<aside id="secondary" class="sidebar widget-area">
+		<section id="wpcom_social_media_icons_widget-3" class="widget widget_wpcom_social_media_icons_widget"><h2 class="widget-title">Social</h2><ul><li><a href="https://twitter.com/nickcdryan/" class="genericon genericon-twitter" target="_blank"><span class="screen-reader-text">View nickcdryan&#8217;s profile on Twitter</span></a></li><li><a href="https://www.linkedin.com/in/nick-ryan-a687ba64/" class="genericon genericon-linkedin" target="_blank"><span class="screen-reader-text">View nick-ryan-a687ba64&#8217;s profile on LinkedIn</span></a></li><li><a href="https://github.com/nickcdryan/" class="genericon genericon-github" target="_blank"><span class="screen-reader-text">View nickcdryan&#8217;s profile on GitHub</span></a></li></ul></section><section id="archives-5" class="widget widget_archive"><h2 class="widget-title">Archive</h2><nav aria-label="Archive">
+			<ul>
+					<li><a href='https://nickcdryan.com/2023/05/'>May 2023</a></li>
+	<li><a href='https://nickcdryan.com/2023/04/'>April 2023</a></li>
+	<li><a href='https://nickcdryan.com/2019/09/'>September 2019</a></li>
+	<li><a href='https://nickcdryan.com/2019/08/'>August 2019</a></li>
+	<li><a href='https://nickcdryan.com/2017/09/'>September 2017</a></li>
+	<li><a href='https://nickcdryan.com/2017/06/'>June 2017</a></li>
+	<li><a href='https://nickcdryan.com/2017/04/'>April 2017</a></li>
+	<li><a href='https://nickcdryan.com/2017/03/'>March 2017</a></li>
+	<li><a href='https://nickcdryan.com/2017/02/'>February 2017</a></li>
+	<li><a href='https://nickcdryan.com/2017/01/'>January 2017</a></li>
+			</ul>
+
+			</nav></section><section id="wp_tag_cloud-5" class="widget wp_widget_tag_cloud"><h2 class="widget-title">Tags</h2><ul class='wp-tag-cloud' role='list'>
+	<li><a href="https://nickcdryan.com/tag/ab-testing/" class="tag-cloud-link tag-link-909271 tag-link-position-1" style="font-size: 1em;">A/B testing</a></li>
+	<li><a href="https://nickcdryan.com/tag/advertising/" class="tag-cloud-link tag-link-521 tag-link-position-2" style="font-size: 1em;">advertising</a></li>
+	<li><a href="https://nickcdryan.com/tag/ai/" class="tag-cloud-link tag-link-14067 tag-link-position-3" style="font-size: 1em;">AI</a></li>
+	<li><a href="https://nickcdryan.com/tag/algorithms/" class="tag-cloud-link tag-link-3378 tag-link-position-4" style="font-size: 1em;">algorithms</a></li>
+	<li><a href="https://nickcdryan.com/tag/artificial-intelligence/" class="tag-cloud-link tag-link-12374 tag-link-position-5" style="font-size: 1em;">artificial intelligence</a></li>
+	<li><a href="https://nickcdryan.com/tag/baseball/" class="tag-cloud-link tag-link-1168 tag-link-position-6" style="font-size: 1em;">baseball</a></li>
+	<li><a href="https://nickcdryan.com/tag/benchmarking/" class="tag-cloud-link tag-link-93654 tag-link-position-7" style="font-size: 1em;">benchmarking</a></li>
+	<li><a href="https://nickcdryan.com/tag/bert/" class="tag-cloud-link tag-link-138238 tag-link-position-8" style="font-size: 1em;">BERT</a></li>
+	<li><a href="https://nickcdryan.com/tag/chunking/" class="tag-cloud-link tag-link-2861718 tag-link-position-9" style="font-size: 1em;">chunking</a></li>
+	<li><a href="https://nickcdryan.com/tag/competitive-advantage/" class="tag-cloud-link tag-link-154660 tag-link-position-10" style="font-size: 1em;">competitive advantage</a></li>
+	<li><a href="https://nickcdryan.com/tag/computer-vision/" class="tag-cloud-link tag-link-76379 tag-link-position-11" style="font-size: 1em;">computer vision</a></li>
+	<li><a href="https://nickcdryan.com/tag/data-analysis/" class="tag-cloud-link tag-link-83336 tag-link-position-12" style="font-size: 1em;">data analysis</a></li>
+	<li><a href="https://nickcdryan.com/tag/deep-learning/" class="tag-cloud-link tag-link-1131271 tag-link-position-13" style="font-size: 1em;">deep learning</a></li>
+	<li><a href="https://nickcdryan.com/tag/dimensionality-reduction/" class="tag-cloud-link tag-link-2160231 tag-link-position-14" style="font-size: 1em;">dimensionality reduction</a></li>
+	<li><a href="https://nickcdryan.com/tag/facebook/" class="tag-cloud-link tag-link-81819 tag-link-position-15" style="font-size: 1em;">facebook</a></li>
+	<li><a href="https://nickcdryan.com/tag/google/" class="tag-cloud-link tag-link-81 tag-link-position-16" style="font-size: 1em;">Google</a></li>
+	<li><a href="https://nickcdryan.com/tag/llm/" class="tag-cloud-link tag-link-642672 tag-link-position-17" style="font-size: 1em;">LLM</a></li>
+	<li><a href="https://nickcdryan.com/tag/machine-learning/" class="tag-cloud-link tag-link-40978 tag-link-position-18" style="font-size: 1em;">machine learning</a></li>
+	<li><a href="https://nickcdryan.com/tag/math/" class="tag-cloud-link tag-link-2813 tag-link-position-19" style="font-size: 1em;">math</a></li>
+	<li><a href="https://nickcdryan.com/tag/metaclass/" class="tag-cloud-link tag-link-8854412 tag-link-position-20" style="font-size: 1em;">metaclass</a></li>
+	<li><a href="https://nickcdryan.com/tag/metaprogramming/" class="tag-cloud-link tag-link-36279 tag-link-position-21" style="font-size: 1em;">metaprogramming</a></li>
+	<li><a href="https://nickcdryan.com/tag/metrics/" class="tag-cloud-link tag-link-7092 tag-link-position-22" style="font-size: 1em;">metrics</a></li>
+	<li><a href="https://nickcdryan.com/tag/moat/" class="tag-cloud-link tag-link-584019 tag-link-position-23" style="font-size: 1em;">moat</a></li>
+	<li><a href="https://nickcdryan.com/tag/model-evaluation/" class="tag-cloud-link tag-link-25099599 tag-link-position-24" style="font-size: 1em;">model evaluation</a></li>
+	<li><a href="https://nickcdryan.com/tag/model-selection/" class="tag-cloud-link tag-link-2675839 tag-link-position-25" style="font-size: 1em;">model selection</a></li>
+	<li><a href="https://nickcdryan.com/tag/multi-label/" class="tag-cloud-link tag-link-42919665 tag-link-position-26" style="font-size: 1em;">multi-label</a></li>
+	<li><a href="https://nickcdryan.com/tag/neural-net/" class="tag-cloud-link tag-link-213496 tag-link-position-27" style="font-size: 1em;">neural net</a></li>
+	<li><a href="https://nickcdryan.com/tag/neural-networks/" class="tag-cloud-link tag-link-65146 tag-link-position-28" style="font-size: 1em;">neural networks</a></li>
+	<li><a href="https://nickcdryan.com/tag/nlp/" class="tag-cloud-link tag-link-47433 tag-link-position-29" style="font-size: 1em;">NLP</a></li>
+	<li><a href="https://nickcdryan.com/tag/nltk/" class="tag-cloud-link tag-link-6704524 tag-link-position-30" style="font-size: 1em;">nltk</a></li>
+	<li><a href="https://nickcdryan.com/tag/optimization/" class="tag-cloud-link tag-link-133147 tag-link-position-31" style="font-size: 1em;">optimization</a></li>
+	<li><a href="https://nickcdryan.com/tag/parsing/" class="tag-cloud-link tag-link-1029805 tag-link-position-32" style="font-size: 1em;">parsing</a></li>
+	<li><a href="https://nickcdryan.com/tag/pca/" class="tag-cloud-link tag-link-209963 tag-link-position-33" style="font-size: 1em;">PCA</a></li>
+	<li><a href="https://nickcdryan.com/tag/politics/" class="tag-cloud-link tag-link-398 tag-link-position-34" style="font-size: 1em;">politics</a></li>
+	<li><a href="https://nickcdryan.com/tag/preprocessing/" class="tag-cloud-link tag-link-4262746 tag-link-position-35" style="font-size: 1em;">preprocessing</a></li>
+	<li><a href="https://nickcdryan.com/tag/python/" class="tag-cloud-link tag-link-832 tag-link-position-36" style="font-size: 1em;">python</a></li>
+	<li><a href="https://nickcdryan.com/tag/pytorch/" class="tag-cloud-link tag-link-556315009 tag-link-position-37" style="font-size: 1em;">pytorch</a></li>
+	<li><a href="https://nickcdryan.com/tag/regularization/" class="tag-cloud-link tag-link-1336144 tag-link-position-38" style="font-size: 1em;">regularization</a></li>
+	<li><a href="https://nickcdryan.com/tag/root-finding/" class="tag-cloud-link tag-link-4516680 tag-link-position-39" style="font-size: 1em;">root-finding</a></li>
+	<li><a href="https://nickcdryan.com/tag/scipy/" class="tag-cloud-link tag-link-2797900 tag-link-position-40" style="font-size: 1em;">scipy</a></li>
+	<li><a href="https://nickcdryan.com/tag/sklearn/" class="tag-cloud-link tag-link-117348259 tag-link-position-41" style="font-size: 1em;">sklearn</a></li>
+	<li><a href="https://nickcdryan.com/tag/statistical-learning-theory/" class="tag-cloud-link tag-link-15804862 tag-link-position-42" style="font-size: 1em;">statistical learning theory</a></li>
+	<li><a href="https://nickcdryan.com/tag/statistics/" class="tag-cloud-link tag-link-5849 tag-link-position-43" style="font-size: 1em;">statistics</a></li>
+	<li><a href="https://nickcdryan.com/tag/tagging/" class="tag-cloud-link tag-link-1503 tag-link-position-44" style="font-size: 1em;">tagging</a></li>
+	<li><a href="https://nickcdryan.com/tag/tensorflow/" class="tag-cloud-link tag-link-417619185 tag-link-position-45" style="font-size: 1em;">tensorflow</a></li>
+	<li><a href="https://nickcdryan.com/tag/transfer-learning/" class="tag-cloud-link tag-link-4600650 tag-link-position-46" style="font-size: 1em;">transfer learning</a></li>
+	<li><a href="https://nickcdryan.com/tag/transformations/" class="tag-cloud-link tag-link-101230 tag-link-position-47" style="font-size: 1em;">transformations</a></li>
+	<li><a href="https://nickcdryan.com/tag/tutorial/" class="tag-cloud-link tag-link-2932 tag-link-position-48" style="font-size: 1em;">tutorial</a></li>
+	<li><a href="https://nickcdryan.com/tag/twitter/" class="tag-cloud-link tag-link-599182 tag-link-position-49" style="font-size: 1em;">twitter</a></li>
+	<li><a href="https://nickcdryan.com/tag/visualization/" class="tag-cloud-link tag-link-44111 tag-link-position-50" style="font-size: 1em;">visualization</a></li>
+	<li><a href="https://nickcdryan.com/tag/web-scraping/" class="tag-cloud-link tag-link-1311799 tag-link-position-51" style="font-size: 1em;">web scraping</a></li>
+	<li><a href="https://nickcdryan.com/tag/xlnet/" class="tag-cloud-link tag-link-684723075 tag-link-position-52" style="font-size: 1em;">XLNet</a></li>
+</ul>
+</section>	</aside><!-- .sidebar .widget-area -->
+
+		</div><!-- .site-content -->
+
+		<footer id="colophon" class="site-footer">
+							<nav class="main-navigation" aria-label="Footer Primary Menu">
+					<div class="menu-primary-container"><ul id="menu-primary-1" class="primary-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8"><a href="/">Home</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9"><a rel="about" href="https://nickcdryan.com/about/">About</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10"><a href="https://nickcdryan.com/contact/">Contact</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-395"><a target="_blank" rel="noopener" href="https://nickcdryan.files.wordpress.com/2023/07/7-2023-resume.pdf">CV</a></li>
+</ul></div>				</nav><!-- .main-navigation -->
+			
+							<nav class="social-navigation" aria-label="Footer Social Links Menu">
+					<div class="menu-social-media-container"><ul id="menu-social-media-1" class="social-links-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-281"><a href="http://www.github.com/nickcdryan"><span class="screen-reader-text">Github</span></a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-282"><a href="https://www.linkedin.com/in/nick-ryan-a687ba64"><span class="screen-reader-text">LinkedIn</span></a></li>
+</ul></div>				</nav><!-- .social-navigation -->
+			
+			<div class="site-info">
+								<span class="site-title"><a href="https://nickcdryan.com/" rel="home">Nick Ryan</a></span>
+								<a href="https://wordpress.com/?ref=footer_blog" rel="nofollow">Blog at WordPress.com.</a>
+			</div><!-- .site-info -->
+		</footer><!-- .site-footer -->
+	</div><!-- .site-inner -->
+</div><!-- .site -->
+
+<!--  -->
+<script src="//0.gravatar.com/js/hovercards/hovercards.min.js?ver=202346aeb24331352c11f5446dd670d75325a3c4e3b8a6bd7f92ee1c88f8b8636d4d9c" id="grofiles-cards-js"></script>
+<script id="wpgroho-js-extra">
+var WPGroHo = {"my_hash":""};
+</script>
+<script crossorigin='anonymous' type='text/javascript' src='https://s0.wp.com/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1610363240i'></script>
+
+	<script>
+		// Initialize and attach hovercards to all gravatars
+		( function() {
+			function init() {
+				if ( typeof Gravatar === 'undefined' ) {
+					return;
+				}
+
+				if ( typeof Gravatar.init !== 'function' ) {
+					return;
+				}
+
+				Gravatar.profile_cb = function ( hash, id ) {
+					WPGroHo.syncProfileData( hash, id );
+				};
+
+				Gravatar.my_hash = WPGroHo.my_hash;
+				Gravatar.init(
+					'body',
+					'#wp-admin-bar-my-account',
+					{
+						i18n: {
+							'Edit your profile': 'Edit your profile',
+							'View profile': 'View profile',
+							'Sorry, we are unable to load this Gravatar profile.': 'Sorry, we are unable to load this Gravatar profile.',
+							'Sorry, we are unable to load this Gravatar profile. Please check your internet connection.': 'Sorry, we are unable to load this Gravatar profile. Please check your internet connection.',
+						},
+					}
+				);
+			}
+
+			if ( document.readyState !== 'loading' ) {
+				init();
+			} else {
+				document.addEventListener( 'DOMContentLoaded', init );
+			}
+		} )();
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-d4c177ad5e10fb7816235b79a0f0a2eb">
+	</div>
+	<div class="grofile-hash-map-f36128b155bdfe7826a8f53215926a95">
+	</div>
+	<div class="grofile-hash-map-d4c177ad5e10fb7816235b79a0f0a2eb">
+	</div>
+	</div>
+	<div id="actionbar" style="display: none;"
+			class="actnbr-pub-twentysixteen actnbr-has-follow">
+		<ul>
+								<li class="actnbr-btn actnbr-hidden">
+						<a class="actnbr-action actnbr-actn-comment" href="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/#comments">
+							<svg class="gridicon gridicons-comment" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M12 16l-5 5v-5H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v9c0 1.1-.9 2-2 2h-7z"/></g></svg>							<span>Comment						</span>
+						</a>
+					</li>
+									<li class="actnbr-btn actnbr-hidden">
+								<a class="actnbr-action actnbr-actn-follow " href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z"  fill-rule="evenodd"></path></svg>
+			<span>Follow</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Following</span>
+		</a>
+							<div class="actnbr-popover tip tip-top-left actnbr-notice" id="follow-bubble">
+							<div class="tip-arrow"></div>
+							<div class="tip-inner actnbr-follow-bubble">
+															<ul>
+											<li class="actnbr-sitename">
+			<a href="https://nickcdryan.com">
+				<img alt='' src='https://s0.wp.com/i/logo/wpcom-gray-white.png' srcset='https://s0.wp.com/i/logo/wpcom-gray-white.png 1x' class='avatar avatar-50' height='50' width='50' />				Nick Ryan			</a>
+		</li>
+										<form method="post" action="https://subscribe.wordpress.com" accept-charset="utf-8" style="display: none;">
+																				<div>
+										<input type="email" name="email" placeholder="Enter your email address" class="actnbr-email-field" aria-label="Enter your email address" />
+										</div>
+										<input type="hidden" name="action" value="subscribe" />
+										<input type="hidden" name="blog_id" value="122804722" />
+										<input type="hidden" name="source" value="https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/" />
+										<input type="hidden" name="sub-type" value="actionbar-follow" />
+										<input type="hidden" id="_wpnonce" name="_wpnonce" value="fc88c6daa3" />										<div class="actnbr-button-wrap">
+											<button type="submit" value="Sign me up">
+												Sign me up											</button>
+										</div>
+									</form>
+									<li class="actnbr-login-nudge">
+										<div>
+											Already have a WordPress.com account? <a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fnickcdryan.com%252F2017%252F09%252F13%252Froot-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents%252F">Log in now.</a>										</div>
+									</li>
+								</ul>
+															</div>
+						</div>
+					</li>
+									<li class="actnbr-btn actnbr-hidden no-display" onclick="javascript:__tcfapi( 'showUi' );">
+						<a class="actnbr-action actnbr-actn-privacy" href="#">
+							<svg class="gridicon gridicons-info-outline" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M13 9h-2V7h2v2zm0 2h-2v6h2v-6zm-1-7c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8m0-2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z"/></g></svg>							<span>Privacy						</span>
+						</a>
+					</li>
+							<li class="actnbr-ellipsis actnbr-hidden">
+				<svg class="gridicon gridicons-ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M7 12c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm12-2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-7 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z"/></g></svg>				<div class="actnbr-popover tip tip-top-left actnbr-more">
+					<div class="tip-arrow"></div>
+					<div class="tip-inner">
+						<ul>
+									<li class="actnbr-sitename">
+			<a href="https://nickcdryan.com">
+				<img alt='' src='https://s0.wp.com/i/logo/wpcom-gray-white.png' srcset='https://s0.wp.com/i/logo/wpcom-gray-white.png 1x' class='avatar avatar-50' height='50' width='50' />				Nick Ryan			</a>
+		</li>
+								<li class="actnbr-folded-customize">
+								<a href="https://nickcdryan.wordpress.com/wp-admin/customize.php?url=https%3A%2F%2Fnickcdryan.wordpress.com%2F2017%2F09%2F13%2Froot-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents%2F">
+									<svg class="gridicon gridicons-customize" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M2 6c0-1.505.78-3.08 2-4 0 .845.69 2 2 2 1.657 0 3 1.343 3 3 0 .386-.08.752-.212 1.09.74.594 1.476 1.19 2.19 1.81L8.9 11.98c-.62-.716-1.214-1.454-1.807-2.192C6.753 9.92 6.387 10 6 10c-2.21 0-4-1.79-4-4zm12.152 6.848l1.34-1.34c.607.304 1.283.492 2.008.492 2.485 0 4.5-2.015 4.5-4.5 0-.725-.188-1.4-.493-2.007L18 9l-2-2 3.507-3.507C18.9 3.188 18.225 3 17.5 3 15.015 3 13 5.015 13 7.5c0 .725.188 1.4.493 2.007L3 20l2 2 6.848-6.848c1.885 1.928 3.874 3.753 5.977 5.45l1.425 1.148 1.5-1.5-1.15-1.425c-1.695-2.103-3.52-4.092-5.448-5.977z"/></g></svg>									<span>Customize</span>
+								</a>
+							</li>
+																<li class="actnbr-folded-follow">
+												<a class="actnbr-action actnbr-actn-follow " href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z"  fill-rule="evenodd"></path></svg>
+			<span>Follow</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Following</span>
+		</a>
+										</li>
+																	<li class="actnbr-signup"><a href="https://wordpress.com/start/">Sign up</a></li>
+									<li class="actnbr-login"><a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fnickcdryan.com%252F2017%252F09%252F13%252Froot-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents%252F">Log in</a></li>
+																	<li class="actnbr-shortlink"><a href="https://wp.me/p8jh7k-VZ">Copy shortlink</a></li>
+																	<li class="flb-report">
+										<a href="http://en.wordpress.com/abuse/?report_url=https://nickcdryan.com/2017/09/13/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents/" target="_blank">
+											Report this content										</a>
+									</li>
+																	<li class="actnbr-reader">
+										<a href="https://wordpress.com/read/blogs/122804722/posts/3595">
+											View post in Reader										</a>
+									</li>
+																	<li class="actnbr-subs">
+										<a href="https://subscribe.wordpress.com/">Manage subscriptions</a>
+									</li>
+																		<li class="actnbr-fold"><a href="">Collapse this bar</a></li>
+															</ul>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+<script>
+window.addEventListener( "load", function( event ) {
+	var link = document.createElement( "link" );
+	link.href = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.css?v=20231110";
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.head.appendChild( link );
+
+	var script = document.createElement( "script" );
+	script.src = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.js?v=20231110";
+	script.defer = true;
+	document.body.appendChild( script );
+} );
+</script>
+
+			<div id="jp-carousel-loading-overlay">
+			<div id="jp-carousel-loading-wrapper">
+				<span id="jp-carousel-library-loading">&nbsp;</span>
+			</div>
+		</div>
+		<div class="jp-carousel-overlay" style="display: none;">
+
+		<div class="jp-carousel-container">
+			<!-- The Carousel Swiper -->
+			<div
+				class="jp-carousel-wrap swiper-container jp-carousel-swiper-container jp-carousel-transitions"
+				itemscope
+				itemtype="https://schema.org/ImageGallery">
+				<div class="jp-carousel swiper-wrapper"></div>
+				<div class="jp-swiper-button-prev swiper-button-prev">
+					<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<mask id="maskPrev" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="6" width="9" height="12">
+							<path d="M16.2072 16.59L11.6496 12L16.2072 7.41L14.8041 6L8.8335 12L14.8041 18L16.2072 16.59Z" fill="white"/>
+						</mask>
+						<g mask="url(#maskPrev)">
+							<rect x="0.579102" width="23.8823" height="24" fill="#FFFFFF"/>
+						</g>
+					</svg>
+				</div>
+				<div class="jp-swiper-button-next swiper-button-next">
+					<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<mask id="maskNext" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="6" width="8" height="12">
+							<path d="M8.59814 16.59L13.1557 12L8.59814 7.41L10.0012 6L15.9718 12L10.0012 18L8.59814 16.59Z" fill="white"/>
+						</mask>
+						<g mask="url(#maskNext)">
+							<rect x="0.34375" width="23.8822" height="24" fill="#FFFFFF"/>
+						</g>
+					</svg>
+				</div>
+			</div>
+			<!-- The main close buton -->
+			<div class="jp-carousel-close-hint">
+				<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<mask id="maskClose" mask-type="alpha" maskUnits="userSpaceOnUse" x="5" y="5" width="15" height="14">
+						<path d="M19.3166 6.41L17.9135 5L12.3509 10.59L6.78834 5L5.38525 6.41L10.9478 12L5.38525 17.59L6.78834 19L12.3509 13.41L17.9135 19L19.3166 17.59L13.754 12L19.3166 6.41Z" fill="white"/>
+					</mask>
+					<g mask="url(#maskClose)">
+						<rect x="0.409668" width="23.8823" height="24" fill="#FFFFFF"/>
+					</g>
+				</svg>
+			</div>
+			<!-- Image info, comments and meta -->
+			<div class="jp-carousel-info">
+				<div class="jp-carousel-info-footer">
+					<div class="jp-carousel-pagination-container">
+						<div class="jp-swiper-pagination swiper-pagination"></div>
+						<div class="jp-carousel-pagination"></div>
+					</div>
+					<div class="jp-carousel-photo-title-container">
+						<h2 class="jp-carousel-photo-caption"></h2>
+					</div>
+					<div class="jp-carousel-photo-icons-container">
+						<a href="#" class="jp-carousel-icon-btn jp-carousel-icon-info" aria-label="Toggle photo metadata visibility">
+							<span class="jp-carousel-icon">
+								<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<mask id="maskInfo" mask-type="alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="21" height="20">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M12.7537 2C7.26076 2 2.80273 6.48 2.80273 12C2.80273 17.52 7.26076 22 12.7537 22C18.2466 22 22.7046 17.52 22.7046 12C22.7046 6.48 18.2466 2 12.7537 2ZM11.7586 7V9H13.7488V7H11.7586ZM11.7586 11V17H13.7488V11H11.7586ZM4.79292 12C4.79292 16.41 8.36531 20 12.7537 20C17.142 20 20.7144 16.41 20.7144 12C20.7144 7.59 17.142 4 12.7537 4C8.36531 4 4.79292 7.59 4.79292 12Z" fill="white"/>
+									</mask>
+									<g mask="url(#maskInfo)">
+										<rect x="0.8125" width="23.8823" height="24" fill="#FFFFFF"/>
+									</g>
+								</svg>
+							</span>
+						</a>
+												<a href="#" class="jp-carousel-icon-btn jp-carousel-icon-comments" aria-label="Toggle photo comments visibility">
+							<span class="jp-carousel-icon">
+								<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<mask id="maskComments" mask-type="alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="21" height="20">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M4.3271 2H20.2486C21.3432 2 22.2388 2.9 22.2388 4V16C22.2388 17.1 21.3432 18 20.2486 18H6.31729L2.33691 22V4C2.33691 2.9 3.2325 2 4.3271 2ZM6.31729 16H20.2486V4H4.3271V18L6.31729 16Z" fill="white"/>
+									</mask>
+									<g mask="url(#maskComments)">
+										<rect x="0.34668" width="23.8823" height="24" fill="#FFFFFF"/>
+									</g>
+								</svg>
+
+								<span class="jp-carousel-has-comments-indicator" aria-label="This image has comments."></span>
+							</span>
+						</a>
+											</div>
+				</div>
+				<div class="jp-carousel-info-extra">
+					<div class="jp-carousel-info-content-wrapper">
+						<div class="jp-carousel-photo-title-container">
+							<h2 class="jp-carousel-photo-title"></h2>
+						</div>
+						<div class="jp-carousel-comments-wrapper">
+															<div id="jp-carousel-comments-loading">
+									<span>Loading Comments...</span>
+								</div>
+								<div class="jp-carousel-comments"></div>
+								<div id="jp-carousel-comment-form-container">
+									<span id="jp-carousel-comment-form-spinner">&nbsp;</span>
+									<div id="jp-carousel-comment-post-results"></div>
+																														<form id="jp-carousel-comment-form">
+												<label for="jp-carousel-comment-form-comment-field" class="screen-reader-text">Write a Comment...</label>
+												<textarea
+													name="comment"
+													class="jp-carousel-comment-form-field jp-carousel-comment-form-textarea"
+													id="jp-carousel-comment-form-comment-field"
+													placeholder="Write a Comment..."
+												></textarea>
+												<div id="jp-carousel-comment-form-submit-and-info-wrapper">
+													<div id="jp-carousel-comment-form-commenting-as">
+																													<fieldset>
+																<label for="jp-carousel-comment-form-email-field">Email (Required)</label>
+																<input type="text" name="email" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-email-field" />
+															</fieldset>
+															<fieldset>
+																<label for="jp-carousel-comment-form-author-field">Name (Required)</label>
+																<input type="text" name="author" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-author-field" />
+															</fieldset>
+															<fieldset>
+																<label for="jp-carousel-comment-form-url-field">Website</label>
+																<input type="text" name="url" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-url-field" />
+															</fieldset>
+																											</div>
+													<input
+														type="submit"
+														name="submit"
+														class="jp-carousel-comment-form-button"
+														id="jp-carousel-comment-form-button-submit"
+														value="Post Comment" />
+												</div>
+											</form>
+																											</div>
+													</div>
+						<div class="jp-carousel-image-meta">
+							<div class="jp-carousel-title-and-caption">
+								<div class="jp-carousel-photo-info">
+									<h3 class="jp-carousel-caption" itemprop="caption description"></h3>
+								</div>
+
+								<div class="jp-carousel-photo-description"></div>
+							</div>
+							<ul class="jp-carousel-image-exif" style="display: none;"></ul>
+							<a class="jp-carousel-image-download" href="#" target="_blank" style="display: none;">
+								<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="3" y="3" width="19" height="18">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M5.84615 5V19H19.7775V12H21.7677V19C21.7677 20.1 20.8721 21 19.7775 21H5.84615C4.74159 21 3.85596 20.1 3.85596 19V5C3.85596 3.9 4.74159 3 5.84615 3H12.8118V5H5.84615ZM14.802 5V3H21.7677V10H19.7775V6.41L9.99569 16.24L8.59261 14.83L18.3744 5H14.802Z" fill="white"/>
+									</mask>
+									<g mask="url(#mask0)">
+										<rect x="0.870605" width="23.8823" height="24" fill="#FFFFFF"/>
+									</g>
+								</svg>
+								<span class="jp-carousel-download-text"></span>
+							</a>
+							<div class="jp-carousel-image-map" style="display: none;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		</div>
+		
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/nickcdryan.com\/2017\/09\/13\/root-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents\/":3595};
+	</script>
+				<script crossorigin='anonymous' type='text/javascript' src='https://s0.wp.com/_static/??-eJzTLy/QTc7PK0nNK9EvyClNz8wr1i+uzCtJrMjITM/IAeKS1CJMEWP94uSizIISoOIM5/yiVL2sYh19yo1yKiotzgioLMnIzwOaaJ9ra2hmaGpibmZpbJQFAFtgQQs='></script>
+<script type='text/javascript'>
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "https://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?ver=3.0.9b";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.head.appendChild( corecss );
+		var themecssurl = "https://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?m=1363304414i&amp;ver=3.0.9b";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		document.head.appendChild( themecss );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '?';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = 'Can\'t find brush for: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush wasn\'t configured for html-script option: ';
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+
+	// Infinite scroll support
+	document.addEventListener( 'is.post-load', function () {
+		SyntaxHighlighter.highlight();
+	} );
+</script>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-0-2' href='https://s0.wp.com/_static/??-eJyljEsKgDAMBS9kDUUquhDPom0Qaz/BNHh9KdgTuBl4w2PgIWVzKpgKRFEU5DgTg8dCm72+DTHnCicBGex2Z2EMwM9JeKtdkgvYW+YOftTaqYkaXOOix8noQU+z8S9MR0BZ&cssminify=yes' type='text/css' media='all' />
+<script id="comment-like-js-extra">
+var comment_like_text = {"loading":"Loading...","swipeUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/comment-likes\/js\/lib\/swipe.js?ver=20131008"};
+</script>
+<script id="twentysixteen-script-js-extra">
+var screenReaderText = {"expand":"expand child menu","collapse":"collapse child menu"};
+</script>
+<script id="jetpack-carousel-js-extra">
+var jetpackSwiperLibraryPath = {"url":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/jetpack-plugin\/moon\/_inc\/build\/carousel\/swiper-bundle.min.js"};
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/nickcdryan.com\/wp-admin\/admin-ajax.php","nonce":"d5e035f59d","display_exif":"1","display_comments":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","copyright":"Copyright","comment_registration":"0","require_name_email":"1","login_url":"https:\/\/nickcdryan.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fnickcdryan.com%2F2017%2F09%2F13%2Froot-finding-algorithms-in-python-line-search-bisection-secant-newton-raphson-boydens-inverse-quadratic-interpolation-brents%2F","blog_id":"122804722","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"stats_query_args":"blog=122804722&v=wpcom&tz=0&user_id=0&subd=nickcdryan","is_public":"1"};
+</script>
+<script id="sharing-js-js-extra">
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+</script>
+<script id="verbum-settings-js-before">
+window.VerbumComments = {"Log in or provide your name and email to leave a reply.":"Log in or provide your name and email to leave a reply.","Receive web and mobile notifications for posts on this site.":"Receive web and mobile notifications for posts on this site.","Name":"Name","Email (address never made public)":"Email (address never made public)","Website (optional)":"Website (optional)","Leave a reply. (log in optional)":"Leave a reply. (log in optional)","Log in to leave a reply.":"Log in to leave a reply.","Logged in via %s":"Logged in via %s","Log out":"Log out","Email":"Email","(Address never made public)":"(Address never made public)","Instantly":"Instantly","Daily":"Daily","Reply":"Reply","WordPress":"WordPress","Weekly":"Weekly","Notify me of new posts":"Notify me of new posts","Email me new posts":"Email me new posts","Email me new comments":"Email me new comments","Cancel":"Cancel","Write a comment...":"Write a Comment...","Website":"Website","Optional":"Optional","We'll keep you in the loop!":"We'll keep you in the loop!","Never miss a beat!":"Never miss a beat!","Interested in getting blog post updates? Simply click the button below to stay in the loop!":"Interested in getting blog post updates? Simply click the button below to stay in the loop!","Enter your email address":"Enter your email address","Subscribe":"Subscribe","siteId":122804722,"postId":3595,"mustLogIn":false,"requireNameEmail":true,"commentRegistration":false,"connectURL":"https:\/\/nickcdryan.wordpress.com\/public.api\/connect\/?action=request&domain=nickcdryan.com","logoutURL":"https:\/\/nickcdryan.wordpress.com\/wp-login.php?action=logout&_wpnonce=bb8c949bda","homeURL":"https:\/\/nickcdryan.com\/","subscribeToBlog":true,"subscribeToComment":true,"isJetpackCommentsLoggedIn":false,"jetpackUsername":"","jetpackUserId":0,"jetpackSignature":"","jetpackAvatar":"https:\/\/0.gravatar.com\/avatar\/?s=96&amp;d=identicon&amp;r=G","enableBlocks":false,"enableSubscriptionModal":true,"isJetpackComments":false}
+</script>
+<script crossorigin='anonymous' type='text/javascript' src='https://s0.wp.com/_static/??-eJydUNtOwzAM/SEygzYV9QHxKShN3NVt4oQ4oevfU7YWjTJNgrf46FwDY1QmcEbO4IuKrhyJBRwNKPBesGCn2TpMu14e4Db5A1NTPGgRzAJ2Yu3JKBe0vSszwfsZUpesfgNshblDP9NiaSCPMzAJnTIifwlloDireFBtMEVUS6dVTmxcsT/9E0Y37TzxXzLawiZT4F/Frhb1mKM2w3KDD4HhbW4ATSFnwegUiqD75q3ArS5Xtnog8ZjVfvd4sVuBNp3J9t4nLxFqjPP8zfn/KdLphFZbO52fxMdlw6t/earq+lBVz/W+/wT+nOQZ'></script>
+<script id="sharing-js-js-after">
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-twitter' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-twitter' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+						return false;
+					}
+				} );
+			} )();
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-facebook' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-facebook' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+						return false;
+					}
+				} );
+			} )();
+</script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>	<iframe src='https://widgets.wp.com/likes/master.html?ver=20230906#ver=20230906&amp;origin=https://nickcdryan.com' scrolling='no' id='likes-master' name='likes-master' style='display:none;'></iframe>
+	<div id='likes-other-gravatars'>
+		<div class="likes-text">
+			<span>%d</span> bloggers like this:		</div>
+		<ul class="wpl-avatars sd-like-gravatars"></ul>
+	</div>
+
+		<script src="//stats.wp.com/w.js?64" defer></script> <script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'122804722','blog_tz':'0','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'122804722','v':'wpcom','tz':'0','user_id':'0','post':'3595','subd':'nickcdryan'}]);
+_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1mNzc2NTVTamdsd0xoLz9RQkM2K298TXY9bERQMXc2MjhEaVZfb2wwakRoSj0mUkp1THptM1NdbkV1WjZIcU9mVWQmPUIvMlN6Jk8wW3NYVEJ3dWZOWExuWD9VNTEucGUwVDREUEpscXB+Y21XfHZTPUZ+WV0/Nnl8WzRRL0oreG1XYVpiaUVMWEpvV0VCUytvdWZBLz1oWz0mVSVVRnU9MUZqMUJtT1drNDkwR1IrT05ISjVCK3FTdVBrQnNZYyxqM3Y0TlFpOVJ5RG1PZnBtSkQleGk0bERVRy8/LzExWGN1TFcwZTh4cXRHM0xSW1FVVE5rQW9KYlczJlp3ZGRtTC9ZbWJpQktaZVMxOFQsUThyOGVmdSw4UUcvRF1vcmQveE1oYytiXy92dURzLCthd3xiMjdaMHBvTXp6P1RwLGwrMm5xVitmWQ=='}]);
+_stq.push([ 'clickTrackerInit', '122804722', '3595' ]);
+	</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:1px;width:1px;overflow:hidden;position:absolute;bottom:1px;" alt="" /></noscript>
+<script defer id="bilmur" data-customproperties="{&quot;logged_in&quot;:&quot;0&quot;,&quot;wptheme&quot;:&quot;pub\/twentysixteen&quot;,&quot;wptheme_is_block&quot;:&quot;0&quot;}" data-provider="wordpress.com" data-service="simple"  src="/wp-content/js/bilmur.min.js?i=11&m=202346"></script><script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+<script>
+(function() {
+	'use strict';
+
+	const fetches = {};
+	const promises = {};
+	const urls = {
+		'verbum': 'https://s0.wp.com/wp-content/mu-plugins/verbum/dist/index.js?m=1700063857i&ver=1700063857'
+	};
+	const loaders = {
+		'verbum': () => {
+			fetchExternalScript('verbum');
+			promises['verbum'] = promises['verbum'] || loadWPScript('verbum');
+			return promises['verbum'];
+		},
+		
+	};
+	const scriptExtras = {
+		
+	};
+
+	window.WP_Enqueue_Dynamic_Script = {
+		loadScript: (handle) => {
+			if (!loaders[handle]) {
+				console.error('WP_Enqueue_Dynamic_Script: unregistered script `' + handle + '`.');
+			}
+			return loaders[handle]();
+		}
+	};
+
+	function fetchExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		fetches[handle] = fetches[handle] || fetch(urls[handle], { mode: 'no-cors' });
+		return fetches[handle];
+	}
+
+	function runExtraScript(handle, type, index) {
+		const id = 'wp-enqueue-dynamic-script:' + handle + ':' + type + ':' + (index + 1);
+		const template = document.getElementById(id);
+		if (!template) {
+			return Promise.reject();
+		}
+
+		const script = document.createElement( 'script' );
+		script.innerHTML = template.innerHTML;
+		document.body.appendChild( script );
+		return Promise.resolve();
+	}
+
+	function loadExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		return fetches[handle].then(() => {
+			return new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.onload = () => resolve();
+				script.onerror = (e) => reject(e);
+				script.src = urls[handle];
+				document.body.appendChild(script);
+			});
+		});
+	}
+
+	function loadExtra(handle, pos) {
+		const count = (scriptExtras[handle] && scriptExtras[handle][pos]) || 0;
+		let promise = Promise.resolve();
+
+		for (let i = 0; i < count; i++) {
+			promise = promise.then(() => runExtraScript(handle, pos, i));
+		}
+
+		return promise;
+	}
+
+	function loadWPScript(handle) {
+		return loadExtra(handle, 'before')
+			.then(() => loadExternalScript(handle))
+			.then(() => loadExtra(handle, 'after'));
+	}
+} )();
+</script>
+</body>
+</html>

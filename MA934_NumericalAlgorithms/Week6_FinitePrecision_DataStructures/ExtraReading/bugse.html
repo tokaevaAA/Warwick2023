@@ -1,0 +1,2914 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!-- saved from url=(0068)bugse.html -->
+
+<!-- saved from url=(0074)bugse.html --><HTML><HEAD><TITLE>Software Bugs - Software Glitches</TITLE>
+
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta content="Technische Universität München, TUM,
+               Informatik, Numerik, Hochleistungrechnen">
+<meta NAME="keywords" content="Software bugs, Software glitches, Software errors, 
+      rounding errors, Disasters">
+<STYLE>.wichtig {
+
+	FONT-WEIGHT: bold; COLOR: red
+
+}
+
+</STYLE>
+
+<meta NAME="language" CONTENT="English">
+
+<meta NAME="description" content="Collection of Software bugs, glitches, errors, 
+disasters like Ariane 5, Pentium bug, Sleipner, Patriot, Mars Climate Orbiter, 
+Mars Sojourner, London Millenium Bridge, Mars Rover Spirit, Pathfinder,
+denver Airport, Therac-25">
+
+
+<META content="MSHTML 6.00.2800.1126" name=GENERATOR></HEAD>
+
+<BODY>
+
+<H1>Collection of Software Bugs </H1>
+
+Prof. Thomas Huckle <BR>Institut für Informatik <BR>TU München 
+
+<BR>huckle@in.tum.de <BR><BR><SPAN class=wichtig>Last modified: May/3/2019 
+
+</SPAN><BR><BR>
+"If you look at a big enough population long enough, then almost any damn thing will happen" (Persi Diaconis)
+
+
+<HR>
+<HR>
+
+<BR><H2><A 
+
+href="bugse.html#WWW">General 
+
+Web Sites on Bugs</A><BR><A 
+ 
+href="bugse.html#general">Bugs 
+
+in general</A> <BR><A 
+
+href="http://www5.in.tum.de/lehre/seminare/semsoft/unterlagen_02">Collection of 
+
+seminar talks on major software bugs (in German)</A> <BR>
+<A href="https://thenextweb.com/shareables/2013/09/18/the-very-first-computer-bug/">"The first
+Computer Bug!"</A>, see also <A href="
+https://www.computerhistory.org/tdih/september/9/">"First" Computer Bug</A> and 
+<A href="http://www.worldwidewords.org/qa/qa-bug1.htm"> Origin of computer bug</A>
+<BR><A href="bugs_neu.flv">Video on Software Bugs as a flash file</A> 
+<BR>
+<A href="bugs_film.html">Play Video on Software Bugs</A>
+<BR>
+<A href="http://wissen.dradio.de/hypo-real-estate-verkalkuliert-rechenfehler-mit-folgen.33.de.html?dram:article_id=13235">
+Interview "Unzuverlässige Software" in DRadio Wissen</A>
+<HR>
+
+<BR>Recent Bugs<BR>
+<H4> Boeing 737 MAX 8:
+<BR>
+<A href="https://reports.aviation-safety.net/2018/20181029-0_B38M_PK-LQP_PRELIMINARY.pdf"> Report on Lion Air 
+Crash, Indonesia, 28 October 2018</A>,
+<BR>
+<A href="https://www.airlive.net/ntsc-indonesia-publishes-preliminary-report-on-jt610-boeing-737-max-8-crash/"> 
+Summary of Lion Air report</A>,
+<BR>
+<A href="https://www.newyorker.com/news/our-columnists/how-did-the-faa-allow-the-boeing-737-max-to-fly">
+The New Yorker on Ethiopian Airlines crash, March 2019, FAA and Boeing</A>,
+<BR>
+<A href="https://www.aviationcv.com/aviation-blog/2019/shocking-facts-boeing-737max-crash">Aviation Blog: More 
+shocking facts</A>,
+<BR>
+<A href="https://edition.cnn.com/2019/03/13/politics/boeing-737-max-8-software/index.html">Delay of software update 
+and government shutdown</A>. 
+
+<H4>Collapse of Miami foot bridge, March 2018:
+<A href="https://www.ntsb.gov/investigations/accidentreports/pages/hwy18mh009-investigative-update2.aspx">Preliminary 
+Report</A>,
+<A href="http://www.materialsperformance.com/articles/material-selection-design/2019/01/investigators-design-issues-behind-florida-bridge-collapse">
+Design Issues</A>.
+
+<H4>XEROX Scanner bug, 2013:
+<A href="https://www.xerox.com/assets/pdf/ScanningQAincludingAppendixA.pdf">XEROX webpage</A>,
+<A href="https://en.wikipedia.org/wiki/Xerox">Wikipedia Xerox page</A>,
+<A href="http://www.dkriesel.com/blog/2013/0802_xerox-workcentres_are_switching_written_numbers_when_scanning">
+D. Kriesel</A>,
+<A href="https://www.spektrum.de/magazin/kompressionssoftware-veraenderte-ziffern/1309306">
+Spektrum der Wissenschaft</A>,
+<A href="http://www.dkriesel.com/blog/2013/0802_xerox-workcentres_are_switching_written_numbers_when_scanning">Kriesel
+Webpage</A>, 
+<A href="http://www.dkriesel.com/en/blog/2013/0802_xerox-workcentres_are_switching_written_numbers_when_scanning">
+English version</A>.
+
+<H4>Bitcoin integer overflow 2010:
+<A href="http://satoshinakamoto.me/2010/08/15/re-overflow-bug-serious/">Satoshi</A>,
+<A href="https://bitcoinmagazine.com/articles/bitcoin-network-shaken-by-blockchain-fork-1363144448/">bitcoinmagazine
+</A>, 
+<A href="http://blog.theshayan.com/2017/12/01/once-there-were-184-billion-bitcoins/">The Shayan</A>,
+<A href="https://bitcointalk.org/index.php?topic=822.0">bitcointalk</A>,
+<A href="https://bitfalls.com/2018/01/14/curious-case-184-billion-bitcoin/">Bruno bitfalls</A>,
+<A href="https://github.com/bitcoin/bitcoin/commit/d4c6b90ca3f9b47adb1b2724a0c3514f80635c84#diff-118fcbaaba162ba17933c7893247df3aR1013">
+Bitcoin transaction</A>,
+<A href="237fe8348fc77ace11049931058abb034c99698c7fe99b1cc022b1365a705d39">related bitcoin transaction</A>
+
+<H4> Security bug in the open-source OpenSSL cryprography library
+<A href="http://en.wikipedia.org/wiki/Heartbleed">Heartbleed Wikipedia</A>,
+<A href="http://heartbleed.com/">Heartbleed</A>,
+<A href="https://xkcd.com/1354/">Graphical Explanation</A>.
+
+<H4>Security Bug in LINUX shell: Shellshock, Bashbug, Bashdoor:
+<A href="http://en.wikipedia.org/wiki/Shellshock_%28software_bug%29">Shellshock Wikipedia</A>,
+<A href="http://www.troyhunt.com/2014/09/everything-you-need-to-know-about.html">Explanation 1</A>,
+<A href="http://arstechnica.com/security/2014/09/bug-in-bash-shell-creates-big-security-hole-on-anything-with-nix-in-it/">
+Explanation 2</A>.
+
+<H4> Measuring error in Olympic games <A href="http://www.spiegel.de/sport/sonst/olympia-2012-software-fehler-schuld-an-heidler-drama-im-hammerwurf-a-849533.html">
+Hammer throwing, London, August 2012</A>, 
+<A href="http://www.stevestandf.com/home/race-results/2011-t-f-results/london-2012">1</A>,
+<A href="http://www.sueddeutsche.de/news/sport/leichtathletik-wieder-softwarefehler-bei-heidlers-hammerwurf-dpa.urn-newsml-dpa-com-20090101-140813-99-05478">
+2</A>.
+
+<H4>Failure of Phobos Grunt:
+<A href="http://en.wikipedia.org/wiki/Fobos-Grunt">Wikipedia</A>,
+<A href="http://www.russianspaceweb.com/phobos_grunt_kik.html">1</A>,
+<A href="http://www.augsburger-allgemeine.de/wissenschaft/Programmierfehler-Russische-Marssonde-Phobos-Grunt-nicht-mehr-zu-retten-id17476916.html">
+2</A>.
+
+<H4> Galileo failure
+<A href="http://www.golem.de/news/galileo-debakel-russischer-software-fehler-soll-schuld-sein-1408-108910.html">Debakel</A>,
+<A href="http://sputniknews.com/world/20140828/192413515.html">Sputniknews</A>.
+
+<H4>ISS: Cygnus - antares Absturz, ORBITAL ATK
+<A href="http://www.focus.de/wissen/weltraum/raumfahrt/nasa-video-zeigt-explosion-start-des-us-raumfrachters-cygnus-endet-in-inferno_id_4233566.html">
+Cygnus explosion</A>,
+<A href="http://www.nasa.gov/mission_pages/station/structure/launch/orbital.html#.VFihs8kjQmY">NASA</A>.
+
+<H4>Spaceship Two - Virgin Galactic Crash
+<A href="http://www.golem.de/news/virgin-galactic-brachte-ein-falsches-kommando-das-spaceship-two-zum-absturz-1411-110269.html">
+Spacehip Two</A>.
+
+<H4>Mars Rover Curiosity bug
+<A href="http://www.zdnet.com/nasa-fixes-bug-that-put-curiosity-mars-rover-on-standby-7000012892/">NASA</A>,
+
+<H4> Malaysian MH 370
+<A href="http://catless.ncl.ac.uk/Risks/27.82.html#subj1">Possible reasons</A>
+
+<H4> Germanwings 9525
+<A href="http://en.wikipedia.org/wiki/Germanwings_Flight_9525">Locked Door</A>
+
+<H4> Software bug leads to retardation of brake system in ICE 
+<A href="http://www.focus.de/finanzen/news/wirtschaftsticker/technikprobleme-deutsche-bahn-muss-weiter-auf-neue-ice-zuege-warten_aid_865726.html">Delay in admission of new ICE trains, November 2012</A>,
+<A href="http://www.zeit.de/wirtschaft/unternehmen/2012-11/bombardier-zuege-talent">1</A>,
+<A href="http://www.dradio.de/dlf/sendungen/wirtschaftammittag/1929240/">2</A>,
+<A href="http://www.tagesspiegel.de/wirtschaft/softwareprobleme-ice-bremsen-zu-spaet/7435884.html">3</A>.
+
+<H4> France, Standard and Poor's Credit Rating
+<A href="http://www.faz.net/aktuell/wirtschaft/frankreichs-irrtuemliche-herabstufung-standard-poor-s-es-war-ein-computerfehler-11526262.html">
+1</A>,
+<A href="http://derstandard.at/1319182725765/Ratingagentur-SP-Frankreich-Panne-war-Computerfehler">2</A>,
+<A href="http://wirtschaft.t-online.de/s-p-rating-panne-war-computerfehler/id_51406828/index">3</A>,
+<A href="https://blogs.wsj.com/source/2011/11/11/france-slams-sp-for-downgrade-gaffe/?mod=google_news_blog">
+4</A>,
+<A href="http://catless.ncl.ac.uk/Risks/26.62.html#subj9">5</A>.<BR>
+<A href="http://www.nytimes.com/interactive/2012/05/12/business/at-jpmorgan-chase-a-complex-strategy-that-backfired.html"><BR>
+JPMorgan loss by trading strategy</A>
+<BR>
+<H4> Software update leads to erronous orders at Stock Exchange:
+<A href="http://www.bloomberg.com/news/2012-10-17/knight-capital-reports-net-loss-as-software-error-takes-toll-1-.html">
+Knight Capital looses $389 million, August 2012 </A>,
+<A href="https://dougseven.com/2014/04/17/knightmare-a-devops-cautionary-tale/">1</A>,
+<A href="https://www.sec.gov/litigation/admin/2013/34-70694.pdf">2</A>,
+<A href="https://en.wikipedia.org/wiki/Knight_Capital_Group">3</A>.
+
+<H4>
+Wrong counting at elections because of use of different software:
+<A Href="http://www.sueddeutsche.de/bayern/panne-bei-bundestagswahl-die-kurzzeit-sensation-1.1778678">
+Election in Fürth, 2013</A>, 
+<A href="http://www.nordbayern.de/region/110-wahlbeteiligung-panne-in-emt-mannsberg-1.3161429?rssPage=bm9yZGJheWVybi5kZQ%3D%3D">
+also here</A>, see also
+<A href="http://catless.ncl.ac.uk/Risks/26.80.html#subj4">Voting</A>.<BR>
+
+<H4><A href="https://www.sueddeutsche.de/politik/software-loescht-daten-schwere-panne-beim-bka-1.1405805">BKA Software löscht NSU-relevante Daten</A><BR>
+
+<H4><A href="http://www.computerworld.com/article/2908355/islamist-hackers-take-french-broadcaster-tv5monde-off-air.html">
+Islamistic Hacker attck TV5Monde</A>
+ 
+<H4>
+NEW: Software problem leads to retractions of five papers on the molecular structures
+of important proteins embedded in cell membrans:
+<A href="http://www.sciencemag.org/cgi/content/full/314/5807/1856">"A Scientist's
+nightmare", in Science Vol.314, Dec. 2006</A>,
+<A href="https://blogs.sciencemag.org/pipeline/archives/2007/02/27/wrong_but_still_convincing?r3f_986=https://www.google.com/">
+Wrong, but still convincing</A>,
+<A href="http://xray0.princeton.edu/~phil/Facility/Guides/ABCtransporter.html">"ABC Transporter 
+Debacle" by Phil Jeffrey</A>,
+<A href="Paper_Retractions.pdf">Misconduct and Paper Retractions</A>,
+<A href="Paper_Chang_MsbA.pdf">Retracted paper on MsbA</A>,
+<A href="Retraction_Letter.pdf">Retraction letter</A>.
+<BR><BR>
+More information on <A href="Betrug_irrtum.htm">Fraud and error in science</A>.<BR>
+More information on <A href="http://en.wikipedia.org/wiki/Retraction"> retractions </A>.
+<BR><BR>
+Hypo Real Estate: wrong booking (+/- mix-up):
+<A href="http://www.stuttgarter-zeitung.de/inhalt.hre-panne-bankirrtum-zu-schaeubles-gunsten.f30374e4-9e5b-4108-8c12-f8bf0aefa944.html">
+here</A> and
+<A href="https://rp-online.de/wirtschaft/unternehmen/banker-verwechseln-plus-und-minus_aid-13078807">here
+</A>, and
+<A href="http://www.zeit.de/2011/45/HRE-Rechenfehler">here</A>.
+<BR>
+Other HRE glitch:
+<A href="http://www.welt.de/wirtschaft/article13691726/Schon-wieder-ein-Rechenfehler-bei-HRE-Bad-Bank.html">here</A>
+<BR><BR>
+
+
+
+<HR>
+<H2>
+<BR>0. Heisenberg effects in Software and Computer Science<BR>
+<H4>Probe effect and debugging: The probe effect is an alteration in the frequency 
+of run-time computational errors observed when delays are introduced into 
+concurrent programs<BR>
+See <!-- <A href="http://www.gup.uni-linz.ac.at/~dk/thesis/fm2html/"> -->
+<A href="http://www.mcs.anl.gov/~norris/MPIGraphAnalysis-KranzlMueller.pdf">
+Debugging massively
+parallel programs</A>, and the literature therein.<BR><BR>
+Heisenberg effect and monitoring:  By collecting information to analyse target 
+system behavior,  one is altering that very behavior<BR>
+<A href="plaleComputer1995.pdf">
+Online Monitoring: A Tutorial, page 3, by B. (Plale) Schroeder</A>, and
+<A href="FightingBugs.pdf">Fighting Bugs by Grottke, Trivedi</A>
+<BR><BR>
+Heisenberg effect in computer arithmetic: 
+<A href="https://www.inf.ethz.ch/personal/gander/Heisenberg/paper"> MATLAB example 
+of Prof. W. Gander, ETH</A><BR><BR>
+Heisenbugs, Bohrbugs and related effects:
+<A href="http://catb.org/~esr/jargon/html/H/heisenbug.html">heisenbug </A>,
+<A href="http://en.wikipedia.org/wiki/Heisenbug"> wikipedia 
+</A>, <A href="http://www5.in.tum.de/persons/huckle/Lance Armstrong bug"> Lance Armstrong bug</A>,
+
+
+
+
+<A href="https://queue.acm.org/detail.cfm?id=1036486">
+interview with Bruce Lindsay </A>,
+<A href="http://catless.ncl.ac.uk/Risks/6.10.html#subj3.1">reverse heisenbug</A>
+<BR><BR>
+Heisenberg effect in user observation: 
+<A href="http://cs.millersville.edu/~liffick/hci/hci.html">panopticon, 
+Hawthorne effect, 
+Heisenberg effect</A><BR><BR>
+Lance Armstrong Bug
+<A href="http://www5.in.tum.de/persons/huckle/Lance Armstrong bug">here</A> and
+<A href="https://www.heise.de/newsticker/meldung/Ext4-Bug-gefaehrdet-Daten-1736310.html">here</A>.
+
+<HR>
+<H2>
+1. Ariane 5, Explosion <BR>(data conversion of a too large number, 1996) 
+<BR>
+<H4><A 
+href="http://www.math.psu.edu/dna/disasters/ariane.html">Disasters: Ariane</A> 
+<BR><A 
+href="http://www.around.com/ariane.html">A bug and a crash</A> 
+<BR><A href="http://www.esa.int/export/esaCP/Pr_33_1996_p_EN.html">ESA 
+report</A> <BR><A 
+
+href="http://www.rvs.uni-bielefeld.de/publications/Incidents/DOCS/ComAndRep/Ariane/Esa/ariane5/COPY/ariane5rep.html">Copy 
+
+of Full Report</A> <BR>
+<A href="http://pauillac.inria.fr/~levy/talks/10enslongo/enslongo.pdf">Un petit bogue,</A>
+<BR><A
+href="http://en.wikipedia.org/wiki/Ariane_5">wikipedia</A> <BR>
+<A href="http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=562936">
+Lessons from Ariane</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.22.html#subj4">Ariane 5: Programming error?</A><BR>
+For videos use <A href="http://www.youtube.com">youtube</A> and search for Ariane, 
+5, 501, explosion<BR>
+
+Problems with Ariane 5:
+<A href="http://www.esa.int/export/esaCP/ESA7198708D_Expanding_0.html">flight 157 report</A>,
+<A href="http://www.arianespace.com/press-release/arianespace-flight-157-the-inquiry-board-submits-its-findings/">
+flight 157 short</A>,
+<!-- <A href="http://www.cnn.com/TECH/9710/30/ariane.launch/">CNNonARIANE5withvideos</A><BR>-->
+<BR>
+General information on Ariane:
+<A href="http://www.astronautix.com/a/ariane5.html">Astronautix</A> and
+<A href="http://www.esa.int/SPECIALS/Launchers_Access_to_Space/ASEVLU0TCNC_0.html">ESA</A>.<BR>
+Other rocket error: <A href ="http://spaceflightnow.com/sealaunch/ico1/000330software.html">
+
+Sea Lunch Zenit 3SL rocket malfunction because of software logic error</A>
+<BR><BR>
+Other problem: Cryosat rocket fault: <A href="http://news.bbc.co.uk/1/hi/sci/tech/4381840.stm">
+Problem with the onboard software flight control system</A>  caused failure of the
+shutdown of the engine of the second stage. See also 
+<A href="https://www.esa.int/Our_Activities/Observing_the_Earth/CryoSat/CryoSat_Mission_lost_due_to_launch_failure">ESA News</A><BR>
+<A href="http://de.wikipedia.org/wiki/CryoSat">Wikipedia</A>,
+<A href="http://www.esa.int/esaCP/SEMDS78X9DE_Germany_2.html">ESA on Rockot</A>, and
+<A href="http://www.cryosat.de/"> Cryosat Homepage</A>
+<BR>
+<A href="http://www.inlandnewstoday.com/story.php?s=6850">
+<BR>
+NASA CO2 hunter fail, february 2009, on Taurus XL</A>, see also
+<A href="http://german.cri.cn/1565/2009/02/25/1s109370.htm">here</A>.
+
+
+<BR><BR> <H2>
+
+<HR>
+
+<BR>2. Pentium Processor, Division Algorithm <BR>(incomplete entries in a 
+
+look-up-table, 1994) <BR>
+
+<H4>
+<A href="http://www.trnicely.net/pentbug/bugmail1.html">First email by T. Nicley 
+related to the Pentium bug</A><BR>
+
+<A 
+href="https://de.mathworks.com/content/dam/mathworks/tag-team/Objects/a/72895_92024v00Cleve_Tale_Two_Numbers_Win_1995.pdf">A tale of two numbers</A> 
+
+<BR><A 
+
+href="https://users.fmi.uni-jena.de/~nez/rechnerarithmetik_5/fdiv_bug/intel_white11.pdf">Intel White Paper</A> 
+
+<BR><A href="http://www-math.mit.edu/~edelman/">The Mathematics of the Pentium 
+
+Flaw by Alan Edelman</A> in 
+
+<A href="http://www.siam.org/journals/sirev/39-1/29395.html">
+
+SIAM Review 39 (March), 54-67</A>, see also
+<A href="http://www-math.mit.edu/~edelman/homepage/talks/pentium.ppt">Talk</A>
+<BR>
+<A href="anapentium">Anatomy of the Pentium Bug</A><BR>
+
+<A href="http://en.wikipedia.org/wiki/Pentium_FDIV_bug">Wikidia on Pentium bug</A><BR>
+<A href="http://www.ddj.com/184410254?pgno=2">Pentium II Math Bug</A><BR>
+SRT Division by Sweeney, Robertson, Tocher:<BR>
+T. D. Tocher, Techniques of multiplication and division for binary computers, Quaterly J. of Applied Math. 2, 1958<BR>
+J.E.Robertson, A new class of digital division methods, IRE Transactions on Electronic Computers, EC-7, 1958
+<BR>
+
+<A 
+href="http://www.cs.earlham.edu/~dusko/cs63/fpu.html">More bugs in Pentium 
+
+Porcessors</A>, e.g. <A 
+
+href="bugse.html#fpu">converting 
+
+floating point into integer</A> <BR>
+
+Further links: <A href="http://mtarchive.blogspot.com/2016/08/pentium-bug-revisited.html">Pentium bug revisited</A>,
+
+<A href="http://www.nytimes.com/library/cyber/week/050697intel-chip-flaw.html">other Intel chip flaw</A>,
+
+<A href="http://www.rcollins.org/secrets/IntelSecrets.html">Intel secrets,</A>
+<A href="http://www.heise.de/newsticker/meldung/Viele-Prozessorfehler-bleiben-geheim-Update-921356.html">
+Viele Prozessorfehler bleiben geheim</A>.
+<BR>
+
+<A 
+
+href="bugse.html#calc">Additional 
+
+Information: Windows Calculator bug.</A>  <BR><BR><H2>
+
+<HR>
+
+<BR>3. Patriot-Scud<BR>(rounding error, 1991) <BR>
+
+<H4><A 
+
+href="http://www.math.psu.edu/dna/disasters/patriot.html">Disasters: Patriot</A> 
+
+<BR>
+<A href="https://web.archive.org/web/20030115043508/http://www.fas.org/spp/starwars/congress/1992_h/">
+Congressional Hearing</A>
+<BR>
+
+Further links
+
+<A href="https://babel.hathitrust.org/cgi/pt?id=pur1.32754076883812">GAO report </A><BR>
+
+
+<A href="http://www.fas.org/spp/starwars/congress/1992_h/h920407r.htm">Israeli Experience </A>,
+<A href="http://www.fas.org/spp/starwars/congress/1992_h/h920407p.htm"> Postol paper</A>, and
+<A href="http://www.fas.org/spp/starwars/docops/pl920908.htm">An evaluation of the Army report</A>
+<BR>
+
+<A href="http://www.cs.unc.edu/~smp/COMP205/LECTURES/ERROR/lec23/node4.html">
+Patriot Missile Software Problem</A>,
+<A href="http://peters-ada.de/soft-bug.doc">
+Is Software to blame </A>?
+<BR>
+<A href="http://www.gulflink.osd.mil/scud_info/index.html#D.%20Scud%20Incidents%20in%20the%20Riyadh%20Area">
+Scud - Information Paper</A>,
+
+<A href="http://www.peterhall.de/history/gulf91/missiles/patriot11.html">Einsatz von Patriot</A>,
+, <A href="http://en.wikipedia.org/wiki/MIM-104_Patriot#Patriot_in_Operation_Iraqi_Freedom_.282003.29">
+Wikipedia on Patriot</A><BR>
+<A href="https://www.youtube.com/watch?v=NG8wF1o6r58">Video patriot</A>, 
+<A href="https://www.youtube.com/watch?v=JmLIeh1SVvw">Video Scud attack Dhahran</A>
+
+<BR>see also e.g. 
+<A href="http://catless.ncl.ac.uk/Risks/10.82.html#subj1.1">Patriot Missile Risk</A>,
+<A href="http://catless.ncl.ac.uk/Risks/13.19.html#subj3">Patriot misled</A>,
+<A href="http://catless.ncl.ac.uk/Risks/22.67.html#subj15">Patriot 
+fails again</A> <BR>
+<A href="http://www.cnn.com/2003/WORLD/meast/03/20/sprj.irq.kuwait.rockets/index.html">
+Patriots down Iraqui Missiles</A>
+<BR><BR>
+
+
+General Problem: Missile defense/Star wars:
+
+<A href="http://www.gao.gov/new.items/d02124.pdf">Review on Missile Defense Tests</A><BR>
+<A href="https://www.c-span.org/video/?25443-1/patriot-missile-performance">Video of the Hearing</A>,<BR>
+
+<A href="http://209.157.64.200/focus/f-news/1018949/posts">
+Candid report on Missile defense</A><BR>
+SDI: <A href="http://www.cs.drexel.edu/~spiros/teaching/CS575/papers/sdi2.ppt">Professional responsibility
+ </A> and <A href="http://www.cs.drexel.edu/~spiros/teaching/CS575/">talks on Parnas papers</A>,
+<A href="sdi1.ppt">Software aspects of SDI</A>,
+and
+<A href="http://catless.ncl.ac.uk/Risks/23.72.html#subj1">Missile interceptor system failed</A>.
+<BR><BR>More on Missile Defense:<BR>
+<A href="https://www.ucsusa.org/nuclear-weapons/us-missile-defense/missile-defense-timeline">
+Chronology of missile defense</A>, see also 
+<A href="https://www.pbs.org/wgbh/pages/frontline/shows/missile/etc/cron.html">here </A>and
+<A href="http://www.missilethreat.com/overview/pageID.265/default.asp">here</A>.
+<BR>
+<A href="http://russianforces.org/files/BriefOnEastEuropeMissileDefenseProposal_August24,2007_FinalReduced.pdf">
+Postol talk</A> and
+<A href="http://archive.boston.com/news/globe/magazine/articles/2005/10/23/going_postol/">Boston Globe on Postol letter</A>,
+<A href="http://www.cse.msu.edu/~cse870/Lectures/SS2007/ParnasPapers/parnas-SDI-ramirez-notes.pdf">
+Talk on Parnas</A>.
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>4. Mars Climate Orbiter, Loss <BR>(Mixture of pounds and kilograms, 1999) 
+
+<BR>
+
+<H4><A 
+
+href="http://marsprogram.jpl.nasa.gov/msp98/orbiter/">NASA MCO webpage</A><BR> 
+<A href="http://sunnyday.mit.edu/accidents/MCO_report.pdf">MCO report</A>
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/20.60.html#subj13.1">risk digest 20.60.subj 13.1</A><BR>
+
+<A href="http://www.dcs.gla.ac.uk/~johnson/Mars/">
+MPL/MCO resources</A><BR>
+
+<A href="http://en.wikipedia.org/wiki/Mars_Climate_Orbiter">wikipedia</A><BR>
+<!-- <A href="http://www.vuw.ac.nz/staff/stephen_marshall/SE/Failures/SE_MCO.html">
+Software Engineering: MCO</A><BR>  --> 
+<A href="http://www5.in.tum.de/persons/huckle/mco_absturz_orig.mpg">Video animation of
+crash</A><BR><BR>
+<A href="http://www.marspages.eu/">Mars Sonden</A>
+<BR><A href="http://www.space.com/1153-mars-polar-lander-clues-crash-site.html
+">Mars Polar Lander </A> (spurious signals when the lander legs were deployed gave
+ false indication that the lander had landed -> engine stop, see
+<A href="http://sunnyday.mit.edu/accidents/mpiat_summary.pdf">MPL report</A><BR>
+
+<A href="http://en.wikipedia.org/wiki/Mars_Polar_Lander">wikipedia</A><BR>
+<A href="http://www.focus.de/panorama/welt/mars-polar-lander_aid_94268.html">
+MPL entdeckt (MPL found)</A> (this identification turned out to be incorrect!)<BR>
+Loss of European lander
+<A href="http://www.esa.int/esaCP/SEMLKAHHZTD_index_0.html">Beagle</A>,
+see also 
+<A href="http://news.bbc.co.uk/1/hi/sci/tech/3591748.stm">here</A>,
+and <A href=
+"https://en.wikipedia.org/wiki/Beagle_2#ESA/UK_inquiry_report">Wikipedia, report</A>, 
+<A href="https://www.theguardian.com/science/2015/jan/16/lost-beagle-2-spacecraft-found-mars">Beagle found intact</A>
+<!--"http://www.bis.gov.uk/assets/bispartners/ukspaceagency/docs/space%20science/beagle-2-commission-of-inquiry-report.pdf">
+report</A>-->
+<BR>
+(see also <A 
+href="http://catless.ncl.ac.uk/Risks/20.86.html#subj2">"Faster, Cheaper, 
+
+Better"</A>) 
+<BR><A 
+
+href="bugse.html#mars">Additional 
+
+Information</A> on unit bugs<BR><BR><H2>
+
+<HR>
+
+<BR>5. Green Party Convent fails<BR>(By  error and erronous use of Excel 
+the wrong number of delegates is computed, 2002) <BR>
+<H4><A href="bugse.html#party">Stuttgarter 
+Zeitung, 25.2.2002, 26.2.2002</A> <BR>
+See also 
+<A href="http://catless.ncl.ac.uk/Risks/22.33.html#subj6">lost decimal point leads to overbill</A>
+<BR><BR>
+<A href="http://hypertextbook.com/facts/LenaWong.shtml">Rounding in Temperature of Healthy Human: fahrenheit vs. C</A>,
+<A href="http://www.rain.org/~mkummel/stumpers/08oct99a.html">1,</A>,
+<A href="http://jama.ama-assn.org/content/268/12/1578.abstract">2</A>,
+<A href="http://www.jstor.org/stable/4457716">3</A>.
+
+<BR><BR>
+Elections in Scheswig Holstein/Germany: Rounding lifts the Green 
+Party from 4.97% to 5.0%, 1992:
+<A href="http://catless.ncl.ac.uk/Risks/13.37.html#subj4.1">in Risks Digest 
+13.37. subj4.1 </A>
+<BR><BR>
+Further problem with Excel 2007 arithmetic:
+<A href="http://www.theregister.co.uk/2007/09/26/excel_2007_bug/">77.1 * 850 = ?</A>.
+See also <A href="http://www.joelonsoftware.com/items/2007/09/26b.html">Explaining the
+Excel Bug</A> and
+<A href="EXCEL_NZZ.pdf">
+Verflixte Multiplikationen</A>.<BR>
+See also  <A href="http://support.microsoft.com/kb/214326">EXCEL 2000, 1900 leapyear problem</A>, also in
+<A href="http://www.itjungle.com/fhg/fhg011007-story01.html">itjungle</A>.
+<BR><BR>
+
+EXCEL Rounding errors:<BR>
+<A href="http://www.cpearson.com/excel/rounding.htm">Rounding Errors in Excel</A>,
+<A href="http://support.microsoft.com/?scid=kb%3Ben-us%3B214118&x=14&y=12">
+Microsoft Support</A>,
+<A href="http://www.cs.berkeley.edu/~wkahan/ARITH_17.pdf">
+Talk on float in business</A>, and
+<A href="http://www5.in.tum.de/persons/huckle/excel.ps">Talk on excel float</A><BR><BR>
+
+<A href="http://www.eusprig.org/stories.htm">Spreadsheet errors</A><BR><BR>
+<A href="http://blogs.msdn.com/ericlippert/archive/2003/09/15/53000.aspx">Java rounding errors</A>
+<BR><BR>
+MS Word (Encrypted information on documents): <A href="http://catless.ncl.ac.uk/Risks/21.25.html#subj4">Risks Digest Vol. 
+21.25</A> 
+<BR><BR>
+<H2>
+<HR>
+
+<BR>6. NASA Mariner 1 , Venus probe <BR>(period instead of comma in FORTRAN 
+
+DO-Loop, 1962) <BR>
+
+<H4><A 
+
+href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">Horror</A> Nr. 
+
+25 with reference to <BR>G.J.Myers: Software Reliability: Principles &amp; 
+
+Practice, p. 25 <BR><A href="http://www.sarahandrobin.com/ingo/swr/">
+
+FORTRAN-Code</A> <BR>
+
+<!-- <A href="http://nssdc.gsfc.nasa.gov/nmc/masterCatalog.do?sc=MARIN1">NASA</A><BR> -->
+
+<A href="https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=MARIN1">NASA</A>,<BR>
+
+<!-- <A href="https://en.wikipedia.org/wiki/Mariner_1">Wikipedia</A>,<BR>
+
+<A href="https://catless.ncl.ac.uk/Risks/9.54.html#subj1">Risk digest</A>,<BR>  -->
+
+<A href="bugse.html#mariner">Additional 
+
+Information</A> on code bugs<BR>
+<H4>Mariner software bug is now considered to be an 
+
+urban legend, see 
+
+<!-- <A href="http://lists.zope.org/pipermail/zope/2000-November/120719.html">zope risks </A>,-->
+<A  href="http://catless.ncl.ac.uk/Risks/8.75.html#subj1">risk digest 8.75 subj 1 </A>,
+<A  href="http://catless.ncl.ac.uk/Risks/9.54.html#subj1">risk digest 9.54 subj 1 </A>,
+<A href="http://en.wikipedia.org/wiki/Mariner_1">wikipedia</A>
+<BR><BR>
+
+<HR>
+<H2>
+<BR>7. AT&amp;T long distance service fails for nine hours<BR>(Wrong BREAK 
+
+statement in C-Code, 1990)<BR>
+
+<H4><A 
+
+href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">Horror </A> 
+Nr. 38.<BR><A 
+
+href="http://www.sarahandrobin.com/ingo/swr/">Problme der Datenverarbeitung: AT&T</A> 
+<BR>
+
+<A href="https://formal.iti.kit.edu/~beckert/teaching/Seminar-Softwarefehler-SS03/Ausarbeitungen/sesterhenn.pdf">
+The C-Code on page 7 </A>,
+<A href="https://docplayer.org/28389904-At-t-ausfall-des-telefonnetzes-in-den-usa-von-joerg-sesterhenn.html">slide 10</A>
+<BR>
+Risk Digest <A href="http://catless.ncl.ac.uk/Risks/9.62.html#subj2.1">9.62,</A>
+<A href="http://catless.ncl.ac.uk/Risks/9.63.html#subj3.1">9.63,</A>
+<A href="http://catless.ncl.ac.uk/Risks/9.69.html#subj5.1">9.69</A> and
+<A href="http://catless.ncl.ac.uk/Risks/9.70.html#subj5.3">9.7.</A> <BR>
+<A href="attcrash1.htm">attcrash webpage with the C code</A> and
+ <A href="timemag.htm">Time 
+Magazin 1990: Ghost in the machine</A>.
+<BR><BR>
+See also
+<!-- <A href="http://www.businessweek.com/technology/content/aug2008/tc20080813_430402.htm"> -->
+<A href="https://www.computerworld.com/article/2534826/iphone-3g-debuts--some-glitches-reported.html">
+iPhone 3G glitches</A>, and
+<A href="http://www.nytimes.com/2008/07/12/business/12iphone.html">iPhone users 
+plagued by software problems</A><BR>
+<A href="https://www.pcworld.com/article/148270/iphone_3g_glitches.html">pcworld</A>,
+<!-- <A href="http://www.technewsdaily.com/apple-addresses-iphone-4-receptiongate-blames-software-bug-0806/">
+Apple iPhone 4</A>, -->
+
+<!-- <A href="http://www.mobilitysite.com/2010/06/iphone-4-reception-issue-is-a-software-bug/">here</A> -->
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>8. Phobos 1, Russian Mars Probe<BR>(Wrong command leads to rotation, 
+
+1988)<BR>
+
+<H4><A 
+
+href="http://catless.ncl.ac.uk/Risks/7.53.html#subj2.1">Risk digest 7.53. subj 2.1</A> 
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>9. Euro Conversion<BR>(Rounding errors) <BR>
+
+<H4><A 
+
+href="bugse.html#euro">Rounding 
+
+error DM to Euro</A> <BR><A 
+
+href="http://ta.twi.tudelft.nl/nw/users/vuik/wi211/disasters.html#euro
+
+">Conversion arithmetics</A> 
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>10. Airbus downing during Iran-conflict<BR>(Pattern recognition software, 
+
+1988)<BR>
+
+<H4><A 
+
+href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">Horror</A> 
+
+Nr. 2 <BR><A 
+
+href="trenches.htm">mirror of Trenches: Fabulous Failures</A><BR>
+
+<A href="http://www.oppapers.com/essays/Uss-Vincennes-Case-Study/93931">
+Vincennes: Case Study</A>,  or 
+<A href="https://www.usni.org/magazines/proceedings/1993/august/vincennes-case-study">Case Study</A>,
+
+<A href="http://www5.in.tum.de/persons/huckle/Naval_Science.htm">copy</A>, or
+<A href="https://www.powershow.com/view/25b753-MDk4N/Case_Study_USS_Vincennes_powerpoint_ppt_presentation">ppt</A>
+or <A href="Lecture07_vincennes.ppt">Case study</A>,
+<A href="https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-422-human-supervisory-control-of-automated-systems-spring-2004/projects/vincennes.pdf">
+slides</A>.
+<BR>
+<!-- <A href="http://dnausers.d-n-a.net/dnetGOjg/030788.htm">Short description</A> -->
+<BR>
+Risk Digest <A href="http://catless.ncl.ac.uk/Risks/7.20.html#subj1.1">7.20 subj 1.1</A>,
+<A href="http://catless.ncl.ac.uk/Risks/7.46.html#subj2.1">7.46 subj 2.1</A>, 
+<A href="http://catless.ncl.ac.uk/Risks/8.74.html#subj1.1">8.74 subj 1.1</A>.
+<BR>
+<A href="http://www.youtube.com/watch?v=hmRhoJH954w">video</A>
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>11. False alarm in Soviet early-warning monitoring system<BR>(Pattern 
+
+recognition, 1983)<BR>
+
+<H4><A 
+
+href="http://www.softwareqatest.com/qatfaq1.html#FAQ1_3">Softwareqatest</A> 
+
+<BR>See also <A 
+
+href="http://www.docstoc.com/docs/45131239/Computer-horror-stories">8/3, 
+
+NORAD-Moon</A> 
+ or <A href="http://www5.in.tum.de/persons/huckle/horrorn.pdf"> copy</A>
+
+<H2>
+
+<HR>
+
+<BR>12. USS Yorktown<BR>(Input and Division by '0', 1998) <BR>
+
+<H4><A 
+
+href="http://home.ku.edu.tr/~egunes/opsm301_supplementary_S05.htm#failures">Failures and Famous Bugs</A> 
+
+<BR><A href="http://www.gcn.com/print/17_17/33727-1.html">Software 
+
+glitches leave Navy Smart Ship dead in the water | GCN July 13, 1998 
+
+</A><BR>
+<A href="http://www.uni-koblenz.de/~beckert/Lehre/Seminar-Softwarefehler/Ausarbeitungen/lotz.pdf">
+Seminar talk</A><BR>
+<A href="http://www.wired.com/science/discoveries/news/1998/07/13987">Sunk by Windows NT</A>.
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/18.93.html#subj1">Splendor of the Seas, computer problem 
+stops cruise ship, 1997</A>, see also 
+<A href="https://catless.ncl.ac.uk/Risks/18.94.html#subj14">here</A><BR>
+
+See also <A href="http://catless.ncl.ac.uk/Risks/22.13.html#subj2">default value zero kills soldier</A><BR>
+<H2>
+
+<HR>
+
+<BR>13. Radio Telescope VLA, calibration<BR>(rounding error, 1990-1995)<BR>
+
+<H4>
+<A href="setjy.shtml">SETJY</A><BR>
+<A 
+href="http://www.vla.nrao.edu/astro/calib/manual/index.shtml">SETJY bug notice</A> 
+
+<BR>
+<!-- <A 
+href="http://www.aoc.nrao.edu/~gtaylor/calman/fluxscale.html">Flux Density Scale at VLA</A><BR> -->
+
+<A href="http://www.nrao.edu/news/newsletters/nraonews67.html"> FLUX DENSITY CALIBRATION AT THE VLA</A>,
+<A href="http://www.aips.nrao.edu/cgi-bin/ZXHLP2.PL?SETJY">incorrect rounding</A>,
+
+<BR>
+See also <A href="http://www.adass.org/adass/proceedings/adass00/O3-02/">Software problem handling in VLT</A>.
+<H2>
+
+<HR>
+
+<BR>14. ROSAT-Bug<BR>(Rounding/processing error in ROSAT observations, 
+
+1998)<BR>
+
+<H4><A 
+
+href="http://heasarc.gsfc.nasa.gov/mail_archive/rosnews/msg00111.html">
+Processing errors in US sequences</A> 
+
+<BR><A 
+
+href="http://heasarc.gsfc.nasa.gov/mail_archive/rosnews/msg00123.html">
+HRI aspect time bug</A> 
+
+<BR><A 
+
+href="http://heasarc.gsfc.nasa.gov/docs/rosat/rosgof.html">
+ROSAT mission</A><BR><A 
+
+href="bugse.html#planet">Additional 
+
+Story</A> on wrongly found new planet<BR>
+<A href="http://www.esa.int/esaCP/SEMNMYO4KKF_index_0.html">
+Rosetta, OSIRIS imaging asteroid Steins, sep 2008,
+Narrow angle camera (NAC) switched to safe mode before closest approach  (to protect camera?)</A>,
+see also
+<A href="http://esamultimedia.esa.int/multimedia/esoc/1_Schwehm_Rosetta_Steins_fly-by_5-6_Sept08.pdf">
+here</A>.<BR>
+<A href="http://www.bernd-leitenberger.de/soho.shtml">
+SOHO, gyros, no power, 1995-2007.</A>
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.37.html#subj2">
+Hubble, data formatter and control unit for sending data to earth fails (2008)</A>.
+
+<H2>
+
+<HR>
+
+<BR>15. Sleipner Offshore Platform<BR>(Sinking caused by the wrong use of 
+
+FE-code NASTRAN, 1991)<BR>
+
+<H4><A 
+
+href="http://www.math.psu.edu/dna/disasters/sleipner.html">Disasters: Sleipner</A> 
+see also  
+<A href="http://www.ima.umn.edu/~arnold/disasters/sleipner.html">here</A>,<BR>
+<A href="sleipner_Jakobsen.pdf">The Sleipner Platform Accident by Jakobsen</A>,<BR>
+<A href="sleipner.pdf">Ursache fuer den Totalverlust - Schlaich, Reineck</A>,<BR>
+<A href="http://de.wikipedia.org/wiki/Condeep">Wikipedia: Condeep</A>,
+<!--<A href="http://home.versatel.nl/the_sims/rig/sleipnera.htm"> -->
+<A href="http://members.home.nl/the_sims/rig/sleipnera.htm">Summary: Sleipner A</A>,
+or
+<A href="http://ta.twi.tudelft.nl/users/vuik/wi211/disasters.html">Kees Vuik: Disasters</A>,
+<BR> 
+<A href="http://www.iti.northwestern.edu/publications/utc/tea-21/FR-3-8-Bazant.pdf">Size Effect and Design Safety
+ in Concrete Structures under Shear</A>, 
+<!-- <A href="http://www.aschehoug.no/yrkesengelsk/dok/Failure%20of%20an%20Offshore%20Oil%20Platform%20Concrete%20Base.doc"> -->
+<A href="http://www.civ.utoronto.ca/vector/journal_publications/jp33.pdf">
+Failure of an Offshore Platform</A>,
+<BR><A href="https://www.duo.uio.no/handle/10852/17747"> Ger Wackers: Resonating Cultures</A>,  also
+<A href="https://www.duo.uio.no/bitstream/handle/10852/17747/WP33.pdf?sequence=1">here</A>.
+<!-- <A href="http://findarticles.com/p/articles/mi_qa5310/is_200607/ai_n21406645/pg_1">
+Behavior and capacity of headed reinforcement, ACI Structural Journal</A> (see also
+<A href="http://findarticles.com/p/articles/mi_qa5310/is_200607/ai_n21406645/?tag=content;col1">here).</A> -->
+<BR>
+Main source: SINTEF Report No. STF22 A97861, Sleipner A GBS Loss Report 17: Main Report
+<BR>
+<A href="http://en.wikipedia.org/wiki/Sleipner_A_oil_rig_collapse">Wikipedia on Sleipner</A>,
+<A href="http://www.vectoranalysisgroup.com/journal_publications/jp26.pdf">
+The Failure of an Offshore Platform, ACI</A>,
+<A href="http://members.home.nl/the_sims/rig/index.htm">Oil rig disasters</A>,
+<!-- <A href="http://www.aschehoug.no/yrkesengelsk/dok/Failure%20of%20an%20Offshore%20Oil%20Platform%20Concrete%20Base.doc">
+Failure of an Offshore Oil Platform Concrete Base</A>. -->
+<A href="https://www.onepetro.org/conference-paper/SPE-27314-MS">The Sleipner Accident</A>.
+
+<BR><A 
+
+href="bugse.html#sleipner">Additional 
+
+Information</A> on the name "sleipner"<BR><BR><H2>
+
+<HR>
+
+<BR>16. London Millenium Bridge, wobbling (compare Tacoma Bridge) <BR>(Simulation fails because of wrong estimates for 
+
+pedestrian forces, 2000) <BR>
+
+<H4><A 
+href="http://www.arup.com/millenniumbridge/">Arup: MilleniumBridge/</A>,
+
+<A href="https://www.building.co.uk/news/arup-we-have-fixed-the-millennium-bridge/1015137.article">Arup: We have 
+fixed the Millenium Bridge</A>, 
+
+<A href="https://www.youtube.com/watch?v=gQK21572oSU">Opening</A>, 
+<A href="https://www.youtube.com/watch?v=QfgNqi4RGLk">Testing</A>, 
+<A href="https://www.youtube.com/watch?v=eAXVa__XWZ8">Wobbling</A>.
+<BR>
+
+<A href="http://de.wikipedia.org/wiki/Millennium_Bridge">Wikipedia</A>,
+<A href="https://researchcourse.pbworks.com/f/structural+engineering.pdf">The London Millennium Footbridge</A>,
+<A href="https://www.fosterandpartners.com/news/archive/2002/02/millennium-bridge-reopens/">Foster and Partners</A>,
+<A href="http://www2.eng.cam.ac.uk/~den/ICSV9_04.htm">Vibration of the LM Footbridge</A>,
+
+<BR>
+Additional damping: <A href="http://www.taylordevices.com/papers/damper/damper.pdf">
+Taylor devices</A> and
+<A href="http://www.gerb.com/de/bibliothek/projektbeispiele/show_projektbeispiel.php?rubrik=tilger&projekt=millen_bridge">
+Gerb</A>
+
+<BR><H2>
+
+<HR>
+
+<BR>17. Thunderstorm "Lothar" in South Germany, Dec./26/99<BR>(Weather 
+
+Prediction fails because of ignored outlier data) <BR>
+
+<H4><A 
+
+href="bugse.html#lothar">Berliner 
+
+Morgenpost vom 27.1.2000</A> <BR>
+<A href="http://www.dkkv.org/fileadmin/user_upload/Veroeffentlichungen/Publikationen/DKKV_1._Forum_Extreme_Naturereignisse_und_Vulnerabilitaet.pdf">
+DWD Flügelschlag des Schmetterlings</A>, also
+<A href="http://eaps4.mit.edu/research/Lorenz/Butterfly_1972.pdf">here</A>
+<BR>
+<A href="https://www.dwd.de/DE/leistungen/klimastatusbericht/publikationen/ksb_1999.pdf?__blob=publicationFile&v=4">
+DWD Klimastatusbericht 1999, Orkantief Lothar</A><BR>
+<!-- <A href="http://www.dwd.de/bvbw/appmanager/bvbw/dwdwwwDesktop?_nfpb=true&_pageLabel=_dwdwww_spezielle_nutzer_forschung_analyse&T12203437091139841900534gsbDocumentPath=Navigation%2FForschung%2FAnalyse__Modellierung%2FFU__IF__Anatal__etc__node.html__nnn%3Dtrue">
+Was war mit den neuen Vorhersagemodellen des DWD</A><BR> -->
+<A href="https://rcc.dwd.de/DE/fachnutzer/forschung_lehre/numerische_wettervorhersage/nwv_aenderungen/_functions/DownloadBox_modellaenderungen/gme/pdf_1999_2001/pdf_gme_03_05_2000.pdf?__blob=publicationFile&v=4">
+DWD Vorhersagemodelle, Datenassimilation</A>, also
+<A href="http://www.met.fu-berlin.de/~dmg/promet/27_34/27_3_4_Heft_lores.pdf#page=48">here</A>, and
+<A href="https://www.dwd.de/SharedDocs/downloads/DE/modelldokumentationen/nwv/veroeffentlichungen/Promet/dwd_promet_27_3_4_k1_modellkette.html">here</A>,
+<BR>
+<A href="http://www.wetter-extrem.de/stuerme/lothar/orkan_lothar.pdf">Bewertung der Wetterlage</A>,
+<BR>
+<A href="https://www.weltderphysik.de/gebiet/erde/atmosphaere/wetter/wettervorhersage/">Wettervorhersage</A>,
+<BR>
+<A href="http://www.worldscientific.com/doi/abs/10.1142/9789812704832_0001">Predictability</A>
+<BR>
+
+<!-- <A href="http://www.dgb.ch/unterricht/maturaarbeiten/WidmerChristian/lothar/simulation.html">
+Simulation von Lothar</A>
+<BR> -->
+<A href="http://www.wetter-extrem.de/stuerme/lothar/orkan_lothar.pdf">Orkan Lothar</A>
+<BR>See also
+<A href="lothar">Lothar Workshop</A> and <A href="lothar.pl.htm">Wetterfuchs</A> and
+<A href="http://www.wetterzentrale.de/cgi-bin/webbbs/wzconfig1.pl?noframes;read=145">
+Wetter Modelle: GME und LM</A><BR>  
+<A href="http://en.wikipedia.org/wiki/Data_assimilation">Data assimilation</A>, (see also
+<A href="http://www.zamg.ac.at/docu/Manual/SatManu/main.htm?/docu/Manual/SatManu/Catastrophic/991225/case10.htm">
+here</A>).
+<BR><BR>
+For a similar case see <A href="http://catless.ncl.ac.uk/Risks/1.02.html#subj1.1">
+Risk Digest </A>
+<BR><BR><H2>
+
+<HR>
+
+<BR>18. Vancouver Stock Exchange Index<BR>(Rounding Error, 1983) <BR>
+
+<H4><A href="http://catless.ncl.ac.uk/Risks/3.41.html#subj4.1">Risks Digest 
+
+3.41, subj4.1, Question 20</A> <BR><A 
+
+href="https://www.aeaweb.org/articles?id=10.1257/jel.37.2.633">Numerical Reliability of Econometric Software</A> 
+
+<BR>see also Dow Jones Industrial Average DJIA: <BR><A 
+
+href="http://www.theregister.co.uk/content/28/17700.html">Dow Jones Average collapses</A> 
+
+<BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/21.28.html#subj3">Risk Digest 21.28. subj 3</A><BR>
+
+<A href="Vancouv.pdf">Copy of original sources: Toronto Star, Wall Street Journal, and J. of Economic Literature</A>
+<BR>
+Toronto Stock Exchange, Dec 2008: Shut-down because of technical problems.
+"network firmware issue" resulted in complications with data sequencing, 
+which affected quotes going out.
+<A href="https://spectrum.ieee.org/riskfactor/computing/it/toronto_stock_exchange_resumes">See here</A>.
+<BR><BR>
+
+Arbeitslosengeld II = ALG-II in Germany:<A href=
+"http://catless.ncl.ac.uk/Risks/23.65.html#subj6.1">writing 9 digit bank codes left-aligned
+in 10 digit fields</A> leads to adding a zero at the end and wrong bank codes.
+<BR>
+See also
+<A href="http://catless.ncl.ac.uk/Risks/23.69.html#subj6">German dole</A> and
+<A href="http://www.spiegel.de/wirtschaft/0,1518,206245,00.html">loss of pension data</A>
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.03.html#subj5">
+German tax software Elster (Werbungskosten: Autofahrt zur Arbeit absetzen, 2008)</A>,<BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.29.html#subj6">
+German Tax identification code (misinterpretation of white space, 2008)</A>, see also
+<A href="http://catless.ncl.ac.uk/Risks/25.30.html#subj18.1">here</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.24.html#subj3">Millions cashless in bank glitch
+</A>
+
+<H2> General discussion of financial risks:
+<H4>
+<A href="http://www.haaretz.com/business/why-the-markets-are-like-an-epileptic-brain-1.360434">Markets=Eliptic Brain</A>
+<BR>
+<A href="http://en.wikipedia.org/wiki/Algorithmic_trading">Algotrading</A><BR>
+<A href="https://www.gov.uk/government/publications/future-of-computer-trading-in-financial-markets-an-international-perspective">
+Computer Trading</A><BR>
+<A href="http://www.risknet.de/elibrary/kategorien/risknet-elibrary/a6a2b655197907643fdba923123f97f2/?tx_hmelibrary_elibrary[paper]=199&tx_hmelibrary_elibrary[action]=show&tx_hmelibrary_elibrary[controller]=Paper">
+Financial Risks</A><BR>
+<A href="http://www.google.de/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CCQQFjAA&url=http%3A%2F%2Fwww.risknet.de%2Ffileadmin%2FeLibrary%2FBieta-Umgang-mit-Risiken.pdf&ei=leksVfmsJ9HpaJiagbgG&usg=AFQjCNEHTHDstnaI1VVmygH6A-yZOTZ2jA&sig2=A8jAAVAqR8XiqB8SVkPrjA&bvm=bv.90790515,d.d2s">
+Risiken im Bankensektor</A>
+
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>19. Cloud data blown away for sidekick users (Oct 11 09):<BR>
+<H4>
+<A href="http://db.tidbits.com/article/10638">T-Mobile and Microsoft loose personal data</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.44.html#subj3.1">Amazon Cloud</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.36.html#subj4.1">Gmail Cloud</A>
+
+<BR><BR>
+<H2>Other Mobile Phone Bugs:<BR><H4>
+<A href="http://www.teltarif.de/iphone-4-wecker-neujahr-technologie/news/41147.html">iPhone 4 verschläft neues Jahr</A> and
+<A href="http://www.spiegel.de/netzwelt/gadgets/ios-8-0-2-apple-bessert-software-update-nach-a-993869.html">here</A><BR>
+
+<A href="http://www.forbes.com/sites/ewanspence/2011/11/24/software-bugs-are-a-regular-part-of-smartphone-life-for-windows-phone-and-android-users/">
+Smart Phone bugs</A><BR>
+
+<A href="http://techcrunch.com/2014/09/25/apple-apologizes-for-iphone-update-bug-and-releases-new-ios-8-0-2/">Apple iPhone update bug
+</A><BR>
+
+<A href="http://www.bbc.co.uk/news/technology-15870020">Samsung Galaxy Nexus Volume bug</A> and
+<A href="http://www.pocket-lint.com/news/113035-samsung-galaxy-nexus-software-bugs">here</A>
+
+
+<BR><BR>
+<HR>
+<H2>
+<BR>20. Voyager 2<BR>(Wrong Starting Estimate of Uranus mass in Iteration, Data 
+
+Compression, 1986) <BR>
+
+<H4><A 
+
+href="http://www.sarahandrobin.com/ingo/swr/allehtml.html">Probleme der Datenverarbeitung: Voyager 2</A>, 
+<BR> Spektrum der Wissenschaft 1/1987S. 67,  R.Laeser, W. MacLaughlin, D. Wolff, Fernsteuerung und Fehlerkontrolle von Voyager 2
+
+(in German)<BR>General information on Voyager:<BR> <A 
+
+href="http://www.planetary.org/blogs/guest-blogs/a-j-s-rayl/stories_murray.html">
+Bruce Murray and Voyager</A><BR>
+
+<A href="http://www.planetary.org/multimedia/planetary-radio/show/2016/1017-charley-kohlhase.html">
+Charlie Kohlhase and Voyager</A>, and
+<A href="http://www.planetary.org/blogs/guest-blogs/a-j-s-rayl/stories_kohlhase.html">here</A>
+<BR>
+
+Book: Bruce Murray: Journey into Space: The first three decades of Space Exploration.<BR>
+
+<A href="http://www.bernd-leitenberger.de/voyager-sonde.shtml">Leitenberger on Voyager</A><BR>
+<A href="http://www.bernd-leitenberger.de/computer-raumfahrt2.shtml">Computer in der Raumfahrt</A><BR>
+<BR>
+<A href="http://www.space-travel.com/reports/NASA_Fixes_Bug_On_Voyager_2_999.html">NASA fixes bug</A> and
+<A href="https://www.nasa.gov/mission_pages/voyager/voyager20100506.html">Data system</A>
+<BR>
+<A 
+
+href="http://catless.ncl.ac.uk/Risks/9.12.html#subj3.1">catless.ncl.ac.uk/Risks/9.12.html#subj3.1</A> 
+<BR>
+<A href="http://www.domisse.fr/astro/sondes/voyager/article/pannes.html">Usure et pannes</A><BR>
+<A href="http://adsabs.harvard.edu/abs/1986asdy.conf..168M">
+Sequencing Voyager II for the Unranus encounter</A>
+<BR>
+MORRIS, R. B., California Institute of Technology, Jet Propulsion Laboratory,
+ Pasadena AIAA-1986-2111
+IN: Astrodynamics Conference, Williamsburg, VA, August 18-20, 1986, 
+Technical Papers (A86-47901 23-13). New York , American Institute of 
+Aeronautics and Astronautics, 1986, p. 168-177. NASA-supported research
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>21. Shut down of Nuclear Reactors<BR>(Use of wrong norm in CAD system, 1979) 
+
+<BR>
+
+<H4><A 
+
+href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">Horror</A>  
+
+Nr. 28 <BR><BR>
+For general nuclear accidents see:
+<BR><A href="http://en.wikipedia.org/wiki/Mayak">Mayak and Kyshtym, 1957</A><BR>
+<A href="http://en.wikipedia.org/wiki/Windscale_fire">Windscale, 1957</A><BR>
+<A href="http://en.wikipedia.org/wiki/Three_Mile_Island_accident">Harrisburg, Three Miles Island, 
+1979</A><BR>
+<A href="http://en.wikipedia.org/wiki/Chernobyl_disaster">Chernobyl, 1986</A><BR>
+<A href="http://www.spiegel.de/international/germany/0,1518,492305,00.html">Accidents
+in nuclear plants Kruemmel and Brunsbuettel, 2007</A>
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>22. 180 Degree Bugs:<BR>
+
+<H4><A 
+href="http://www.docstoc.com/docs/45131239/Computer-horror-stories">
+<!-- href="http://www.qucis.queensu.ca/Software-Engineering/archive/horror"> -->
+horror stories</A>
+or <A href="http://www5.in.tum.de/persons/huckle/horrorn.pdf"> copy of horror stories:</A>
+5/2 (F-16-equator), 8/5 (US vessel), 9/5 (F16-left-right), 10/2 (Soviet test 
+missile)</A><BR><A 
+
+href="bugse.html#torpedo">Additional 
+
+story</A> on torpedo, see also 
+<A href="http://www.broadleaf.com.au/pdfs/articles//Conf_NAVSAFE_012.pdf">torpedo story on page 9</A>,
+ <A href="http://homes.cerias.purdue.edu/~spaf/Yucks/V4/msg00027.html">torpedo story in Yucks Digest </A>,
+<A href="https://www.history.navy.mil/research/library/online-reading-room/title-list-alphabetically/u/united-states-submarine-losses/tullibee-ss-284.html">USS Tullibee</A> (or
+<A href="http://en.wikipedia.org/wiki/USS_Tullibee_%28SS-284%29">here </A>),
+<A href="http://en.wikipedia.org/wiki/USS_Tang_(SS-306)">USS Tang</A>,
+<A href="http://navysite.de/ssn/ssn589.htm">USS Scorpion</A>(also
+<A href="http://en.wikipedia.org/wiki/USS_Scorpion_(SSN-589)">here</A> and
+<A href="https://www.history.navy.mil/research/histories/ship-histories/danfs/s/scorpion-ssn-589-vi.html">here) </A>
+ for circular run of torpedoes. 
+<BR><BR>
+Submarine Bug: 
+<!-- <A href="http://ny.essortment.com/sinkingresueus_rjqy.htm">Sinking of Squalus because of open hatch
+ and all-clear signal</A> --> 
+<A href="https://www.history.navy.mil/research/histories/ship-histories/danfs/s/squalus-ss-192.html">Sinking of the Squalus</A>,
+see also
+<A href="http://www.bbc.co.uk/insideout/northwest/series7/thetis.shtml">Sinking of Thetis</A>,
+also <A href="http://www.cyber-heritage.co.uk/thetis/subs.htm">here</A>
+<BR><BR>
+Equator F-16 inversion:
+<A href="http://www.cs.uga.edu/~jam/home/courses/csci4050/testing/L23_UnitTesting_ch11lect1.ppt">Lectures on Testing</A>,
+<!-- 
+<A href="http://hubpages.com/hub/Software_Bugs_with_Fatal_Consequences">Software Bugs with fatal consequences</A>,
+-->
+<A href="PGneumann.pdf">Simulation Bugs</A>,
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/3.44.html#subj1">Risk digest 3.44 subj 1</A>,
+<A href="http://www.csl.sri.com/users/neumann/illustrative.html#8">Illustrative Risks 8</A>.
+<BR><BR>
+Related "International Date Line" - Bugs:
+<BR>
+<A href="https://www.defenseindustrydaily.com/f22-squadron-shot-down-by-the-international-date-line-03087/">
+F-22 shot down by date line</A>, see also 
+<A href="http://transcripts.cnn.com/TRANSCRIPTS/0702/24/tww.01.html">CNN article, 
+international date  line</A> or 
+<A href="http://it.slashdot.org/article.pl?sid=07/02/25/2038217">
+Slashdot article</A> or
+<A href="http://www.murdoconline.net/archives/004595.html">murdoc online article</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/24.58.html#subj1">Risk digest 24.58</A>.
+<BR><BR>
+Related "New Year" - Bug:
+<BR>
+<!-- <A href="http://www.theglobeandmail.com/servlet/story/RTGAM.20061129.wshuttll1129/BNStory/Science/home"> -->
+<A href="http://engineering.curiouscatblog.net/2006/11/30/shuttle-computer-not-designed-for-new-year-while-in-flight/">
+Space Shuttle computer is not designed to make the change from the 365th to 
+the first day while in flight,</A> 
+(<A href="http://www5.in.tum.de/persons/huckle/science.htm">here</A>),
+or
+<A href="http://science.slashdot.org/article.pl?sid=06/11/06/2320235">slashdot article</A> and
+<A href="http://www.techdirt.com/articles/20061109/142841.shtml">
+Space shuttle computers and new year</A>,
+<A href="http://catless.ncl.ac.uk/Risks/24.92.html#subj5">Risk digest</A>
+<BR>
+
+<H2>
+
+<HR>
+
+<BR>23. Falkland Exocet<BR>(Argentinian (French-friendly) Exocet sinks British 
+
+H.M.S.Sheffield, 1982) <BR>
+
+<H4><A 
+
+href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">Horror</A> Nr. 8
+<BR>
+<A href="http://catless.ncl.ac.uk/risks/3.67.html#subj6">Risk Digest</A>
+
+<BR><BR>
+See also 
+<A href="http://en.wikipedia.org/wiki/HMS_Sheffield_(D80)">Wikipedia</A> and 
+<A href="http://news.bbc.co.uk/onthisday/hi/dates/stories/may/4/newsid_2504000/2504155.stm">
+BBC video</A>,
+<BR>
+<A href="http://www.mod.uk/NR/rdonlyres/9D8947AC-D8DC-4BE7-8DCC-C9C623539BCF/0/boi_hms_sheffield.pdf">Board of Inquiry</A>
+<A href="http://news.bbc.co.uk/2/hi/uk_news/1414411.stm">BBC News</A>, 
+<A href="https://www.theguardian.com/uk/2000/sep/26/falklands.world">The Guardian</A>.
+<BR>New Scientist 10 February 1983: HMS Sheffiled thought Exocet was friendly.
+<BR>New Scientist 24 February 1983: This sinking feeling.
+ <H2>
+
+<HR>
+
+<BR>24. Mars Sojourner, Pathfinder<BR>(Unwanted Restart, 'Priority Inversion', 1997) 
+
+<BR>
+
+<H4>Risks-Digest: <A 
+
+href="http://catless.ncl.ac.uk/Risks/19.49.html#subj1.1">Risk Digest 19.49. subj 1.1</A>
+<BR> <A href="http://catless.ncl.ac.uk/Risks/19.54.html#subj6.1">Risk Digest 19.54 subj 6.1</A><BR>
+
+<A href="https://www.apnews.com/d1743ce83060e95ec73019edffce4e2c">Pathfinder's 
+
+computer reprogrammed to avoid software glitches </A><BR>
+
+General information on Pathfinder: <A 
+
+href="http://mpfwww.jpl.nasa.gov/MPF/default.html">JPL Nasa MPF</A> 
+
+<BR><BR>See also: Software problems with MARS ROVER SPIRIT:<BR>
+
+<A href="http://marsrover.nasa.gov/newsroom/pressreleases/20040201a.html">NASA</A><BR>
+
+<A href="http://en.wikipedia.org/wiki/MER-A">wikipedia</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/23.52.html#subj12.1">Risk digest</A><BR>
+<A href="http://en.wikipedia.org/wiki/Flash_memory">Flash memory</A> and
+<A href="http://en.wikipedia.org/wiki/File_Allocation_Table">FAT memory</A>
+<BR>
+
+<A href="http://www.noapologiespress.com/newnews/spiritshutdown.html">Windows Bug 
+converts Mars Rover into Juke box</A><BR>
+
+<A href="http://arstechnica.com/news.ars/post/20040124-3333.html">arstechnica update on Mars</A><BR>
+Spaceflightnow<A href="http://www.spaceflightnow.com/mars/mera/040123recovery.html"> articel 1 </A>,
+<A href="http://spaceflightnow.com/mars/mera/040126spirit.html"> article 2 </A>, and
+<BR>
+<A href="http://marsrover.nasa.gov/newsroom/pressreleases/20040124a.html">NASA 2</A>,
+<BR>
+<A href="https://www.eetimes.com/document.asp?doc_id=1148448">
+Trouble with rover is revealed</A><BR>
+<A href="http://www.extremetech.com/article2/0,1558,1638764,00.asp">Dos glitch nearly killed Mars Rover</A>.
+
+<BR><BR>
+Problems with <A href="http://www.washingtonpost.com/wp-dyn/content/article/2007/01/10/AR2007011002253.html">
+Mars Global Surveyor</A> (Incorrect addresses), see also
+<A href="http://mars.jpl.nasa.gov/mgs/newsroom/20070413a.html">JPL</A>, 
+<A href="http://catless.ncl.ac.uk/Risks/24.63.html#subj1">Risk digest 24.63</A>,
+<A href="http://www.spaceref.com/news/viewnews.html?id=1185">Spaceref article</A>
+and <A href="http://science.slashdot.org/article.pl?sid=07/04/14/0529246">Slashdot article</A>
+<BR><BR>See also
+<A href="http://catless.ncl.ac.uk/Risks/23.67.html#subj1">Loss of data from Huygens probe</A>
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>25. Railway Signal Box Altona, Germany<BR>(not enough memory, 1995) <BR>
+
+<H4><A href="http://catless.ncl.ac.uk/Risks/16.93.html#subj1.1">Risks Digest 
+
+vol. 63 (93)</A> 
+<BR>
+
+<!-- <A 
+href="http://www4.in.tum.de/lehre/seminare/ps/WS0203/desaster/Hennes-Altona-Ausarbeitung-16-12-02.pdf
+">Seminar on Stellwerk Altona glitch</A> and also-->
+<A href="https://formal.iti.kit.edu/~beckert/teaching/Seminar-Softwarefehler-SS03/Ausarbeitungen/bertram.pdf">
+Seminar paper</A>and 
+<A href="https://www5.in.tum.de/lehre/seminare/semsoft/unterlagen_02/eisenbahn/website/quellenangabe.html">Sources
+</A>.
+
+<BR>
+<A href="http://web-docs.gsi.de/~giese/swr/fehler21.html">Giese</A>,
+<A href="https://www.computerwoche.de/a/deutsche-bahn-erwaegt-schadensersatz-zu-fordern-siemens-rechner-legt-stellwerk-in-hamburg-fuer-zwei-tage-lahm-cw-bericht-walter-mehl,1112982">
+Schadenersatz</A>
+
+<BR><A href="http://www.infosec.ch/faelle/f_fall177.htm">Computersteuerung, 
+
+Hamburgs Bahnhof auf dem Abstellgeleis, NZZ</A> <BR><A 
+
+href="http://www.tu-harburg.de/tbg/Deutsch/Diplom-Diss/diplom-hinck.html">Diplom 
+
+Thesis on Altona signal box error</A> <BR><A 
+
+href="https://2013.foebud.org/pd/pd068/">Brunnstein ueber Altona</A> <BR>
+
+More on trains:
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/9.81.html#subj2.1">London tube train leaves ... without its 
+driver, 1990</A>, see also
+<A href="http://catless.ncl.ac.uk/Risks/9.92.html#subj2.1">here</A><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/25.47.html#subj1">
+Metrolink crash, 12 Sept 2008, LA, signal failure, driver text-messaging</A>,
+see also <A href="https://www.latimes.com/local/la-me-train-crash-hearing11-2009feb11-story.html">here</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.72.html#subj1">
+Washington DC Metro collision 22 June 2009, automatic mode, signals</A><BR>
+<A href="http://www.welt.de/print-welt/article699690/Fahrerlose_U_Bahn_in_Nuernberg_faehrt_wieder_aber_ohne_Passagiere.html">
+Fahrerlose U-Bahn in Nuernberg</A>.
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>26. Denver Airport<BR>(Computerised Baggage Handling fails, 1995) <BR>
+
+<H4>
+<A href="https://www.nytimes.com/2005/08/27/us/denver-airport-saw-the-future-it-didnt-work.html">
+NYT</A>
+<BR>
+<A href="https://www.youtube.com/watch?v=xx8f4x6C_KY">Video</A>
+<!--
+<A 
+
+href="http://www.eee.bham.ac.uk/dsvp_gr/roxby/ee4a3/Lecture2/sld008.htm">Why is Software hard to make</A> 
+
+<BR><A 
+
+href="http://www.cds.caltech.edu/conferences/1997/vecs/tutorial/Examples/Cases/failures.htm">
+Famous Failures</A>
+-->
+
+<BR><A
+href="schloh_DIA.pdf">Schloh-Project on DIA</A>
+
+<BR><A href="swartz_DIA.pdf"> Swartz on Automated Baggage System</A>
+
+<BR><A
+href="http://ardent.mit.edu/airports/ASP_papers/Bag%20System%20at%20Denver.PDF">
+Paper Neufville</A>
+<BR>
+<A href="http://www.cs.mdx.ac.uk/research/SFC/Reports/TR2002-01.pdf">A case narrative
+of the Project Problems with DIA</A>
+<BR><A href="DIABaggage.pdf">Case Study DIA</A>
+
+<BR><A
+href="http://www.pages.drexel.edu/~st91hwn4/Final_Project_MIS611.doc">
+Project Drexel University</A>
+or 
+<A href="http://www5.in.tum.de/persons/huckle/Drexel_DIA.htm"> copy</A>
+<BR><A
+href="Denvervor.pdf">Vortrag DIA (in German)</A><BR>
+<A href="https://www.logplan.com/map">Logplan Baggage handling
+</A><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/23.89.html#subj1">UA abandons DIA baggage system 2005
+</A><BR><BR>
+<A href="http://wjhill.net/PTE2004S.pdf">Baggage handling Munich Airport
+</A>,   and
+<A href="http://www.airport-technology.com/projects/munich-international/">here</A>, and
+<A href="https://www.suisseplan-logistik.com/en/references/airport-munich.php">here</A>.
+     <BR>
+<A href="http://www.fraport-groundservices.com/content/groundservices/en/products-services/infrastructure/services-systems/services-facilities.html">
+Baggage handling at Frankfurt Airport</A><BR><BR>
+<BR>
+<!-- <A href="http://www.silicon.com/management/cio-insights/2006/02/20/heathrows-high-tech-terminal-5-prepares-for-take-off-39156524/">
+T5 prepares for take off</A><BR>  -->
+<A href="https://www.ibm.com/services/us/gbs/thoughtleadership/traveltransportation.html">
+IBM - beyond the carousel
+</A>  <BR>
+<!-- <A href="http://209.162.181.66/article_cbr.asp?guid=6DF70B23-428A-4A3B-92DE-8CD5FB7377CF">
+Heathrow T5 prepares for take off </A> and -->
+<A href="http://www.computerweekly.com/Articles/2008/05/14/230680/british-airways-reveals-what-went-wrong-with-terminal.htm">
+British Airways reveals what went wrong with Terminal 5</A>
+<BR>
+<A href="http://www.isthisyourluggage.com/lost_luggage/LANDING.html">Is this your luggage?</A> by Luna Laboo.<BR>
+<A href="https://www.thefreelibrary.com/The+T5+baggage+system%3A+Nick+Porter+from+Vanderlande+Industries...-a0166823661">
+Nick Porter from Vanderlande Industries describes baggage handling system Heathrow T5</A><BR>
+<A href="http://www.computerweekly.com/Articles/2008/04/02/230084/it-experts-tackle-baggage-system-problems-at-heathrows-terminal.htm">
+IT experts tackle baggage system problems at Heathrow's Terminal 5</A><BR>
+<A href="https://www.vanderlande.com/case-studies/london-heathrow-airport/">
+Vanderlande - T5</A><BR>
+<!--
+<A href="http://golondon.about.com/od/airtraveltolondon/a/Termninal5.htm">
+Facts: Heathrow T5</A><BR>  -->
+<A href="http://catless.ncl.ac.uk/Risks/25.10.html#subj7">Risk digest 25.10</A><BR>
+<A href="http://news.bbc.co.uk/2/hi/uk_news/england/london/7008412.stm">BBC 1</A> and
+<A href="http://news.bbc.co.uk/2/hi/uk_news/7332956.stm">BBC 2</A><BR>
+<A href="https://www.zdnet.com/article/it-failure-at-heathrow-t5-what-really-happened/">IT failure at T5</A><BR>
+<A href="http://www.computerweekly.com/Articles/2008/03/27/230012/baggage-handling-system-glitch-mars-heathrows-t5-opening.htm">
+Baggage handling glitch T5</A><BR>
+
+Baggage handling control from IBM
+<A href="https://www-03.ibm.com/innovation/us/outcomes/pdf/full-stories/airport.pdf?..">here</A>, 
+<A href="https://www.ibm.com/downloads/cas/MJQOJ1XJ">here</A>
+and
+<A href="http://www-03.ibm.com/press/us/en/pressrelease/28958.wss">here</A>.<BR>
+
+
+<A href="http://www.heise.de/newsticker/Weiter-Logistikprobleme-im-neuen-Heathrow-Terminal--/meldung/105840">
+Weitere Logistikprobleme im neuen Heathrow Terminal</A>
+<BR><BR>
+
+<A href="http://travel.howstuffworks.com/baggage-handling.htm">How baggage handling works
+</A><BR>
+<A href="http://news.bbc.co.uk/2/hi/uk_news/7318540.stm">Other baggage handling problems</A>
+
+<BR><H2>
+
+<HR><BR>27. Distributed denial-of-service attacks (2000) <BR>
+
+<H4><A 
+
+href="http://catless.ncl.ac.uk/Risks/20.79.html#subj1">Risk Digest 20.79. subj 1</A> 
+
+<BR><A href="http://www.csl.sri.com/neumann/insiderisks.html#118">Inside Risks 118, 
+
+CACM 43, 4, April 2000, by P.G.Neumamm </A><BR><BR><H2>
+
+<HR>
+
+<BR>28. Airbus 380 wiring matching problems: 
+<BR><H4>Toulouse and Hamburg working with different versions of CAD Software.
+See <A href="http://catless.ncl.ac.uk/Risks/24.51.html#subj3">Delivery delays</A> and
+<A href="http://catless.ncl.ac.uk/Risks/24.45.html#subj1">SW problems</A>,
+<A href="http://www.nytimes.com/2006/12/11/business/worldbusiness/11iht-airbus.3860198.html?_r=1">New York Times</A>,
+and <A href="http://www.cadalyst.com/management/what-grounded-airbus-a380-5955">cadalyst</A>.
+<BR><BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.01.html#subj2">Boeing 787 networking</A>.
+<BR><BR><H2>
+
+<HR>
+
+<BR>29. Clementine Space Mission (NASA + Strategic Defense Initiative 
+
+Organization, funded and operated by the Ballistic Missile Defense Organization 
+
+'Starwars') <BR>(malfunction of computer, firing of control thruster, 
+
+1994)
+
+<H4>
+<!-- <A href="http://www.eee.bham.ac.uk/dsvp_gr/roxby/ee4a3/Lecture2/sld012.htm">Why is Software hard to make</A> -->
+
+<BR><A 
+
+href="http://nssdc.gsfc.nasa.gov/planetary/clementine.html">Nasa: Clementine</A> <BR>
+<A href="https://solarsystem.nasa.gov/missions/clementine/in-depth/">
+Clementine Mission</A>
+
+<BR><BR><H2>
+
+<HR> 
+
+<BR>30. ISS International Space Station</SPAN><BR>(Computer bugs) <BR>
+
+<H4><A 
+
+href="http://www.space.com/news/spacestation/zvezda_goldin_101499.html">
+Russian Software glitch delaying ISS Launch</A> ,
+<A href="http://www.newscientist.com/article/dn1624-russian-docking-problem-threatens-shuttle-launch.html">here
+</A>, 
+<A href="http://www.nasa.gov/centers/kennedy/pdf/312099main_02-05-09.pdf">Software glitch shakes space station</A>,
+<BR><A 
+
+href="http://www.space.com/news/spacestation/zvezda_goldin_101499.html">Space 
+
+Station / Space Shuttle Software glitch </A>,
+<A href="http://www.space.com/3956-nasa-eyes-workarounds-space-station-computer-glitch.html"> Space shuttle 
+computer glitch</A>,
+<A href="http://www.space.com/3947-russian-mission-control-restores-contact-failed-iss-computers.html"> ISS Computers
+</A>
+<BR><A 
+
+href="http://www.cnn.com/2001/TECH/space/04/28/shuttle.launch.02/index.html">CNN, April 28, 2001</A> 
+
+<BR><A href="http://catless.ncl.ac.uk/Risks/21.37.html#subj5">Risk Digest vol. 
+
+21.37</A> <BR><A 
+
+href="http://edition.cnn.com/2001/TECH/space/04/30/space.tito.03/">
+CNN, May 1, 2001</A> <BR>
+<A href="http://www.heise.de/newsticker/meldung/91251"> ISS-Computer wieder in Betrieb</A>,
+<A href="http://www.heise.de/newsticker/meldung/91320">ISS Computer arbeiten wieder
+</A>
+<BR><BR>
+The computer error that delayed the first shuttle start:
+<A href="http://portal.acm.org/toc.cfm?id=1005928&type=issue&coll=GUIDE&dl=GUIDE&CFID=58987177&CFTOKEN=76832096">
+The "Bug" heard around the world, John Garman, ACM SIGSOFT vol. 6 (5) 1981</A>, or
+<A href="space_.pdf">here</A>.
+<BR>
+<A href="http://klabs.org/DEI/Processor/shuttle/">Space shuttle software</A><BR>
+Endeavour rendezvous error:
+<A href="http://catless.ncl.ac.uk/Risks/13.56.html#subj5.1">when is x==y?</A>,<BR> 
+<A href="http://query.nytimes.com/gst/fullpage.html?res=9A0CE2DF1739F931A25756C0A9649C8B63">
+NASA buying old 8086 chips for space shuttle</A><BR>
+<A href="http://www.newscientist.com/article/dn13099">Space shuttle fuel sensor, 2007</A>,
+see also <A href="http://www.space.com/missionlaunches/071218-sts122-ecosensor-update.html">here</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/24.69.html#subj2">Space Station computer problem: faulty switch, 
+June 2007</A>, see also
+<A href="http://catless.ncl.ac.uk/Risks/24.70.html#subj5">here</A> and
+<A href="
+https://spectrum.ieee.org/aerospace/space-flight/space-station-internal-nasa-reports-explain-origins-of-june-computer-crisis">
+here</A>.
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>31. Voting Technique and Elections Machines <BR>(Florida Voting Chaos) 
+
+<BR>
+
+<H4><A href="http://www.cs.uiowa.edu/~jones/voting/uscrc.html">Jones Testimony 
+
+before Civil Rights Commission</A><BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/21.13.html#subj1">Risks Digest Vol. 21.13 
+
+</A><BR><A href="http://catless.ncl.ac.uk/Risks/21.12.html#subj1">Risks Digest 
+
+Vol. 21.12 </A><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/22.36.html#subj2">Risk Digest 22.36</A><BR><A 
+
+href="http://www.cnn.com/2001/ALLPOLITICS/03/11/palmbeach.recount/index.html">Butterfly 
+
+Ballot (CNN)</A><BR><A 
+
+href="http://www.issues2000.org/Florida_Recount.htm">General 
+
+information</A><BR><A 
+
+href="http://lists.jammed.com/RRE/2001/04/0001.html">Collection of 
+
+URL's</A><BR><A 
+
+href="http://www.cnn.com/2001/TECH/ptech/02/14/voting.systems.study.idg/index.html">Paper 
+
+better than Computer (CNN)</A> 
+
+<BR>
+
+<A href="http://www.usenix.org/events/evt06/tech/">Workshop EVT</A><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/26.19.html#subj6">Voting machines with poorly written software</A>,
+also
+<A href="http://catless.ncl.ac.uk/Risks/26.19.html#subj12">here</A><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/26.14.html#subj1">Debate over electronic Voting</A>
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>32. Therac-25, X-ray<BR>(Overdosing patients during radiation, 
+
+1975-1987)<BR>
+
+<H4><A 
+
+href="http://www.wired.com/software/coolapps/news/2005/11/69355">History's worst software bugs</A><BR>
+<A 
+
+href="http://courses.cs.vt.edu/~cs3604/lib/Therac_25/Therac_1.html">Therac_25/Therac_1.html</A><BR> 
+
+<A href="http://www.cs.washington.edu/research/projects/safety/www/papers/therac.ps">therac.ps</A>
+<BR>
+<A href="http://staff.washington.edu/~jon/pubs/safety-critical.html">Safety-Critical Computing</A><BR>
+
+<A href="http://www.dcs.gla.ac.uk/~muffy/papers/HIS1.ps">Therac-25 in LOTOS</A><BR>
+
+<BR>
+Related accidents:<BR>
+<A href="http://catless.ncl.ac.uk/Risks/24.37.html#subj3">Medical errors</A><BR>
+
+<A href="https://healthcare-in-europe.com/en/news/patient-dies-after-x-ray-blunder.html">Epinal, France: Patient dies
+after X-Ray blunder</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/23.83.html#subj1"> Patient exposed to high radiation</A>
+<BR>
+<A href="strahl_therac.pdf">Probleme mit IMRT Systemkonfigurationen</A><BR>
+<A href="http://www.welt.de/regionales/hamburg/article1360233/Letztes_Kapitel_im_Strahlenskandal.html">Strahlenskandal Eppendorf</A><BR>
+<A href="http://www.mailonsunday.co.uk/news/article-509289/Transplant-patient-NEW-kidney-removed-NHS-blunder.html">
+Kidney transplant with wrong blood type, incorrectly recorded in database</A>.<BR>
+<A href="http://articles.latimes.com/2009/oct/13/local/me-cedars13">Overdosis, LA, 2009</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.26.html#subj1">Radiation machines overdosing again</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.26.html#subj2">Medical radiation mistakes</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.19.html#subj4">Medical errors (wrong patient, wrong part)</A>
+<BR><BR>
+
+<H2>
+<HR>
+
+<BR>33. Sound System German 'Bundestag', December 1992:<BR><H4>
+ Risk Digest<A 
+
+href="http://catless.ncl.ac.uk/Risks/14.19.html#subj1.1">14.19 subj 1.1</A>, <A 
+
+href="http://catless.ncl.ac.uk/Risks/14.20.html#subj8.1">14.20 subj 8.1</A>, <A 
+
+href="http://catless.ncl.ac.uk/Risks/14.74.html#subj3.1">14.74 subj 3.1</A> <BR><BR>
+
+<HR>
+<H2>
+<BR>34. Wall Street Crash, October 1987<BR>(Acceleration of the crash) <BR>
+<H4>
+<A href="https://money.cnn.com/1997/10/13/markets/crash_main/">
+The blackest of mondays
+</A> <BR>
+
+<A href="http://hnn.us/articles/895.html">What caused the Stock Market Crash 1987</A>, or
+<A href="stock market.htm">here</A>, or
+<A href="stock market.txt">here</A>   <BR>
+<A href="http://en.wikipedia.org/wiki/Flash_crash">2010 Stock market Flash Crash: A single 
+large trade can send stocks into a sudden spiral</A><BR>
+
+<A href="http://www.wired.com/techbiz/it/magazine/17-03/wp_quant?currentPage=all">
+The formula that killed Wall Street</A><BR>
+
+<A href="https://www.mitpressjournals.org/doi/10.1162/REST_a_00172">Inappropriate Gaussian 
+copula in the housing crisis</A>,<BR>
+<A href="https://en.wikipedia.org/wiki/Algorithmic_trading">
+Algo-Trading</A><BR>
+Xetra DAX <A href="http://www.heise.de/newsticker/data/tol-16.04.02-002/">Computer 
+Panne an Frankfurter Boerse </A>,
+<A href="https://www.wallstreet-online.de/diskussion/500-beitraege/1072266-1001-1500/der-meister-sprach">Kurssturz ueberfordert
+Boersen-systeme</A>,
+
+<A href="http://www.berlinonline.de/berliner-zeitung/archiv/.bin/dump.fcgi/2002/0417/wirtschaft/0070/index.html">
+Panne legt Boersenhandel lahm </A>,
+
+<!-- <A href="http://news.zdnet.de/story/0,,t101-s2108419,00.html">Einwahlprobleme bei Xetra</A><BR> -->
+<A href="http://catless.ncl.ac.uk/Risks/24.58.html#subj3">
+Dow-Jones drop, 27 Febr 2007, Computer overload, dropping of the index</A>
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/5.16.html#subj1.1">
+Bank of America, $23 Million snafu, 1987, new system installed, befor debugged</A>, see also
+<A href="http://catless.ncl.ac.uk/Risks/6.16.html#subj4.1">here</A>, or
+<A href="http://catless.ncl.ac.uk/Risks/1.31.html#subj4">here</A>, or
+<A href="http://catless.ncl.ac.uk/Risks/1.11.html#subj4.1">here</A>.
+<BR><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.07.html#subj20">Stock market fiasko 2010</A>  and
+<A href="http://catless.ncl.ac.uk/Risks/26.06.html#subj1">here</A>.
+<BR><BR><H2>
+
+<HR>
+
+<BR>35. ATM gives any amount of Euro for arbitrarily PINcode<BR>(Programming 
+
+glitch on the occasion of the switch-over from DM to Euro, 2002) <BR>
+
+<H4><A 
+
+href="bugse.html#atm">Sueddeutsche 
+
+Zeitung, 9.1.2002</A> <BR><BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.59.html#subj4">Wrong bank transfer</A>.
+<BR><BR><H2>
+
+<HR>
+
+<BR>36. Reverse Thrust: Unknown reason! <BR>(Avoid Crash by Reverse Thrust 
+
+--&gt; Lufthansa crash in Warsaw 1993) <BR>
+
+<H4>Risk Digest <A 
+
+href="http://catless.ncl.ac.uk/Risks/16.35.html#subj2.1">16.35. subj 2.1</A>, 
+<A 
+href="http://catless.ncl.ac.uk/Risks/11.82.html#subj3.2">11.82. subj 3.2</A>,
+<A href="http://catless.ncl.ac.uk/Risks/15.13.html#subj7.1">15.13 subj 7.1</A>,
+<A href="http://catless.ncl.ac.uk/Risks/15.30.html#subj7.1"> 15.30 subj 7.1</A>,
+<A href="http://catless.ncl.ac.uk/Risks/15.31.html#subj9.1">15.31 subj 9.1</A>,
+<A href="http://www4.in.tum.de/lehre/seminare/ps/WS0203/desaster/Bender-Airbus-Ausarbeitung-13-01-03.pdf">Paper</A>
+<BR>
+
+<A href="http://www.mlit.go.jp/jtsb/eng-air_report/B1816.pdf">Aircraft Accident Investigation Report
+on China Airlines B 1816, Airbus A300</A>
+<BR>
+See also: <A href="http://catless.ncl.ac.uk/Risks/24.58.html#subj10">Airbus overrunning runway</A>,
+<A href="http://catless.ncl.ac.uk/Risks/25.04.html#subj2">Leeds Bradford, 2005</A>, and
+<A href="http://news.bbc.co.uk/2/hi/uk_news/england/london/7194086.stm">Heathrow, 2008</A>.<BR>
+ <A href="http://www.bild.de/BILD/news/2009/07/25/computer-problem-offenbar-schuld/an-beinahe-unglueck-bei-airbus-flug.html">
+Lufthansa LH 44, Hamburg: crosswind landing (ground versus flight mode)</A>,
+<A href="http://nachrichten.t-online.de/c/19/51/93/62/19519362.html">or here </A>.
+<A href="http://www.flugzeugforum.de/forum/archive/index.php/t-46370.html">Discussion group</A>.
+
+<BR><BR>
+Airbus 320 fly-by-wire crash Habsheim/Mulhouse:
+<!-- <A href="http://www.cs.york.ac.uk/hise/safety-critical-archive/2002/0466.html">
+Safety critical  archive 1</A>, 
+<A href="http://www.cs.york.ac.uk/hise/safety-critical-archive/2002/0468.html">
+Safety critical  ahttp://www.crashdehabsheim.net/CRenglish%20phot.pdfrchive 2</A>, -->
+<A href="http://www.crashdehabsheim.net/CRenglish%20phot.pdf">crash at Habsheim</A>,
+<!-- <A href="http://www.airdisaster.com/investigations/af296/af296.shtml#believe">
+airdisaster investigation</A>, 
+<A href="http://www.airdisaster.com/cgi-bin/view_details.cgi?date=06261988%AE=F-GFKC&airline=Air+France">
+airdisaster database</A>,  -->
+<A href=" https://aviation-safety.net/database/record.php?id=19880626-0&lang=de">Aviation Safety Network</A>,
+<A href="http://catless.ncl.ac.uk/Risks/7.11.html#subj3.2">Risk digest 7.11 subj 3.2</A>,
+<A href="habsheim_mehr_software.pdf">Trusting Software</A>,
+<A href="http://www.youtube.com/watch?v=CFv4ADUuwhw">Crash video</A><BR><BR>
+<A href="http://www.computerweekly.com/Articles/2008/05/30/230803/Chinook-helicopter-disaster-computer-software-failure-or-pilot-error.htm">
+Chinook helicopter crash</A>, <A href="chinook_software.pdf">blame the pilot</A>.
+<BR><BR>
+Similar problem with trains: <A href="http://catless.ncl.ac.uk/Risks/24.51.html#subj4">
+Railway flat train wheels</A>
+
+
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>37. Friendly Fire<BR>
+
+<H4>
+Risk digest
+<A href="http://catless.ncl.ac.uk/Risks/21.98.html#subj1">21.98</A>,
+<A href="http://catless.ncl.ac.uk/Risks/22.65.html#subj2.1">22.65</A>,
+<A href="http://catless.ncl.ac.uk/Risks/22.69.html#subj17">22.69</A>,
+<A href="http://catless.ncl.ac.uk/Risks/22.71.html#subj12">22.71</A>, 
+<A href="http://catless.ncl.ac.uk/Risks/22.72.html#subj10.1">22.72</A>,
+<A href="http://catless.ncl.ac.uk/Risks/23.72.html#subj2.1">23.72</A> Patriot again!
+<BR>
+<!-- <A href="http://www.cdi.org/friendlyversion/printversion.cfm?documentID=2259">Patriot
+and friendly fire</A>, also -->
+<A href=" https://www.theguardian.com/world/2003/apr/04/iraq.rorymccarthy4">guardian</A>,
+<A href="http://news.bbc.co.uk/2/hi/uk_news/2877349.stm">Patriot versus Tornado</A> 
+<!--and
+<A href="http://www.cdi.org/program/document.cfm?DocumentID=2259&from_page=../index.cfm">Patriot/Tornado</A>
+-->
+<BR><BR><H2>
+
+<HR>
+
+<BR>38. Sibirian pipeline sabotage, 1982<BR>
+
+<H4> 
+<A href="http://en.wikipedia.org/wiki/Siberian_pipeline_sabotage">Flaws in stolen software lead to explosion</A>
+<BR><BR>
+<H2>
+
+<HR>
+
+
+
+<BR>39. Ozone Hole ignored until 1985 
+
+<BR>(Software had to set aside data points that deviated greatly from expected 
+
+measurements) <BR>
+
+<H4><A 
+
+href="http://earthobservatory.nasa.gov/Features/RemoteSensingAtmosphere/remote_sensing5.php">Earth 
+
+Observatory, NASA</A> <BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/3.29.html#subj1">Risk Digest 3.29</A>
+<BR>
+See also
+<A href="http://catless.ncl.ac.uk/Risks/24.66.html#subj4">
+Error in climate data recording software 2006 caused by software glitch in buoys</A>
+
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>40. Sinking of the Zenobia <BR>(Failure 
+
+of the computerized ballasting system, 1980) <BR>
+
+<H4><A 
+
+href="http://en.wikipedia.org/wiki/MS_Zenobia">Zenobia</A><BR>
+
+<A href="https://www.ezdivers.com/zenobia-wreck-diving-cyprus/">Zenobia Ship Wreck</A>, see also
+<!-- <A href="http://www.sadkosub.com/g_zenobia.php">here</A>, or
+<A href="http://bbs.keyhole.com/ubb/ubbthreads.php?ubb=showflat&Number=480404&site_id=1#import">here</A>, or
+<A href="http://bbs.keyhole.com/ubb/showflat.php/Cat/0/Number/480404/Main/480404">
+Zenobia shipwreck</A>, or  -->
+<A href="http://www.diver-log.de/2008/03/wrack-der-zenobia-zypern.html"> Wrack der Zenobia
+</A> or
+<A href="http://www.divesitedirectory.co.uk/dive_site_cyprus_wreck_zenobia.html">
+Zenobia</A>
+
+<BR><BR>
+Other ship accidents:
+<A href="http://en.wikipedia.org/wiki/MS_Estonia">M/S Estonia, 1994</A>
+<!-- (or <A href="http://www.factgroup.nu/est/non_official_videos.html">here</A>) --> ,
+<A href="http://en.wikipedia.org/wiki/Herald_of_Free_Enterprise">Herald of Free Enterprise, 
+1987</A>, and
+<A href="http://en.wikipedia.org/wiki/Vasa_(ship)">Sinking of Vasa, 1628</A>
+<BR><BR>
+Oil tanker catastrophes, e.g.
+<A href="http://en.wikipedia.org/wiki/Amoco_Cadiz">Amoco Cadiz, 1978</A> or
+<A href="http://en.wikipedia.org/wiki/Exxon_Valdez_oil_spill">Exxon Valdez, 1989</A>
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>41. Swedish fighter plane Gripen 
+
+<BR>(Flight control software causes crash, 1989) <BR>
+
+<H4><A href="http://catless.ncl.ac.uk/Risks/8.49.html#subj2.1">Risk 
+Digest 8.49</A>  <BR>
+
+<A href="http://en.wikipedia.org/wiki/Accidents_and_incidents_involving_the_JAS_39_Gripen">
+Pilot induced oscillations, ejections</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/24.70.html#subj1">ejection</A><BR>
+
+<A 
+
+href="http://www.saabgroup.com/en/Air/Gripen-Fighter-System/">Gripen page</A> <BR>
+<A href=" http://www.youtube.com/watch?v=jP-QMmzGL5I">gripen crash video 1</A> and
+<A href="http://www.youtube.com/watch?v=U0LBj_8xs_w">video 2.</A>
+<BR><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.53.html#subj1">F-35 Testing suspended: 
+control surface freeze in flight</A>
+<BR><BR><H2>
+
+<HR>
+
+<BR>42. Software bugs related to cars <BR>
+
+<H4>
+<A href="https://www.wired.com/2016/02/googles-self-driving-car-may-caused-first-crash/">
+Google crash</A>, see also <A href="https://www.dmv.ca.gov/portal/wcm/connect/3946fbb8-e04e-4d52-8f80-b33948df34b2/Google_021416.pdf?MOD=AJPERES&CVID=">
+report</A>, video <A href="https://www.youtube.com/watch?v=eTLMGjp-AIQ&t=2s">here</A>,
+and other accidents
+<A href="https://www.theguardian.com/technology/2016/jan/12/google-self-driving-cars-mistakes-data-reports">
+here</A>.
+
+<BR><BR>
+<A href="https://static.nhtsa.gov/odi/inv/2016/INCLA-PE16007-7876.PDF">Tesla Williston, FL,
+May 7, 2016</A>, <A href="https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR1702.pdf">
+report</A>, <A href="https://www.ntsb.gov/news/press-releases/Pages/NR20180412.aspx">after math
+</A>, <A href="https://www.dmv.org/articles/tesla-responsible-for-driving-death">here</A>,
+and <A href="https://www.youtube.com/watch?v=uIV6sGHZo1U">youtube video animation</A>.
+<BR>
+Background information
+<A href="https://www.theverge.com/2016/7/1/12085218/tesla-autopilot-crash-investigation-radar-automatic-emergency-braking">
+Mobileye</A>, <A href="https://electrek.co/2016/07/01/tesla-autopilot-mobileye-fatal-crash-comment/">
+more</A>, <A href="https://arstechnica.com/cars/2016/07/tesla-and-mobileye-call-it-quits-will-the-car-company-build-its-own-sensors/">
+and more</A>, <A href="https://jalopnik.com/does-teslas-semi-autonomous-driving-system-suffer-from-1782935594">
+and more</A>.
+<A href="http://www.cbc.ca/news/technology/tesla-autopilot-crash-ntsb-1.4287026">Limitations 
+of Tesla Autopilot</A>. 
+<BR><BR>
+<A href="http://www.thedrive.com/news/20848/utah-tesla-driver-turns-on-autopilot-rams-fire-truck-at-60-mph">
+Tesla into fire truck</A>, <A href="https://www.wired.com/story/tesla-autopilot-why-crash-radar/">
+here</A>, <A href="https://www.teslarati.com/tesla-model-s-firetruck-crash-details/">here</A>,
+and <A href="https://www.youtube.com/watch?v=mEGAH330SCY&t=5s">video</A>.
+<BR><BR>
+<A href="https://www.ntsb.gov/investigations/AccidentReports/Pages/HWY18FH011-preliminary.aspx">
+Tesla into concrete barrier</A>, <A href="https://www.nytimes.com/2018/03/31/business/tesla-crash-autopilot-musk.html">
+here</A>, <A href="http://autoweek.com/article/autonomous-cars/tesla-blames-driver-fatal-crash-involving-autopilot">
+and here</A>. <A href="https://www.youtube.com/watch?v=VVJSjeHDvfY">video simulation</A>.
+<BR><BR>
+
+<A href="https://www.ntsb.gov/investigations/AccidentReports/Pages/HWY18MH010-prelim.aspx">
+Uber car vs. bycicle</A>. For background information see
+<A href="https://www.theregister.co.uk/2018/05/24/uber_self_driving_software_... 24">here</A>,
+<A href="https://www.wsj.com/articles/uber-self-driving-car-that-struck-killed-pedestrian-wasnt-set-to-stop-in-an-emergency-1527170145">here</A>,
+<A href="https://www.forbes.com/forbes/welcome/?toURL=https://www.forbes.com/sites/alanohnsman/2018/03/23/lidar-maker-velodyne-baffled-by-self-driving-ubers-failure-to-avoid-pedestrian/&refURL=https://www.google.com/&referrer=https://www.google.com/">
+here</A>, <A href="https://www.theinformation.com/articles/uber-finds-deadly-accident-likely-caused-by-software-set-to-ignore-objects-on-road">
+here</A>.
+
+
+
+<BR><BR>
+<A href="http://news.bbc.co.uk/2/hi/uk_news/magazine/8510228.stm">How computer took over our cars</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/23.81.html#subj2">Cruise control failures</A>,
+see also 
+<A href="http://catless.ncl.ac.uk/Risks/23.82.html#subj4">here</A>
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/23.60.html#subj3">BMW onboard drive dynamic control system fails
+</A><BR>
+<A href="http://www.zdnet.de/enterprise/tech/auto/0,39026506,39122887,00.htm">
+Software bugs bremsen Luxusschlitten aus</A>
+<BR>
+<A href="http://www.heise.de/ct/00/05/118/">Mensch denkt, Chip lenkt: Software im Auto
+</A><BR>
+Airbag: <A href="http://service.spiegel.de/digas/servlet/find/DID=10246307">
+Vom Retter erschlagen: Software bug in airbag kills child</A>:
+<A href="http://www5.in.tum.de/persons/huckle/retter.pdf">Artikel</A>,
+<A href="http://catless.ncl.ac.uk/Risks/20.28.html#subj8.1">Risk digest - Baby Death</A>,
+<A href="Broy.pdf">Talk Prof. Broy</A>, <A href="swr2-airbag-broy.rtf">SWR-Interview mit Prof. Broy</A>,
+<A href="http://www.wer-weiss-was.de/theme107/article1702605.html">Airbagabschaltung</A>, 
+<!-- <A href="http://www.gyrosmafia.de/cms/upload//Unfall.pdf">Verletzungen durch Airbag</A> -->
+<A href="http://www.allianz-autowelt.de/magazin/presse_archiv/artikelliste-2004/airbags-sicherer-schutz-mit-risiko.html">
+Verletzungen durch Airbag</A>,
+<BR>Airbag-Audi-Continental, Toyota
+<A href="http://www.heise.de/autos/artikel/Airbag-Defekt-bei-Audi-Die-Schuld-von-Continental-2440578.html">AUDI 1</A>,
+<A href="http://www.nytimes.com/2014/10/24/business/audi-recalls-850000-cars-over-airbag-software-flaw.html?_r=1">AUDI 2</A>:
+<A href="http://www.spiegel.de/auto/aktuell/rueckruf-toyota-schickt-20-modelle-wegen-defekter-airbags-in-die-werkstatt-a-974458.html">
+TOYOTA</A>,
+<A href="http://www.bild.de/auto/auto-news/auto-news/airbag-rueckrufe-takata-fuenf-millionen-bmw-nissan-toyota-nhtsa-38247750.bild.html">
+TOYOTA 2</A>.
+
+<BR>
+<A href="http://www.theage.com.au/articles/2003/05/13/1052591776195.html">
+Thai minister trapped 
+in BMW by central locking system</A><BR>
+<A href="http://www.zdnet.de/arbeitsplatzrechner_peripherie_in_unternehmen_software_bugs_bremsen_luxusschlitten_aus_story-20000005-39122887-1.htm">
+BMW 7, battery and software</A><BR>
+
+<A href="http://www.wired.com/software/coolapps/news/2005/11/69355">
+Warning lights and gasoline engines stalling in Prius hybrid vehicle</A>
+<BR>
+<A href="http://www.josef-kaiser.info/arbeitsbeispiele/pdf/AudiTT.pdf"> ESP and Audi TT</A><BR>
+<A href="http://www.baselinemag.com/c/a/Projects-Customer-Service/Consumer-Products-When-Software-Bugs-Bite/">
+Automotive bugs, dishwasher and more</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.85.html#subj5">Toyota break problems</A><Br>
+<A href="http://www.latimes.com/business/la-fi-0915-toyota-blackbox-20100915,0,93137.story">Toyota 'black box' reader</A><BR>
+<A href="http://money.cnn.com/2010/04/19/autos/lexus_gx460_recall/index.htm?hpt=T2">Toyota recalls Lexus, increased risk of rollover: electronic stability control program</A><BR>
+<A href="http://articles.boston.com/2011-06-29/cars/29717948_1_hybrid-system-top-selling-automaker-natural-disasters">Toyota: computer boards with possible faulty wiring</A><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.56.html#subj20">Man unable to open car from inside</A>, and
+<A href="http://catless.ncl.ac.uk/Risks/26.54.html#subj4>here</A><BR>
+<A href="http://blogs.wsj.com/drivers-seat/2011/04/30/smart-keys-not-so-smart-for-motorcycles/">Smart Keys for motorcycles
+</A><BR>
+<A href="http://www.computerworld.com/s/article/9119560/Phoenix_bus_system_keeps_moving_but_software_bugs_linger">
+Bus system doesn't read paper money, screen freeze, Phoenix, 2008</A>
+<BR><BR>
+<A href="http://chess.eecs.berkeley.edu/pubs/153/1530AutomotiveElectronics-ASV.pdf">
+Automotive embedded systems (pdf)</A> or
+<A href="http://chess.eecs.berkeley.edu/pubs/153/1530AutomotiveElectronics-ASV.ppt">
+ppt</A><BR>
+<A href="http://www.handelsblatt.com/technologie/news/software-prueft-autoelektronik-bereits-beim-entwurf;957308">
+Automotive Software</A>, see also
+<A href="http://www.innovations-report.de/html/berichte/energie_elektrotechnik/bericht-49088.html">
+here</A>.
+<BR>Motorsteuerung Golf V: Pannen und Mängel
+<A href="http://www.adac.de/infotestrat/fahrzeugkauf-und-verkauf/gebrauchtfahrzeuge/gebrauchtwagentest/detail.aspx?gwid=154&info=VW_154">
+Pannen und Maengel</A>
+<BR>
+Toyota Prius: Hybrid control bug
+<A href="http://www.autonews.com/article/20140212/COPY01/302129954/toyota-recalls-prius-models-to-update-software">Hybrid</A>.
+
+ <BR><BR><H2>
+
+<HR>
+
+
+<BR>43. Toll Collect: Problems with toll billing system for trucks based on GPS and GSM<BR>
+
+<H4>
+Risk Digest <A 
+href="http://catless.ncl.ac.uk/Risks/22.94.html#subj4.1">22.94 subj 4.1</A>,
+<A href="http://catless.ncl.ac.uk/Risks/23.65.html#subj6">23.65 subj 6</A>,
+<A href="http://catless.ncl.ac.uk/Risks/23.69.html#subj5.1">23.69 subj 5.1</A>, 
+<A href="http://catless.ncl.ac.uk/Risks/23.72.html#subj6">23.72 subj 6</A>,
+<A href="http://catless.ncl.ac.uk/Risks/23.21.html#subj6.1">23.21 subj 6.1</A>
+<A href="http://catless.ncl.ac.uk/Risks/24.82.html#subj3">24.82 subj 3</A>
+<BR>
+<A href="
+https://www.computerworld.com/article/2569173/high-tech-truck-toll-system-finally-launched-in-germany.html">
+Computer world article,</A>
+<A href="
+https://www.roadtraffic-technology.com/projects/lkw-maut/">road traffic article,</A> <BR>
+
+<A href="Toll_Collect.htm">Public Private Partnership Disaster</A>,
+
+<A href="http://www.burks.de/forum/phpBB2/viewtopic.php?t=2583">Tolle Welt mit Toll Collect</A>,
+<A href="https://www.toll-collect.de/en/">
+Toll Collect Homepage <A>,
+<A href="http://www.heise.de/ct/02/21/060/">c't article</A>.
+<BR><BR>
+GPS problems:
+<A href="https://www.sacbee.com/entertainment/living/travel/article2573180.html">Death valley</A>,
+<A href="http://catless.ncl.ac.uk/Risks/25.16.html#subj15">bus crash</A>,
+<A href="http://www2.unb.ca/gge/Resources/gpsworld.november98.pdf">week rollover bug</A>
+<!-- <A href="http://www.amazon.com/gp/blog/post/PLNK3W3PCDRSZ1X5X">invalid data used by receivers</A>-->.<BR>
+<A href="http://www.nbcnews.com/id/14831843/ns/business-autos/t/segways-recalled-because-software-glitch/#.XMrHnqDgokI">
+Segways software glitch: Wheels can unexpectedly reverse direction, 2006</A>.
+<BR><BR>
+Further logistic problems:
+
+<A 
+href="https://csantaella2011gs.wordpress.com/2012/10/27/disaster-incubation-theory-adidas-1996-warehouse-meltdown/">Adidas Shoe 
+Distribution System</A>, <A href="trenches.htm">Pizza 
+Delivery Service and Computer Aided Vehicle Dispatching</A>, <BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/9.68.html#subj4.1">Software for Hubble</A> <A 
+
+href="http://www.sarahandrobin.com/ingo/swr/allehtml.html">(see also here)</A>
+
+<BR><BR>
+Further large-scale project disasters<BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/25.73.html#subj2">
+German health card system, loss of data</A>, see also
+<A href="https://www.heise.de/newsticker/meldung/Erste-Generation-der-elektronischen-Gesundheitskarte-ist-ungueltig-3849656.html">
+here</A><BR>
+
+<A href="http://de.wikipedia.org/wiki/Terrestrial_Trunked_Radio">
+Digitaler Polizeifunk TETRA</A>, see also
+<A href="http://de.wikipedia.org/wiki/BOS-Funk">here</A>, and
+<A href="http://www.heise.de/newsticker/Digitaler-Behoerdenfunk-verzoegert-sich-weiter--/meldung/92503">
+here</A><BR>
+
+<A href="http://www.heise.de/newsticker/Oesterreichische-Polizisten-aergern-sich-ueber-neues-EDV-System--/meldung/86188">
+Oesterreich, neues Polizei EDV-SYSTEM</A><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/25.77.html#subj1">
+UK Chinook helicopters, software problems</A>, see also
+<A href="http://www.telegraph.co.uk/news/newstopics/politics/defence/6085909/MoD-software-blunder-keeps-Chinook-helicopters-grounded.html">
+here</A>.
+<BR><BR><H2><HR>
+
+
+<BR>44. Power blackout NY 2003 (Northeast blackout):<BR>
+
+<H4><A 
+href="http://catless.ncl.ac.uk/Risks/22.86.html#subj1">Risk digest 22.86 subj 1</A><BR>
+<A href="http://www.securityfocus.com/news/8016">Bug in GE Energy's XA/21 system</A><BR>
+<A href="http://en.wikipedia.org/wiki/Northeast_Blackout_of_2003">Northeast blackout</A><BR><BR>
+<A 
+href="http://en.wikipedia.org/wiki/California_electricity_crisis">Deregulation 
+of California Power Industry</A>,<BR>
+See also <A href="http://catless.ncl.ac.uk/Risks/24.48.html#subj1"> EON German Power Outage
+2006</A> (Simulation done only including fitst order effects), see also
+<A href="http://catless.ncl.ac.uk/Risks/24.47.html#subj1">here</A>
+<BR><BR><H2><HR>
+
+
+
+<BR>45. Airplane disasters:<BR>
+
+<H4>
+<A href="http://www.rvs.uni-bielefeld.de/publications/compendium/index.html">
+Computer-Related Incidents with Commercial Airlines</A> by Peter Ladkin
+<BR>
+<A 
+
+href="http://www.airdisasters.co.uk/">Major Airline Disasters</A> 
+
+<BR><A href="http://airsafe.com/">airsafe.com</A> <BR>
+<A href="http://www.1001crash.com/index-page-video-lg-2.html">
+Airplane crash videos</A><BR>
+<A 
+href="http://aviation-safety.net/database/record.php?id=19980902-0">Swiss Air Flight 
+111 Inflight Entertainment System, fammable material</A>, see also
+<A href="http://catless.ncl.ac.uk/Risks/21.08.html#subj9">here</A> and
+<A href="http://en.wikipedia.org/wiki/Swissair_Flight_111">here</A>
+
+<BR>
+<A href="http://en.wikipedia.org/wiki/Bashkirian_Airlines_Flight_2937">Bashkirian Airlines - 
+DHL crash</A> or
+<A href="http://de.wikipedia.org/wiki/Flugzeugkollision_von_%C3%9Cberlingen">Kollision
+Ueberlingen</A><BR>
+see also
+<A href="http://catless.ncl.ac.uk/Risks/22.19.html#subj8.1">Listen to TACS</A>,
+<A href="http://catless.ncl.ac.uk/Risks/24.50.html#subj2">Brazil 2006</A>,
+ and
+<A 
+href="http://catless.ncl.ac.uk/Risks/19.07.html#subj12.1">Airplane safety and GPS</A>
+<BR>
+<A href="http://en.wikipedia.org/wiki/Turkish_Airlines_Flight_1951">
+Turkish Airlines 1951, Boeing 737, Amsterdam, 25 February 2009;
+faulty radio altimeter, showing -8 feet instead of 1950 feet</A>, see also
+<A href="http://catless.ncl.ac.uk/Risks/25.60.html#subj2">here</A>,
+<A href="http://catless.ncl.ac.uk/Risks/25.60.html#subj5">here</A>, and
+<A href="http://news.bbc.co.uk/2/hi/europe/7923782.stm">here.<BR>
+<A href="http://www.tsb.gc.ca/eng/rapports-reports/aviation/2008/a08w0007/a08w0007.html">
+Air Canada 190, A319, loosing 4000ft by autopilot malfunction, 10 January 2008</A>, 
+see also
+<A href="https://www.airliners.net/forum/viewtopic.php?t=756491">here</A>.<BR>
+
+<A href="http://en.wikipedia.org/wiki/Spanair_Flight_5022">
+SPANAIR 5022 MD-82, Madrid, 20. August 2008:
+Abnormal take-off configuration with flaps at 0°: no alarm sounded</A>, see also
+<A href="http://www.welt.de/vermischtes/article2393646/Neue-Erkenntnisse-zum-Spanair-Absturz.html">here
+</A>, and
+<A href="http://catless.ncl.ac.uk/Risks/26.16.html#subj13">Spanair revisited</A>
+<BR><BR>
+
+Computer problems Airbus  Qantas flight 72 from Singapur to Perth, October 7, 2008.
+<A href="http://en.wikipedia.org/wiki/Qantas_Flight_72">Air Data Inertial Reference Unit
+supplies incorrect data to the flight control computers</A>.<BR>
+See also 
+<A href="http://www.atsb.gov.au/publications/investigation_reports/2008/AAIR/pdf/AO2008070_prelim.pdf">
+preliminary report</A>. <BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.38.html#subj1.1">Risk Digest 25.38</A>,
+<A href="http://www.atsb.gov.au/newsroom/2008/release/2008_43.aspx">Australian Government </A>,
+<A href="http://www.spiegel.de/reise/aktuell/0,1518,584046,00.html">Spiegel-Artikel</A>
+<A href="http://www.heise.de/newsticker/meldung/Computerfehler-schuld-an-Beinaheabsturz-1398777.html">Heise</A>,
+<A href="http://www.stuff.co.nz/travel/travel-troubles/6163633/Qantas-terror-blamed-on-computer">NZ</A>.
+
+<BR><BR>
+Similar Problem: <A href="http://en.wikipedia.org/wiki/Air_France_Flight_447">Air France flight 447, 
+31 May 2009</A>, see also
+<A href="http://www.airsafe.com/plane-crash/air-france-flight-447-airbus-a330-atlantic-ocean.htm">Airsafe</A>,
+<A href="http://catless.ncl.ac.uk/Risks/25.96.html#subj6">Risk Digest 25.96</A>,
+and <A href="http://www.time.com/time/world/article/0,8599,1902907,00.html">time.com</A>.
+<BR><A href="https://www.nytimes.com/2012/07/06/world/europe/air-france-flight-447-report-cites-confusion-in-cockpit.html">
+NYT</A>
+<A href="http://www.spiegel.de/panorama/absturz-von-air-france-447-abschlussbericht-vorgestellt-a-842868.html">Spiegel</A>,
+<A href="http://www.vanityfair.com/news/business/2014/10/air-france-flight-447-crash">Vanityfair</A>.
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>46. Railway disasters:<BR>
+
+<H4><A href="http://danger-ahead.railfan.net/">Danger ahead: Historic Railway Disasters</A> 
+<BR>See also
+<A 
+href="http://www.sarahandrobin.com/ingo/swr/allehtml.html">Word Processing Bug leads 
+to railway accident, Markup-Textsystem Paris June 1988</A><BR><BR>
+Other train accidents, e.g.
+<A href="http://en.wikipedia.org/wiki/Eschede_train_disaster">ICE Eschede train 
+disaster, 1998</A>, 
+<A href="http://danger-ahead.railfan.net/reports/rep99/paddington991005.html">Paddington
+Rail Tragedy, 1999</A> (see also
+<A href="http://catless.ncl.ac.uk/Risks/23.63.html#subj4">train overruns stops</A>), 
+and
+<A href="http://en.wikipedia.org/wiki/2006_Lathen_maglev_train_accident">Transrapid
+accident, Emsland, 2006</A>
+<BR><BR>
+<A href="http://catless.ncl.ac.uk/Risks/25.79.html#subj3">Washington, DC Metro crash</A>.
+<BR><BR>
+<A href="http://catless.ncl.ac.uk/Risks/26.01.html#subj5">London Dockland light railway accident</A>.
+<BR><BR><H2>
+
+<HR>
+
+<BR>47. Space Disasters:<BR>
+
+<H4><A href="http://sunnyday.mit.edu/papers/jsr.pdf">Role of Software 
+in Spacecraft Accidents</A> by Nancy Leveson (MCO, MPL, Ariane-5, 
+Titan/Milstar, SOHO)
+<BR>
+<A 
+
+href="https://en.wikipedia.org/wiki/List_of_spaceflight-related_accidents_and_incidents">Space accidents</A> 
+
+<BR><A 
+
+href="https://history.nasa.gov/sts51l.html">The 
+
+Challenger Accident</A> and
+<A href="http://en.wikipedia.org/wiki/Space_Shuttle_Columbia_disaster">Columbia accident</A>, see also
+<A href="http://en.wikipedia.org/wiki/Apollo_1">Apollo 1</A> and 
+<A href="http://en.wikipedia.org/wiki/Apollo_13"> Apollo 13</A>
+<BR>
+<A href="http://en.wikipedia.org/wiki/Nedelin_catastrophe">Nedelin catastrophe</A><BR>
+<A href="http://en.wikipedia.org/wiki/Soyuz_1">Soyuz 1</A> and
+<A href="http://en.wikipedia.org/wiki/Soyuz_11">Soyuz 11</A>.<BR>
+<A href="https://www.arkansasonline.com/news/2007/oct/21/soyuz-craft-lands-short-destination-cosmonauts-and/">
+Soyuz craft lands short of destination, 2007, damaged cable incontrol panel</A>, see also
+<A href="http://en.wikipedia.org/wiki/Soyuz_TMA-10">here</A>.
+<BR><BR><H2>
+
+<HR>
+
+<BR>48. Great Concert Disasters:<BR>
+
+<H4><A 
+
+href="http://www.arthurchandler.com/great-concert-disasters">Great Concert Disasters (Music)</A> 
+
+<H2>
+
+<HR>
+
+<BR>49. Tacoma Bridge (not a computer bug) <BR>(collapse, 1940)<BR>
+
+<H4><A 
+
+href="https://en.wikipedia.org/wiki/Tacoma_Narrows_Bridge_(1940)">Tacoma Narrows</A> 
+
+<BR><A 
+
+href="http://www.ketchum.org/ajp1.html">Resonance, Tacoma Narrows bridge failure</A><BR>
+
+<A href="https://www.wsdot.wa.gov/TNBhistory/">History of bridge  </A>,
+
+<A href="https://mse.redwoods.edu/darnold/math55/DEproj/sp03/seanmatt/presentation.pdf">Paper</A>,
+
+<A href="http://www.wsdot.wa.gov/TNBhistory/People/people2.htm">pictures  </A><BR>
+
+<A href="https://www.youtube.com/watch?v=j-zczJXSxnw">
+
+video 1  </A>and
+
+<A href="https://www.youtube.com/watch?v=nFzu6CNtqec">video 2</A>,
+<A href="https://www.youtube.com/watch?v=XggxeuFDaDU">video 3</A>.
+
+<BR><BR><H2>
+
+<HR>
+
+<BR>50. Railway Bug (not a computer bug, 1992?) <BR><BR>After reunification the 
+
+originally double-tracked line <BR>between Eichenberg - Arenshausen (near Kassel 
+
+and Erfurt) <BR>should be restored with only one track. <BR>Two building sites 
+
+start in Hessen and in Thüringen. <BR>Both groups built the'right' track! 
+
+<BR>
+
+<H4>Newsgroup: de.etc.bahn.eisenbahn, October 1999 <BR><A 
+
+href="bugse.html#eisenbahn">Additional 
+
+Stories</A><BR><BR><H2>
+
+<HR>
+
+<BR>51. Y2K <BR><H4>
+
+<A href="http://catless.ncl.ac.uk/Risks/22.20.html#subj3">Risk Digest 22.20</A><BR>
+<A href="http://americanradioworks.publicradio.org/features/y2k/index.html">Legacy of Y2K
+</A>
+<BR>
+<A href="http://en.wikipedia.org/wiki/Y2K">Wikipedia: Year 2000 Problem</A><BR>
+<A href="http://www.rvs.uni-bielefeld.de/research/Y2K/year2000_de.html">Das Jahr-2000-Problem</A>
+<A href="http://www.rvs.uni-bielefeld.de/research/Y2K/year2000.html">Year 2000 Problem</A>
+<BR>
+<A href="http://www.udo-leuschner.de/computer/cy2x.htm">Y2K im Rueckblick
+</A><BR>
+<A href="http://www.greenspun.com/bboard/q-and-a-fetch-msg.tcl?msg_id=002E8t">Bug Bite 2000</A>
+<BR>
+
+<BR><BR>
+See also
+<A 
+href="http://catless.ncl.ac.uk/Risks/6.36.html#subj10.2">leap year</A>, <A 
+href="http://www.sarahandrobin.com/ingo/swr/allehtml.html">holiday vs. working day</A>,<BR><BR>
+
+<A href="https://en.wikipedia.org/wiki/Battle_of_Ulm">
+Napoleon wins battle at Austerlitz because of Russina/Austrian calendar date confusion</A>, see also
+L. Kartsen, Globalization and Time, page 161.
+
+
+<BR><BR>
+Year 2010 bug on German bankcards (Jan 4 2010):
+<A href="https://www.ft.com/content/6e433188-fa32-11de-beed-00144feab49a">German 
+bank cards hit by 2010 bug, FT</A>. 
+<BR> See also
+<A href="http://stackoverflow.com/questions/2011631/whats-the-technical-reason-behind-the-2010-bank-card-problems-in-germany">
+What is the technical reason behind the 2010 card problems</A>,
+<A href="http://www.spiegel.de/netzwelt/netzpolitik/0,1518,670062,00.html">2010-Bug laesst Bankkunden verzweifeln
+</A> or
+<BR>  <A href="http://www.golem.de/1001/72245.html">Gemalto schliesst Austausch von Karten nicht aus</A>
+and <A href="http://www.gemalto.com/php/pr_view.php?id=683">Gemalto announcement</A>.
+<BR><A href="http://catless.ncl.ac.uk/Risks/25.89.html#subj1">Risk Digest 25.89</A>.
+<BR><BR>
+Leap second bug
+<A href="http://www.zdnet.de/news/41563176/schaltsekunde-laesst-websites-und-software-abstuerzen.htm">Schaltsekunde</A>.
+
+<BR><BR><H2>
+
+<HR><BR>
+
+52. Software Testing:<BR><H4> 
+
+<A href="http://www.welchco.com/02/14/01/60/95/12/0102.HTM">BYTE: How Software doesn't work</A>
+<BR>
+
+<A href="http://www.haifa.il.ibm.com/projects/verification/contest/index.html">ConTest / IBM</A><BR>
+
+<A href="report02-3.pdf">
+
+Report of the National Institute of Standards and Technology</A><BR>
+
+<A href="http://www.mtsu.edu/~storm/">MTSU - STORM</A><BR>
+
+<A href="http://sunnyday.mit.edu/papers/issc03-stpa.doc"> STAMP</A> and 
+<A href="http://sunnyday.mit.edu/papers/incose-04.pdf">STPA</A><BR>
+
+<A href="http://www.avacs.org/">Automatic Verification and Analysis of Complex Systems</A>
+<BR>
+<A href="http://www.pressetext.de/pte.mc?pte=060126030">Schaden durch Softwarefehler</A>
+<BR><BR>
+<HR>
+<H2>53. Rounding Errors <BR><H4>
+What is Rounding error, Pete Stewart:<BR><A 
+
+href="ftp://thales.cs.umd.edu/pub/misc/roundtalk.ps">Roundtalk</A> 
+or citation in
+<A href="http://www.netlib.org/na-digest-html/99/v99n43.html#1">netlib</A>
+<BR>
+<A href="http://www5.in.tum.de/persons/huckle/kahan.ps">Kahan and IEEE</A><BR>
+<A href="http://www.eecs.berkeley.edu/~wkahan/Mindless.pdf">How futile are mindless 
+assessments of roundoff in floating-point computation (Kahan)</A><BR>
+
+<A href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.103.2519">
+Numerical Computation Guide
+</A> (or <A href="numericalcomputationguide.pdf">here</A>), and 
+<A href="http://www.cs.berkeley.edu/~demmel/cs267/lecture21/lecture21.html">Basic issues in float.</A>
+<BR><A href="http://docs.sun.com/source/806-3568/ncg_goldberg.html">D. Goldberg:
+What every computer scientist should know about floating-point arithmetic</A>
+<BR>
+<A href="http://www.cs.berkeley.edu/~wkahan/SPECbnch.pdf">SPEC Benchmarks and float </A><BR>
+<A href="http://www.cs.berkeley.edu/%7Ewkahan/JAVAhurt.pdf">Java's float</A><BR>
+<A href="http://www.netlib.org/na-digest-html/08/v08n08.html#3">
+Cosine bug in Linux</A><BR><BR>
+
+<A name=ill>New:</A>
+<A href="http://www.sgipt.org/e/wisms/nis/spearm0.htm">Ill-conditioned Correlation Matrices
+in Psychology</A>
+
+<BR><BR><A href="http://www.maths.manchester.ac.uk/~higham/asna/index.php">Accuracy and 
+
+Stability of numerical Algorithms</A>, book by Nick Higham. <BR><BR><A 
+
+href="http://www.cs.nyu.edu/cs/faculty/overton/book/index.html">Numerical 
+
+Computing with IEEE Floating Point Arithmetic</A>, book by Michael Overton. 
+
+<BR><BR>
+
+
+
+
+<HR><H2>
+54. NSA, Snowden, Privacy<H4>
+<BR>
+<A href="http://catless.ncl.ac.uk/Risks/28.48.html#subj7">US spies on millions of cars</A>,
+<BR>
+<A href="http://onpoint.wbur.org/2012/01/12/the-wired-car">Car supervision</A>.
+<BR>Big Data - Spying
+<A href="http://www.zdnet.com/article/why-big-data-evangelists-need-to-be-reprogrammed/">BIG DATA</A>,
+<A href="http://catless.ncl.ac.uk/Risks/27.83.html#subj2">Spying</A>.
+<BR>Privacy Post-Snowden
+<A href="http://www.pewinternet.org/2015/03/16/americans-privacy-strategies-post-snowden/">Post Snowden 1</A>,
+<A href="http://www.privacysurgeon.org/blog/incision/global-security-analysis-reveals-widespread-government-apathy-following-snowden-disclosures/">
+Post Snowden 2</A>.
+
+<HR>
+<H2>
+<BR><A name=WWW>General Web Sites on Bugs and Reliability:</A><BR><BR>
+Collections of Bugs:<H4>
+<BR>
+Risks Digest: <A 
+
+href="http://catless.ncl.ac.uk/Risks/">http://catless.ncl.ac.uk/Risks/</A> 
+
+<BR>z.B. Sojourner, Altona, Reverse Thrust, Banking bugs, DMV California, 
+
+SDI
+
+<BR>Newsgroup comp.risks <BR><BR><A 
+
+href="http://www.math.psu.edu/dna/disasters/">http://www.math.psu.edu/dna/disasters/</A> 
+
+<BR>Sleipner, Ariane 5, Patriot <BR><BR>
+
+<A href="https://www.nsc.liu.se/wg25/book/ch1/">Accuracy and Reliability in Scinetific computing</A><BR><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/26.83.html#subj1">Poorly designed User Interface (Vincennes,,...)</A><BR><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/26.71.html#subj20">New book, Nancy Leveson: Engineering a safer World</A><BR><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/26.69.html#subj2">SW reliability, David Jefferson</A><BR><BR>
+ 
+<A href="http://ercim-news.ercim.eu/en99/special/estimating-the-costs-of-poor-quality-software-the-iceberg-project">
+Estimating Costs of poor Software: Iceberg Project</A><BR><BR>
+
+<A href="https://www.computerwoche.de/a/zehn-spektakulaere-softwarefehler,2553543">SW-Pannen 2013</A><BR><BR>
+<A href="http://www.computerwoche.de/a/die-spektakulaersten-softwarefehler-2012,2531034">SW-Pannen 2012</A><BR><BR>
+
+<A href="https://en.wikipedia.org/wiki/Ramsey_theory">Ramsey Order</A><BR><BR>
+
+<A href="http://www.der-postillon.com/2013/02/lego-startet-neue-serie-gescheiterte.html">Lego gescheiterte deutsche Großprojekte</A>
+
+<BR><BR>
+
+<A href="http://sunnyday.mit.edu/accidents/index.html">N. Leveson</A> 
+(Ariane 5, MCO, MPL, Challenger, Titan/Centaur/Milstar, Warsaw Airbus
+
+<BR><BR><A href="http://www.astonisher.com/archives/bugnet/
+">bugnet</A> <BR>Y2K, 
+
+Windows 98, PC Bug Fixes. <BR><BR>
+
+
+<A href="http://www.cs.clemson.edu/~steve/Spiro/stories.htm">
+Stories for Computation: Why Care is Needed</A> (Cerro Grand Fire (wrong model for
+fire), Cassini-Huygens,
+Hubble (small value, but not zero), Apollo 11 (gravity considered as repulsive 
+instead of attractive), Vincennes, Ozon whole (dramatic data vlaues were rejected 
+by software)
+
+<BR><BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/2.01.html">Risks Digest Disaster List 
+
+January 1986</A> <BR><BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/4.01.html#subj1">Illustrative Risks in the 
+
+Use of Computer Systems, November 1986</A> Risks Digest. <BR><BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/3.41.html#subj4.1">Questions and Answers, 
+
+August 1986</A>, Risks Digest. <BR><BR>
+
+<A href="http://www.student.cs.uwaterloo.ca/~se101/Safety.pdf">
+Safety and Hazard Analysis:</A> Therac 25, NASA Space Shuttle Safety
+<BR><BR>
+
+<A href="http://sunnyday.mit.edu/accidents/">Accident reports</A> (MCO, MPL,
+Ariane 5, Challenger, Titan/Centaur/Milstar, Airbus Warsaw,...)<BR><BR>
+
+<!-- <A href="http://www4.in.tum.de/lehre/seminare/ps/WS0203/desaster/">Seminar TUM, Prof. Nipkow
+</A> (Therac, MCO, Ariane, Pentium, Hamburg Altona, STS-1, Airbus Warshaw)<BR><BR>  -->
+<A 
+
+href="trenches.htm">trenches</A> 
+
+<BR>Bank of America, US Federal Reserve System, Iranian Airbus, Department of 
+
+Motor Vehicles California, Lion King CD, ... <BR><BR><A 
+
+href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=4&ved=2ahUKEwj0pISG8_7hAhXB_aQKHWbzBR4QFjADegQIAhAC&url=http%3A%2F%2Fwww.scs.carleton.ca%2F~sbtajali%2F4004%2Fslides%2Flec01-intro-course-outline.ppt&usg=AOvVaw3HNA-zPkDpauNE57YTf-94">
+Lecture</A> 
+
+<BR>Therac-25, London Ambulance System, Taurus Stock Exchange program, E-mail 
+
+buffer overflow, USS Yorktown, ... <BR><BR><A 
+
+href="http://www.sarahandrobin.com/ingo/swr/allehtml.html">Giese</A><BR>(in 
+
+German): Software in general, Mariner 1, AT&amp;T, Therac-25, Voyager 2, Gemini, 
+
+Apollo, Space Shuttle, Eole, Phobos, SDI, Exocet, F-16, Airplanes, NORAD, new 
+
+Planet 1991, Bank bugs,Vancouver, general Literature, and much more. <BR><BR><A 
+
+href="http://www.softwareqatest.com/qatfaq1.html#FAQ1_3">http://www.softwareqatest.com/qatfaq1.html#FAQ1_3</A><BR>Russian 
+
+early-warning monitoring system 1983, Telephone bugs, Banking bugs, Software 
+
+Engineering in general, ... <BR><BR>
+<A 
+
+href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">http://www.cs.tau.ac.il/~nachumd/verify/horror.html</A><BR>Horror 
+
+Stories: Airbus, London Ambulance, Exocet, Space Shuttle, NORAD, airplanes, 
+
+AEGIS, Banking bugs, and much more. <BR><BR>
+
+
+<A href="art20.html">Mirror 
+
+of http://www.byte.com/art/9509/sec7/art20.htm</A><BR>BYTE: SDI, Banking bugs, 
+
+Windows, Therac-25, Wall Street,... <BR><BR><A 
+
+href="http://www5.in.tum.de/persons/huckle//horrorn.pdf">SEN computer horror stories</A>
+(or <A href="http://www.cs.queensu.ca/Software-Engineering/archive/horror">here</A>)
+<BR>Vancouver 
+
+Stock Market Index, BART, Weather Prediction, airplanes, Norad, and much more. <BR><BR>
+
+<A href="http://ta.twi.tudelft.nl/nw/users/vuik/wi211/disasters.html">Disaster page 
+by Kees Vuik</A>  (Patriot, Ariane, Euro conversion, Vancouver, ...)<BR><BR>
+
+<A href="http://www.uni-koblenz.de/~beckert/Lehre/Seminar-Softwarefehler/Ausarbeitungen/">
+Seminar  Uni Koblenz</A>, also
+<A href="http://www.uni-koblenz.de/~beckert/Lehre/Seminar-Softwarefehler/"> here</A>
+(Ariane, Pentium, Mars Climate Orbiter and Sojourner, Hamburg Altona, Green party convent,...) 
+<BR><BR>
+
+<A href="http://www.mtholyoke.edu/~rzdalea/cs100/software_disasters/sd.htm">
+Software Disasters</A> (Airbus crash, Therac, Ariane,...)
+<BR><BR>
+
+<A href="http://royal.pingdom.com/2009/03/19/10-historical-software-bugs-with-extreme-consequences/">
+10 SW bugs: Norad, ozone,..</A><BR><BR> 
+
+<A href="http://www.computerworld.com/s/article/9183580/Epic_failures_11_infamous_software_bugs">
+11 infamous software bugs: Windowds genuine, Osprey aircraft crash, end-of-the-world bugs,..</A><BR><BR>
+
+<A href="https://www.networkworld.com/article/2257122/bizarre-bugs--9-of-the-strangest-software-glitches-ever.html">
+Software Bugs: MacIn tax, ebay, Tivo, Nintendo, Skype, Android, Zune-Player, Google Malware,..</A><BR><BR>
+
+<A href="http://www.wired.com/software/coolapps/news/2005/11/69355">
+History's worst software bugs</A><BR><BR>
+
+<A href="http://www.rvs.uni-bielefeld.de/publications/#e-j-essays">
+Peter Ladkin collection</A><BR><BR>
+
+<A href="http://www.cse.psu.edu/~gxt29/bug/softwarebug.html">
+Collection of well-known software failures (MCO, Denver,..)</A><BR><BR>
+
+<A href="http://www.astonisher.com/archives/win95_bugs.html">
+Windows 95 bug collection</A><BR><BR>
+
+<A href="http://www.staff.uni-mainz.de/pommeren/DSVorlesung/Grundprobleme/Gefahren.html">
+Datensicherheit (Kreditkarten, RFID,..)</A><BR><BR>
+
+<A href="http://www.csl.sri.com/users/neumann/illustrative.html">
+Illustrative risks, PGN</A><BR><BR>
+
+<A href="http://www6.svsu.edu/~koperski/cases.htm">
+Bug Case Studies (non-computer)</A>, Koperski (power plant, Quebec Bridge,..)
+<BR><BR>
+
+<A href="http://www.talkingeasy.com/09computers.html">Computer anectoda</A>,
+<A href="https://www.anecdote.com/?s=computer">also here</A>, 
+<A href="https://history.computer.org/annals/anecdotes/">and here</A>.
+<A href="http://www.rinkworks.com/stupid/">Computer stupidities</A>,
+<A href="https://de.industryarena.com/forum/die-entwicklung-der-computer--5685.html">citations related to computers
+</A>, and
+<A href="http://www.techtales.com/">techtales</A>
+
+<BR><BR>
+<H3><HR><BR>
+Paper, talks, and books on reliable Software:
+<BR><H4>
+<A href="http://www.mrtc.mdh.se/projects/tatoo/Safe-rev3.pdf">
+Safe and Reliable Computer Control</A> by Henrik Thane
+<BR>
+<A href="http://en.wikipedia.org/wiki/Computer_bug">wikipedia: Computer_bug</A>, see also
+<A href="http://www.fact-index.com/c/co/computer_bug.html">here</A><BR>
+
+<A href="http://www.nsc.liu.se/wg25/book/">Accuracy and Reliability in Scientific Computing - </A><BR>
+
+<A href="http://www.cis.gsu.edu/~mmoore/CIS3300/handouts/SciAmSept1994.html">SciAmSept1994</A><BR>
+
+<A href="http://www.csl.sri.com/users/neumann/illustrative.html">Illustrative Risks - P.G. Neumann</A><BR>
+
+<A href="http://techcenter.davidson.k12.nc.us/Group3/main2.htm">
+
+Problems with space flights</A><BR>
+
+<A href="softwareAging">Software Aging, talk by D. Parnas</A><BR>
+
+<A href="elektronikfehler.pdf">Elektronikfehler by J. Niehaus</A><BR>
+
+<A href="http://www.ba-education.demon.co.uk/for/hardware/reliablity.html">Reliability of computer systems</A>
+<BR>
+<A href="http://staff.washington.edu/jon/pubs/safety-critical.html">Software Computing: 
+Hazards</A>
+<BR><A 
+href="bugs.html">Kleine 
+BUGs, große GAUs (Vortrag)</A> <BR><A 
+href="http://www-pu.informatik.uni-tuebingen.de/users/klaeren/herakles/herakles.html">
+Calculemus (Vortrag)</A>
+<BR>
+Spass (Fun) am Absturz von Computern und Netzen? Prof. Brunnstein (in German): <A 
+href="http://museum.foebud.org/texte/ccc/ccc95/artikel/bruns.htm">Spass am Absturz</A> and
+
+<A 
+
+href="http://www.chscene.ch/ccc/ds/54/032_brunnstein.html">Gesammelte Pannen</A> 
+
+<BR>
+<A href="http://www.iese.fraunhofer.de/fhg/Images/Softwareentwicklung_Deutschland_Evasoft_tcm175-46413.pdf">
+Analyse und Evaluation der Softwareentwicklung in Deutschland</A><BR>
+
+<A href="http://www.sci.brooklyn.cuny.edu/~kopec/csc79000/0214_LEVESON1_4_2ANI_2_13_03.ppt"> Nancy Leveson: Safeware</A><BR>
+
+<A href="http://www3.interscience.wiley.com/cgi-bin/abstract/113445469/ABSTRACT?CRETRY=1&SRETRY=0">
+G.J. Myers: Software Reliability Principles and Practice</A><BR>
+
+
+<A href="http://portal.acm.org/citation.cfm?id=529232">Digital Woes</A> by Lauren Ruth Wiener<BR>
+
+<A 
+
+href="http://www.cantrip.org/nobugs.html">Bill 
+
+Gates Interview: No Bugs in WIN95</A> <BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/22.01.html#subj3">Comparison: computers to Cars, 2002
+</A><BR>
+
+<A href="http://catless.ncl.ac.uk/Risks/22.29.html#subj4">
+
+Microsoft statement on bugs</A><BR>
+
+<A href="http://www.sciencedirect.com/science?_ob=ArticleURL&_udi=B6V0B-3Y1643H-3&_user=616147&_rdoc=1&_fmt=&_orig=search&_sort=d&view=c&_acct=C000032324&_version=1&_urlVersion=0&_userid=616147&md5=b533b2d0440f90c3789f6c8bf616d464">
+Analysis of software bug causes and its prevention, Nakashima, Oyama, Hisada, Ishii, 
+Information and Software Technology 41(15), 1059-1068, 1999</A><BR>
+
+<A href="http://press.princeton.edu/books/rochlin/chapter_09.html#p30">
+Rochlin: Trapped in the Net</A><BR>
+
+<A href="http://www.cs.toronto.edu/~chechik/talks/highschool.ps">
+Whys and Whynots of Software Engineering, Marsha Chechik, 1997</A><BR>
+
+<A href="http://people.engr.ncsu.edu/efg/379/sum03/lectures/wk13/lecture.html">
+Software Safety with examples, NCSU</A><BR>
+
+<A href="http://local.cis.strath.ac.uk/teaching/ug/classes/52.422andrew/his_systems_concerns_three.pdf">
+Software safety requirements, with examples, Strathclyde</A><BR>
+
+<A href="http://www.spinellis.gr/codequality/">
+Code Quality: The open source prespective,Spinellis</A><BR>
+
+<A href="http://www.cs.uiowa.edu/~oliveira/SCISOFTBOOK/">
+Writing Scientific Software, Oliveira, Stewart</A>
+
+<BR><BR>
+
+Criticizing the NASA Management:
+
+<A href="http://www.fysh.org/~zefram/nasa/sts107_culture.txt">NASA cultural failures</A>,
+
+<A href= "http://www.computerworld.com/governmenttopics/government/story/0,10801,78135,00.html">
+NASA has history of glitches </A>,
+
+<A href="http://www.spectrum.ieee.org/sep07/5481">Lost in Space </A>,
+
+<A href="bugse.html#NASA">NASA Management </A>, and
+<A href="http://query.nytimes.com/gst/fullpage.html?res=9A0CE2DF1739F931A25756C0A9649C8B63">
+NASA buys space shuttle 8086 computer chips at Ebay</A>.
+
+<BR><BR>
+
+<HR>
+<H3>
+<BR>Further Keywords:<BR><H4>
+ <A 
+href="http://catless.ncl.ac.uk/Risks/16.41.html#subj9.3">The urban legend: 
+Neuron Net and tank recognition</A><BR>  
+</A>
+<A href="http://catless.ncl.ac.uk/Risks/21.35.html#subj6">
+The funny Hi-Tech Toilet Glitch</A>
+<BR><BR>
+
+Further Banking Bugs: Bank of 
+
+America, US Federal Reserve System, Westpac<BR>(Loss of accounts, wrong 
+
+transfers, ATM teller)  (see <A href="trenches.htm">trenches</A>, 
+<A href="http://www.softwareqatest.com/qatfaq1.html#FAQ1_3">Softwarequatest</A>,
+<A href="http://www-aix.gsi.de/~giese/swr/">Probleme der Datenverarbeitung</A>,
+<A href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">Horror</A>,
+<A href="http://www5.in.tum.de/persons/huckle/art20.html">Notorious Bugs</A>
+
+
+
+<BR><BR>
+
+<HR>
+
+
+
+<HR>
+<H3>
+<BR><A name=general>Bugs in general:</A> <BR><BR><BR>
+INTEL: no more than 80-90 
+
+Bugs in Pentium. <BR><BR>Standard Software: 25 bugs per 1000 lines of program. 
+
+<BR>Good Software: 2 errors per 1000 lines. <BR>Space Shuttle Software: &lt; 1 
+
+errors per 10000 lines. <BR><BR>Example Handy (Cellular Phone): <BR>200 000 
+
+lines of program: up to 600 errors. <BR><BR>Windows-95: 10 Mill. lines: up to 
+
+200 000 errors. See also <BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/20.82.html#subj4">catless.ncl.ac.uk/Risks/20.82.html#subj4</A> 
+
+<BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/20.80.html#subj9">catless.ncl.ac.uk/Risks/20.80.html#subj9</A> 
+
+<BR><A 
+
+href="http://catless.ncl.ac.uk/Risks/20.82.html#subj7">catless.ncl.ac.uk/Risks/20.82.html#subj7</A> 
+
+<BR><BR>Banana Software: Let the Software ripe at the customer! <BR>'It's not a 
+
+bug, it's a feature' <BR><BR>
+
+<HR>
+
+
+
+<HR>
+
+<BR><BR>Further interesting stories: <BR><BR><A 
+href="http://ndevilla.free.fr/lena/">Image Processing: The story of Lena</A> 
+
+<HR>
+
+<A href="Sutton_Spinach_Iron_and_Popeye_March_2010.pdf">The spinach, Iron, Popeye 
+story</A>
+<HR>
+<A href="http://seattlepi.nwsource.com/national/spy301.shtml"> 
+Stealth Software stolen?</A>
+<BR><BR>
+<HR><HR>
+
+</H3>
+
+<H4><A name=fpu>2. Pentium Processor:</A><BR>A bug in the floating point unit 
+
+(FPU) of the Pentium II and the Pentium Pro processors, also known as the 
+
+Pentium II and Pentium Pro FPU bug or the flag erratum (as it is referenced by 
+
+Intel). This bug occurs with operations that convert floating point numbers into 
+
+integers (compare also Ariane-5 explosion). <BR><BR>
+
+<HR>
+
+<BR><A name=calc>2. Pentium Processor:</A><BR>Calculator applet in Windows gives 
+
+wrong answers (1991), see <A 
+
+href="http://www.byte.com/art/9509/sec7/art20.htm">Don't use the calculator 
+
+</A>. <BR><BR>
+
+<HR>
+
+<BR><A name=mars>4. Mars Climate Orbiter</A><BR>'The recent crash of the Mars 
+
+Orbiter was the direct consequence of unbelievably bad numerics done by the 
+
+contractor who supplied a navigational instrument to NASA for the spacecraft. 
+
+That instrument computed its output, using Imperial units!!! And nobody at NASA 
+
+noticed that there was anything odd about the output of that instrument, until 
+
+the inquest which followed the crash.' (Garry J. Tee) <BR><BR>'Actually, it was 
+
+a mixture of pounds and kilograms. Lockheed was sending small-force events to 
+
+JPL in pound-second units, but the contract had specified Newton-second units, 
+
+and that was what the JPL software expected. <BR>It wasn't really a software 
+
+error in the classical sense -- both programs performed according to their 
+
+specifications. It was a validation error: Lockheed had built the wrong program 
+
+correctly.' (Van Snyder) <BR><BR>SDI laser experiment 1985 failed because 
+
+computer data was in nautical miles instead of feet, see <A 
+
+href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">31. </A><BR><BR>Gemini 
+
+V missed landing point, because program ignored motion of the earth around the 
+
+sun, see <A href="http://www.cs.tau.ac.il/~nachumd/verify/horror.html">27.</A> 
+<BR><BR>
+The battle of Austerlitz between Napoleon and the Austrian-Russian coalition was lost 
+because Austrians used the Gregorian calender and Russians the Julian; so the Russian
+started too late to unite with the Austrian forces. Hence General Mack von Leiberich
+forfeited the first battle near Ulm on september 25th 1805 
+loosing 70.000 soldiers. At the battle of Austerlitz there were only 85.400 soldiers 
+(16.000 Austrians left) of the coalition against 73.000 men fighting for Napoleon, see
+<A href="http://www.wasistwas.de/geschichte/alle-artikel/artikel/link//bf0219dda9/browse/6/article/die-schlacht-von-austerlitz.html?tx_ttnews%5BbackPid%5D=48">
+here in German</A> or
+<A href="http://www.historynet.com/wars_conflicts/napoleonic_wars/3036636.html?showAll=y&c=y">
+here in English</A>.
+ 
+<BR><BR>
+
+<HR>
+
+<BR><A name=mariner>6. NASA Mariner 1</A><BR>Mariner 18 lost due to missing NOT 
+
+in program, see <A 
+
+href="http://www5.in.tum.de/persons/huckle//horrorn.pdf">5/2</A> 
+
+<BR><BR>
+
+<HR>
+
+<BR><A name=planet>14. ROSAT-Bug</A><BR>In 1991 a group in Mancester working in 
+
+Radio Astronomy anounced the first discovery of a planet outside of our solar 
+
+system. One year later it turned out that they had an error in the formula of 
+
+the motion of the earth around the sun. <BR><BR>
+
+<HR>
+
+<BR><A name=sleipner>15. Sleipner Offshore Platform</A><BR>A new ferry named 
+
+Sleipner sank in autumn '99; Norwegians should avoid the name 
+
+'Sleipner'.<BR>Sleipner is a name from Viking mythology, namely the eight legged 
+
+horse of Odin, see <A 
+
+href="http://en.wikipedia.org/wiki/Sleipnir">Wikipedia on Sleipnir.</A> <BR><BR>
+
+<HR>
+
+<BR><A name=lothar>17. Thunderstorm "Lothar", Berliner Morgenpost, 
+
+27.1.2000</A><BR>Kaum ein Lueftchen regte sich am zweiten Weihnachtsfeiertag des 
+
+Jahres 1999 am Bodensee. Nur das Barometer an der Wand deutete Ungewoehnliches 
+
+an: Der Luftdruck sackte in den Keller, als waere das Geraet hoffnungslos 
+
+defekt. Genau so hatte auch das Prognoseprogramm des deutschen Wetterdienstes 
+
+reagiert, als in der Nacht zuvor automatische Messgeraete meldeten, der 
+
+Luftdruck ueber der Biskaya sei innerhalb von drei Stunden um zwanzig 
+
+Hektopascal gesunken. Ein solch rascher Abfall aber war in dieser Weltgegend 
+
+noch nie registriert worden. Deshalb tat das Programm etwas sehr Logisches: Es 
+
+interpretierte den extremen Luftdruckabfall als Messfehler - und ignorierte ihn. 
+
+Die Wettervorhersage fuer den 26. Dezember warnte dann nur vor 
+
+Windgeschwindigkeiten bis zu 90 Kilometern in der Stunde. ...... <BR><BR>
+
+<HR>
+
+<BR><A name=torpedo>22. 180 Degree Bugs:</A><BR>Torpedos, that deviate more than 
+
+90 degree, explode to avoid self destruction of the ship. Once upon a time a 
+
+ship fired a torpedo but the torpedo was jammed in the tube. Then the captain 
+
+gave the command: Let's turn around and return to the harbour! <BR><BR>
+
+<HR>
+
+<BR><A name=eisenbahn>44. Railway Bug</A> <BR>Inverse Story: One track of the 
+
+line Rostock - Schwaan had to be pulled down and brought to Russia after World 
+
+War II as reparation; on both sides they pull down the right track! <BR>Shifted 
+
+Story: Building a railway line from Austria to Germany in the last century; at 
+
+the meeting point there is a difference in altitude of 0.8 m, because Germany 
+
+refers to the North Sea and Austria to the Mediterranean Sea. <BR><BR>
+
+<HR>
+
+<BR><A name=euro>9. Euro Conversion</A> <BR>1 EURO = 1.95583 DM --&gt; 0.01 DM = 
+
+0.01 Euro and 0.01 EURO = 0.02 DM <BR><BR>
+
+<HR>
+
+<BR><A name=atm>35. ATM</A>, Sueddeutsche Zeitung, 09.01.2002: <BR>Glückspilz 
+
+mit Geldsegen ohne Geheimzahl <BR>Manche Zeitgenossen ohne Zahlengedächtnis 
+
+mögen sich in den vergangenen ersten Tagen des neuen Jahres als Glückspilze 
+
+gefühlt haben: Ganz ohne Geheimzahl konnten Postbank-Kunden mit ihrer Sparcard 
+
+bis Montagabend unbegrenzt Geld abheben. Das bestätigte Unternehmenssprecher 
+
+Hartmut Schlegel: «Aufgrund eines Softwareproblems konnten bei allen anderen 
+
+Geldinstituten außer der Postbank selbst mit beliebigen Pincodes Euro abgehoben 
+
+werden, ohne dass das Sparkonto mit der abgehobenen Summe belastet wurde.» 
+
+<BR>Zwar habe die Postbank bereits in den ersten Tagen des Jahres den Fehler bei 
+
+der Ende Dezember neu installierten Software bemerkt. «Da das Schadensrisiko aus 
+
+unserer Sicht minimal war, haben wir den Fehler korrigiert, ohne das System für 
+
+unsere Kunden zu sperren. Gegenwärtig wissen wir nur von einem einzigen Fall in 
+
+Hamburg, wo der Softwarefehler zufällig entdeckt wurde. Der Betroffene muss das 
+
+abgehobene Geld zurückgeben», so Schlegel weiter. .... <BR><BR>
+
+<HR>
+
+<BR><A name=party>5. Green Party Convent fails</A>, Stuttgarter Zeitung, 
+
+25.2.2002: <BR>Parteitag platzt wegen eines Computerfehlers ..... <BR>Die 
+
+Auszählung dauerte lange. 201 Delegierte hatten ihre Stimme abgegeben. Die 
+
+Satzung begrenzt die Zahl der Vertreter der Basis aber auf 200.... <BR><BR>Bei 
+
+genauer Betrachtung ist zwei plus zwei eben drei, Stuttgarter Zeitung, 
+
+26.6.2002: <BR>Von Rainer Klüting und Renate Allgöwer <BR>... Was bei der 
+
+Einladung zur Wahlversammlung der Grünen passiert ist, hätten die grünen Rechner 
+
+im Anfängerkurs an der Volkshochschule lernen können. Excel, so lernt man dort, 
+
+kann krumme Zahlen auf dem Bildschirm gerundet anzeigen. Beim Runden wird aus 
+
+der Zahl 1,5 eine 2. Die 2 erscheint am Bildschirm, aber intern merkt sich Excel 
+
+die krumme Zahl. Addiert man nun zwei solcher Zahlen, dann macht Excel aus 1,5 
+
+plus 1,5 korrekterweise 3. Am Bildschirm aber ist zu lesen: 2 plus 2 ist 3. 
+
+<BR>So oder ähnlich muss es passiert sein. Die Grünen hatten 200 
+
+Delegiertenplätze zu vergeben. Um die 47 Wahlkreise möglichst gerecht zu 
+
+berücksichtigen, wird deshalb die Mitgliederzahl eines Wahlkreises durch die 
+
+Gesamtzahl der Mitglieder im Land geteilt und dann mit 200 malgenommen. Dabei 
+
+kann herauskommen, dass Wahlkreis A 1,5 Delegierte schicken darf, Wahlkreis B 
+
+7,3 und Wahlkreis C 3,9 Delegierte. <BR>Wahlkreis A bekommt zwei Delegierte, 
+
+denn diese Mindestzahl wird jedem Kreis zugestanden. Gibt es zehn solcher 
+
+kleinen Wahlkreise, sind damit bereits zwanzig Delegiertenplätze vergeben. 
+
+Wahlkreis B bekommt nun zunächst sieben, Wahlkreis C drei Delegierte, 
+
+entsprechend den Ziffern vor dem Komma. Sind auf diese Weise alle Wahlkreise 
+
+berücksichtigt, bleiben in der Regel noch freie Plätze übrig. Die werden nach 
+
+den Zahlen hinter dem Komma vergeben. Wahlkreis C hat, wegen der Neun hinter dem 
+
+Komma, gute Chancen auf einen weiteren Platz, Wahlkreis B nicht so gute. <BR>So 
+
+wird auf möglichst gerechte Weise gewährleistet, dass keinem Wahlkreis ein 
+
+halber oder ein Vierteldelegierter bewilligt wird. Doch Excel rechnet nicht mit 
+
+Delegierten, sondern mit Zahlen, und die dürfen krumm sein. Selbstverständlich 
+
+kann Excel auch mit ganzen oder gerundeten Zahlen rechnen. Dem Grünen-Büro sei 
+
+an dieser Stelle die Tabellenfunktion "Runden" empfohlen, die eine krumme Zahl 
+
+auf eine beliebige Anzahl von Stellen rundet. <BR>Oder, noch einfacher: In den 
+
+Einstell-Optionen gibt es einen Schalter mit der zugegeben rätselhaften 
+
+Beschriftung "Genauigkeit wie angezeigt". Klickt man diesen Schalter an, rechnet 
+
+Excel exakt mit den Zahlen, die auf dem Bildschirm angezeigt sind. Dieser kleine 
+
+Trick hätte den Grünen vermutlich einen zweiten Anlauf zum Wahlparteitag 
+
+erspart. Dann nämlich hätte am Ende der Delegiertenliste als Summe die Zahl 202 
+
+gestanden. Und das sind zwei zu viel. ... <BR>
+See also <A href="http://www.uni-koblenz.de/~beckert/Lehre/Seminar-Softwarefehler/Ausarbeitungen/westenberg.pdf">
+Seminar</A>
+
+<HR>
+
+<BR><A name=NASA>NASA management: </A>Berliner Morgenpost, 12.Mai 2002:
+
+NASA is buying replacement parts for Space Shuttle computer chips at ebay<BR>
+
+ NASA kauft Ersatzteile für Spaceshuttle bei eBay und Yahoo Houston. Das Raumfahrtprogramm der USA ist abhängig von Ersatzteilen, die nicht mehr produziert werden. Wie die New York Times berichtet, sucht die NASA für ihre Spaceshuttles Computerchips, die nicht mehr ...
+
+<H3></BODY></HTML>
+
