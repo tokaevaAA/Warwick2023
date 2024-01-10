@@ -1,0 +1,1857 @@
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    
+    
+    <link href="https://files.realpython.com" rel="preconnect">
+
+    <title>Fourier Transforms With scipy.fft: Python Signal Processing – Real Python</title>
+    <meta name="author" content="Real Python">
+    <meta name="description" content="In this tutorial, you&#x27;ll learn how to use the Fourier transform, a powerful tool for analyzing signals with applications ranging from audio processing to image compression. You&#x27;ll explore several different transforms provided by Python&#x27;s scipy.fft module.">
+    <meta name="keywords" content="">
+
+    
+  
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+
+    
+      <link rel="stylesheet" href="/static/realpython.min.4b158d0d7cd2.css">
+      <link rel="stylesheet" href="/static/gfonts/font.5ac42994de49.css">
+      <link rel="preload" href="/static/glightbox.min.9b438b29cef1.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/static/glightbox.min.9b438b29cef1.css"></noscript>
+    
+
+    
+  
+  
+  <link rel="preload" as="image" href="https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg" imagesrcset="/cdn-cgi/image/width=480,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 480w, /cdn-cgi/image/width=640,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 640w, /cdn-cgi/image/width=960,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 960w, /cdn-cgi/image/width=1920,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 1920w" imagesizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)">
+
+
+    
+    
+      <link rel="canonical" href="https://realpython.com/python-scipy-fft/">
+
+      
+      
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg">
+        <meta property="og:image" content="https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg">
+      
+      <meta name="twitter:creator" content="@realpython">
+      <meta name="twitter:site" content="@realpython">
+      <meta property="og:title" content="Fourier Transforms With scipy.fft: Python Signal Processing – Real Python">
+      <meta property="og:type" content="article">
+      <meta property="og:url" content="https://realpython.com/python-scipy-fft/">
+      <meta property="og:description" content="In this tutorial, you&#x27;ll learn how to use the Fourier transform, a powerful tool for analyzing signals with applications ranging from audio processing to image compression. You&#x27;ll explore several different transforms provided by Python&#x27;s scipy.fft module.">
+    
+
+    <link href="/static/favicon.68cbf4197b0c.png" rel="icon">
+    <link href="https://realpython.com/atom.xml" rel="alternate" title="Real Python" type="application/atom+xml">
+    <link rel="manifest" href="/manifest.json">
+
+    
+
+    
+    
+
+    
+    <script id="icons-data" type="application/json">{"iconsUrl": "/static/icons.55e8f03acfe3.svg"}</script>
+
+    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  
+
+  ga('create', 'UA-35184939-1', 'auto', {'allowLinker': true});
+
+  
+
+  
+
+  
+  
+  ga('set', {
+    dimension1: false,
+    dimension2: false
+  });
+  
+
+  ga('send', 'pageview');
+  
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7L6L5F6Y6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-L7L6L5F6Y6');
+
+  
+</script>
+
+  </head>
+  <body >
+    
+      
+
+
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark flex-column ">
+  <div class="container flex-row">
+
+    <a class="navbar-brand" href="/">
+      <img src="/static/real-python-logo.893c30edea53.svg" width="165" height="40" class="d-inline-block align-top" alt="Real Python">
+    </a>
+
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse navbar-nav-scroll" id="navbarSupportedContent" role="navigation" aria-label="Main Navigation">
+
+      <ul class="navbar-nav mr-2">
+
+        <li class="nav-item">
+          <a class="nav-link" href="/start-here/">Start&nbsp;Here</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLibrary" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--python"/></svg></span> Learn Python
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownLibrary">
+            
+<a class="dropdown-item " href="/search?kind=article&kind=course&order=newest" style="color: #ff7e73; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--graduation-cap"/></svg></span>Python Tutorials&nbsp;→<br><small class="text-secondary">In-depth articles and video courses</small></a>
+
+
+            
+<a class="dropdown-item " href="/learning-paths/" style="color: #ffc873; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#@learning-path"/></svg></span>Learning Paths&nbsp;→<br><small class="text-secondary">Guided study plans for accelerated learning</small></a>
+
+
+            
+<a class="dropdown-item " href="/quizzes/" style="color: #abe0e5; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#@quiz"/></svg></span>Quizzes&nbsp;→<br><small class="text-secondary">Check your learning progress</small></a>
+
+
+            
+<a class="dropdown-item " href="/tutorials/all/" style="color: #ccc; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#@category"/></svg></span>Browse Topics&nbsp;→<br><small class="text-secondary">Focus on a specific area or skill level</small></a>
+
+
+            
+<a class="dropdown-item " href="/community/" style="color: #e5c6ab; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--message-smile"/></svg></span>Community Chat&nbsp;→<br><small class="text-secondary">Learn with other Pythonistas</small></a>
+
+
+            
+<a class="dropdown-item " href="/office-hours/" style="color: #e5c6ab; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--users"/></svg></span>Office Hours&nbsp;→<br><small class="text-secondary">Live Q&A calls with Python experts</small></a>
+
+
+            
+<a class="dropdown-item " href="/podcasts/rpp/" style="color: #b8abe5; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#@podcast"/></svg></span>Podcast&nbsp;→<br><small class="text-secondary">Hear what’s new in the world of Python</small></a>
+
+
+            
+<a class="dropdown-item " href="/products/books/" style="color: #abe5b1; line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--book-heart"/></svg></span>Books&nbsp;→<br><small class="text-secondary">Round out your knowledge and learn offline</small></a>
+
+
+            
+              
+              
+<a class="dropdown-item border-top text-warning" href="/account/join/" style="line-height: 110%;"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--star"/></svg></span>Unlock All Content&nbsp;→</a>
+
+            
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMore" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            More
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMore">
+            <a class="dropdown-item" href="/learner-stories/">Learner Stories</a>
+            <a class="dropdown-item" href="/newsletter/">Python Newsletter</a>
+            <a class="dropdown-item" href="https://www.pythonjobshq.com" target="_blank">Python Job Board</a>
+            <a class="dropdown-item" href="/team/">Meet the Team</a>
+            <a class="dropdown-item" href="/write-for-us/">Become a Tutorial Writer</a>
+            <a class="dropdown-item" href="/become-an-instructor/">Become a Video Instructor</a>
+          </div>
+        </li>
+
+      </ul> 
+
+      
+      <div class="d-block d-lg-none"> 
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/search" title="Search"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--search"/></svg></span> Search</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="d-none d-lg-flex align-items-center mr-2 flex-fill">
+        <form class="form-inline w-100 position-relative" action="/search" method="GET">
+          <a class="js-search-form-submit position-absolute" href="/search" title="Search"><span class="icon baseline text-muted pl-2"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--search"/></svg></span></a>
+          <input class="search-autocomplete search-field form-control form-control-md mr-sm-1 mr-lg-2 w-100" style="padding-left: 2rem;" maxlength=50 type="search" placeholder="Search" aria-label="Search" aria-keyshortcuts="/ Control+J Meta+J" name="q" autocomplete="off">
+          <span class="search-hotkey-indicator position-absolute px-2 border border-input text-input rounded small user-select-none" style="right: 1em;" title="Press / (forward slash) or Ctrl+J to open search" aria-hidden="true">/</span>
+          <input type="hidden" name="_from" value="nav">
+        </form>
+      </div>
+      
+
+      <ul class="navbar-nav ml-auto">
+        
+          <li class="nav-item form-inline">
+            <a class="ml-2 ml-lg-0 btn btn-sm btn-primary px-3" href="/account/join/">Join</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn text-light" href="/account/login/?next=%2Fpython-scipy-fft%2F">Sign&#8209;In</a>
+          </li>
+        
+      </ul>
+
+    
+    </div>
+
+  </div>
+
+  
+
+</nav>
+
+    
+
+    <div class="container main-content">
+      
+
+      
+  <div class="row justify-content-center">
+
+    
+    <aside class="col-md-7 col-lg-4 order-2 d-none d-lg-block">
+      
+  
+
+
+
+
+<div class="card mb-3 bg-secondary">
+  <form class="card-body" action="/optins/process/" method="post">
+    <div class="form-group">
+      <p class="h5 text-muted text-center">— FREE Email Series —</p>
+      <p class="h3 text-center">🐍 Python Tricks 💌</p>
+      <p><img loading="lazy" class="img-fluid rounded" src="/static/pytrick-dict-merge.4201a0125a5e.png" width="738" height="490" alt="Python Tricks Dictionary Merge"></p>
+    </div>
+    <div class="form-group">
+      <input type="hidden" name="csrfmiddlewaretoken" value="sDrfOc4QdeRIXBc3MooFTALen6U5IGwYyBhZE9XyGWPOFkDXEMqEE8NaaB3giAk7">
+      <input type="hidden" name="slug" value="static-python-tricks-sidebar">
+      <input type="email" class="form-control form-control-md" name="email" placeholder="Email&hellip;" required>
+    </div>
+    <button type="submit" name="submit" class="btn btn-primary btn-md btn-block">Get Python Tricks »</button>
+    <p class="mb-0 mt-2 text-muted text-center">🔒 No spam. Unsubscribe any time.</p>
+  </form>
+</div>
+
+
+  
+
+
+<div class="sidebar-module sidebar-module-inset border">
+  <a href="/tutorials/all/" class="badge badge-light text-muted"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#@category"/></svg></span>Browse Topics</a>
+
+  <a href="/learning-paths/" class="badge badge-light text-muted"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--map-location-dot"/></svg></span>Guided Learning Paths</a>
+
+  <br>
+
+  <a href="/search?level=basics" class="badge badge-light text-muted"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--angle-double-up"/></svg></span> Basics</a>
+
+  <a href="/search?level=intermediate" class="badge badge-light text-muted"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--angle-double-up"/></svg></span><span class="icon baseline tight-left"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--angle-double-up"/></svg></span> Intermediate</a>
+
+  <a href="/search?level=advanced" class="badge badge-light text-muted"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--angle-double-up"/></svg></span><span class="icon baseline tight-left"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--angle-double-up"/></svg></span><span class="icon baseline tight-left"><svg><use href="/static/icons.55e8f03acfe3.svg#v4--angle-double-up"/></svg></span> Advanced</a>
+
+  <hr class="my-2">
+
+  
+    
+  
+    
+    <a href="/tutorials/api/" class="badge badge-light text-muted">api</a>
+    
+  
+    
+  
+    
+    <a href="/tutorials/best-practices/" class="badge badge-light text-muted">best-practices</a>
+    
+  
+    
+    <a href="/tutorials/career/" class="badge badge-light text-muted">career</a>
+    
+  
+    
+    <a href="/tutorials/community/" class="badge badge-light text-muted">community</a>
+    
+  
+    
+    <a href="/tutorials/databases/" class="badge badge-light text-muted">databases</a>
+    
+  
+    
+    <a href="/tutorials/data-science/" class="badge badge-light text-muted">data-science</a>
+    
+  
+    
+    <a href="/tutorials/data-structures/" class="badge badge-light text-muted">data-structures</a>
+    
+  
+    
+    <a href="/tutorials/data-viz/" class="badge badge-light text-muted">data-viz</a>
+    
+  
+    
+    <a href="/tutorials/devops/" class="badge badge-light text-muted">devops</a>
+    
+  
+    
+    <a href="/tutorials/django/" class="badge badge-light text-muted">django</a>
+    
+  
+    
+    <a href="/tutorials/docker/" class="badge badge-light text-muted">docker</a>
+    
+  
+    
+    <a href="/tutorials/editors/" class="badge badge-light text-muted">editors</a>
+    
+  
+    
+    <a href="/tutorials/flask/" class="badge badge-light text-muted">flask</a>
+    
+  
+    
+    <a href="/tutorials/front-end/" class="badge badge-light text-muted">front-end</a>
+    
+  
+    
+    <a href="/tutorials/gamedev/" class="badge badge-light text-muted">gamedev</a>
+    
+  
+    
+    <a href="/tutorials/gui/" class="badge badge-light text-muted">gui</a>
+    
+  
+    
+  
+    
+    <a href="/tutorials/machine-learning/" class="badge badge-light text-muted">machine-learning</a>
+    
+  
+    
+    <a href="/tutorials/numpy/" class="badge badge-light text-muted">numpy</a>
+    
+  
+    
+    <a href="/tutorials/projects/" class="badge badge-light text-muted">projects</a>
+    
+  
+    
+    <a href="/tutorials/python/" class="badge badge-light text-muted">python</a>
+    
+  
+    
+    <a href="/tutorials/testing/" class="badge badge-light text-muted">testing</a>
+    
+  
+    
+    <a href="/tutorials/tools/" class="badge badge-light text-muted">tools</a>
+    
+  
+    
+    <a href="/tutorials/web-dev/" class="badge badge-light text-muted">web-dev</a>
+    
+  
+    
+    <a href="/tutorials/web-scraping/" class="badge badge-light text-muted">web-scraping</a>
+    
+  
+</div>
+
+
+
+  
+<div class="sidebar-module sidebar-module-inset p-0" style="overflow:hidden;">
+  
+<div style="display:block;position:relative;">
+  <div style="display:block;width:100%;padding-top:100%;"></div>
+  <div class="rpad" data-unit="1x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"></div>
+</div>
+
+
+</div>
+
+
+
+  <div class="sidebar-sticky ">
+    
+      <div class="bg-light sidebar-module sidebar-module-inset" id="sidebar-toc">
+        <p class="h4 text-muted"><a class="link-unstyled" href="#toc">Table of Contents</a></p>
+        <div class="toc">
+<ul>
+<li><a href="#the-scipyfft-module">The scipy.fft Module</a><ul>
+<li><a href="#install-scipy-and-matplotlib">Install SciPy and Matplotlib</a></li>
+<li><a href="#scipyfft-vs-scipyfftpack">scipy.fft vs scipy.fftpack</a></li>
+<li><a href="#scipyfft-vs-numpyfft">scipy.fft vs numpy.fft</a></li>
+</ul>
+</li>
+<li><a href="#the-fourier-transform">The Fourier Transform</a><ul>
+<li><a href="#why-would-you-need-the-fourier-transform">Why Would You Need the Fourier Transform?</a></li>
+<li><a href="#time-domain-vs-frequency-domain">Time Domain vs Frequency Domain</a></li>
+<li><a href="#types-of-fourier-transforms">Types of Fourier Transforms</a></li>
+</ul>
+</li>
+<li><a href="#practical-example-remove-unwanted-noise-from-audio">Practical Example: Remove Unwanted Noise From Audio</a><ul>
+<li><a href="#creating-a-signal">Creating a Signal</a></li>
+<li><a href="#mixing-audio-signals">Mixing Audio Signals</a></li>
+<li><a href="#using-the-fast-fourier-transform-fft">Using the Fast Fourier Transform (FFT)</a></li>
+<li><a href="#making-it-faster-with-rfft">Making It Faster With rfft()</a></li>
+<li><a href="#filtering-the-signal">Filtering the Signal</a></li>
+<li><a href="#applying-the-inverse-fft">Applying the Inverse FFT</a></li>
+<li><a href="#avoiding-filtering-pitfalls">Avoiding Filtering Pitfalls</a></li>
+</ul>
+</li>
+<li><a href="#the-discrete-cosine-and-sine-transforms">The Discrete Cosine and Sine Transforms</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+      </div>
+    
+
+    <div class="sidebar-module sidebar-module-inset text-center my-3 py-0">
+      
+<div class="jsCompletionStatusWidget btn-group mb-0">
+  <button title="Click to mark as completed" class="jsBtnCompletion btn btn-secondary border-right " style="border-top-right-radius: 0; border-bottom-right-radius: 0;" disabled>Mark as Completed</button>
+  <button title="Add bookmark" class="jsBtnBookmark btn btn-secondary border-left" disabled><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#light--bookmark"/></svg></span></button>
+</div>
+
+      <div class="my-2">
+        
+<div class="btn-group mb-0">
+  <a class="btn btn-secondary border-right" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" title="Liked it" role="button" aria-label="Thumbs up (liked it)" href="/feedback/survey/article/python-scipy-fft/liked/?from=article-sidebar" target="_blank"><span class="icon"><svg><use href="/static/icons.55e8f03acfe3.svg#light--thumbs-up"/></svg></span></a> 
+  <a class="btn btn-secondary border-left" role="button" aria-label="Thumbs down (disliked it)" title="Disliked it" href="/feedback/survey/article/python-scipy-fft/disliked/?from=article-sidebar" target="_blank"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#light--thumbs-down"/></svg></span></a>
+</div>
+
+      </div>
+    </div>
+
+    
+      <div class="sidebar-module sidebar-module-inset text-center my-3 py-0">
+        
+
+<span>
+  <a target="_blank" rel="nofollow" href="https://twitter.com/intent/tweet/?text=Check out this %23Python tutorial: Fourier%20Transforms%20With%20scipy.fft%3A%20Python%20Signal%20Processing by @realpython&url=https%3A//realpython.com/python-scipy-fft/" class="mr-1 badge badge-x-twitter text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--x-twitter"/></svg></span>Share</a>
+  <a target="_blank" rel="nofollow" href="https://facebook.com/sharer/sharer.php?u=https%3A//realpython.com/python-scipy-fft/" class="mr-1 badge badge-facebook text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--facebook"/></svg></span>Share</a>
+  
+  <a target="_blank" rel="nofollow" href="mailto:?subject=Python article for you&body=Check out this Python tutorial:%0A%0AFourier%20Transforms%20With%20scipy.fft%3A%20Python%20Signal%20Processing%0A%0Ahttps%3A//realpython.com/python-scipy-fft/" class="badge badge-red text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--envelope"/></svg></span>Email</a>
+</span>
+
+      </div>
+    
+
+    
+
+    
+      <div class="sidebar-module sidebar-module-inset p-0" style="overflow:hidden;">
+        
+<div style="display:block;position:relative;">
+  <div style="display:block;width:100%;padding-top:25%;"></div>
+  <div class="rpad" data-unit="4x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"></div>
+</div>
+
+
+      </div>
+    
+
+    
+  </div>
+
+
+    </aside>
+
+    <div class="col-md-11 col-lg-8 article with-headerlinks">
+      
+
+  
+    <figure class="embed-responsive embed-responsive-16by9 rounded">
+      
+        <img class="card-img-top m-0 p-0 embed-responsive-item" style="object-fit: contain; background: #abe0e6;" alt="Fourier Transforms With scipy.fft: Python Signal Processing" width="1920" height="1080" src="https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg" srcset="/cdn-cgi/image/width=480,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 480w, /cdn-cgi/image/width=640,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 640w, /cdn-cgi/image/width=960,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 960w, /cdn-cgi/image/width=1920,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 1920w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" fetchpriority="high">
+      
+    </figure>
+  
+
+  <h1>Fourier Transforms With scipy.fft: Python Signal Processing</h1>
+  <div class="mb-0">
+    
+      <span class="text-muted">by <a class="text-muted" href="#author">Cameron MacLeod</a>
+    
+    
+    
+      <span class="icon baseline ml-2 mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--comments"/></svg></span><a class="text-muted" href="#reader-comments"><span class="disqus-comment-count" data-disqus-identifier="https://realpython.com/python-scipy-fft/"></span></a>
+    
+    
+
+    <span class="d-inline d-md-block"> 
+      <span class="icon baseline ml-2 ml-md-0"><svg><use href="/static/icons.55e8f03acfe3.svg#@category"/></svg></span>
+      
+        <a href="/tutorials/advanced/" class="badge badge-light text-muted">advanced</a>
+      
+        <a href="/tutorials/data-science/" class="badge badge-light text-muted">data-science</a>
+      
+    </span>
+
+    <div class="d-sm-flex flex-row justify-content-between my-3 text-center">
+      
+<div class="jsCompletionStatusWidget btn-group mb-0">
+  <button title="Click to mark as completed" class="jsBtnCompletion btn btn-secondary border-right " style="border-top-right-radius: 0; border-bottom-right-radius: 0;" disabled>Mark as Completed</button>
+  <button title="Add bookmark" class="jsBtnBookmark btn btn-secondary border-left" disabled><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#light--bookmark"/></svg></span></button>
+</div>
+
+      
+      
+        <div class="align-self-center my-2">
+          
+
+<span>
+  <a target="_blank" rel="nofollow" href="https://twitter.com/intent/tweet/?text=Check out this %23Python tutorial: Fourier%20Transforms%20With%20scipy.fft%3A%20Python%20Signal%20Processing by @realpython&url=https%3A//realpython.com/python-scipy-fft/" class="mr-1 badge badge-x-twitter text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--x-twitter"/></svg></span>Share</a>
+  <a target="_blank" rel="nofollow" href="https://facebook.com/sharer/sharer.php?u=https%3A//realpython.com/python-scipy-fft/" class="mr-1 badge badge-facebook text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--facebook"/></svg></span>Share</a>
+  
+  <a target="_blank" rel="nofollow" href="mailto:?subject=Python article for you&body=Check out this Python tutorial:%0A%0AFourier%20Transforms%20With%20scipy.fft%3A%20Python%20Signal%20Processing%0A%0Ahttps%3A//realpython.com/python-scipy-fft/" class="badge badge-red text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--envelope"/></svg></span>Email</a>
+</span>
+
+        </div>
+      
+    </div>
+  </div>
+
+  
+
+  <div class="article-body">
+    
+      <div class="bg-light sidebar-module sidebar-module-inset" id="toc">
+        <p class="h3 mb-2 text-muted">Table of Contents</p>
+        <div class="toc">
+<ul>
+<li><a href="#the-scipyfft-module">The scipy.fft Module</a><ul>
+<li><a href="#install-scipy-and-matplotlib">Install SciPy and Matplotlib</a></li>
+<li><a href="#scipyfft-vs-scipyfftpack">scipy.fft vs scipy.fftpack</a></li>
+<li><a href="#scipyfft-vs-numpyfft">scipy.fft vs numpy.fft</a></li>
+</ul>
+</li>
+<li><a href="#the-fourier-transform">The Fourier Transform</a><ul>
+<li><a href="#why-would-you-need-the-fourier-transform">Why Would You Need the Fourier Transform?</a></li>
+<li><a href="#time-domain-vs-frequency-domain">Time Domain vs Frequency Domain</a></li>
+<li><a href="#types-of-fourier-transforms">Types of Fourier Transforms</a></li>
+</ul>
+</li>
+<li><a href="#practical-example-remove-unwanted-noise-from-audio">Practical Example: Remove Unwanted Noise From Audio</a><ul>
+<li><a href="#creating-a-signal">Creating a Signal</a></li>
+<li><a href="#mixing-audio-signals">Mixing Audio Signals</a></li>
+<li><a href="#using-the-fast-fourier-transform-fft">Using the Fast Fourier Transform (FFT)</a></li>
+<li><a href="#making-it-faster-with-rfft">Making It Faster With rfft()</a></li>
+<li><a href="#filtering-the-signal">Filtering the Signal</a></li>
+<li><a href="#applying-the-inverse-fft">Applying the Inverse FFT</a></li>
+<li><a href="#avoiding-filtering-pitfalls">Avoiding Filtering Pitfalls</a></li>
+</ul>
+</li>
+<li><a href="#the-discrete-cosine-and-sine-transforms">The Discrete Cosine and Sine Transforms</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+      </div>
+    
+
+    
+    <div class="sidebar-module sidebar-module-inset p-0" style="overflow:hidden;">
+      
+
+<div style="display:block;position:relative;">
+  <div style="display:block;width:100%;padding-top:12.5%;"></div>
+  <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"></div>
+</div>
+<a class="small text-muted" href="/account/join/" rel="nofollow"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"/></svg></span>Remove ads</a>
+
+
+    </div>
+    
+
+    
+
+    <p>The <strong>Fourier transform</strong> is a powerful tool for analyzing <strong>signals</strong> and is used in everything from audio processing to image compression. SciPy provides a mature implementation in its <code>scipy.fft</code> module, and in this tutorial, you&rsquo;ll learn how to use it.</p>
+<p>The <code>scipy.fft</code> module may look intimidating at first since there are many functions, often with similar names, and the <a href="https://docs.scipy.org/doc/scipy/reference/tutorial/fft.html">documentation</a> uses a lot of technical terms without explanation. The good news is that you only need to understand a few core concepts to start using the module.</p>
+<p>Don&rsquo;t worry if you&rsquo;re not comfortable with math! You&rsquo;ll get a feel for the algorithm through concrete examples, and there will be links to further resources if you want to dive into the equations. For a visual introduction to how the Fourier transform works, you might like <a href="https://www.youtube.com/watch?v=spUNpyF58BY">3Blue1Brown&rsquo;s video</a>.</p>
+<p><strong>In this tutorial, you&rsquo;ll learn:</strong></p>
+<ul>
+<li>How and when to use the <strong>Fourier transform</strong></li>
+<li>How to select the correct function from <strong><code>scipy.fft</code></strong> for your use case</li>
+<li>How to view and modify the <strong>frequency spectrum</strong> of a signal</li>
+<li>Which different <strong>transforms</strong> are available in <code>scipy.fft</code></li>
+</ul>
+<p>If you&rsquo;d like a summary of this tutorial to keep after you finish reading, then download the cheat sheet below. It has explanations of all the functions in the <code>scipy.fft</code> module as well as a breakdown of the different types of transform that are available:</p>
+<div class="alert alert-warning" role="alert">
+<p><strong markdown="1">scipy.fft Cheat Sheet:</strong> <a href="https://realpython.com/bonus/scipy-fft-cheatsheet/" class="alert-link" data-toggle="modal" data-target="#modal-scipy-fft-cheatsheet" data-focus="false" markdown="1">Click here to get access to a free scipy.fft cheat sheet</a> that summarizes the techniques explained in this tutorial.</p>
+</div>
+<section class="section2"><h2 id="the-scipyfft-module">The <code>scipy.fft</code> Module<a class="headerlink" href="#the-scipyfft-module" title="Permanent link"></a></h2>
+<p>The Fourier transform is a crucial tool in many applications, especially in scientific computing and data science. As such, SciPy has long provided an implementation of it and its related transforms. Initially, SciPy provided the <code>scipy.fftpack</code> module, but they have since updated their implementation and moved it to the <code>scipy.fft</code> module.</p>
+<p>SciPy is packed full of functionality. For a more general introduction to the library, check out <a href="https://realpython.com/python-scipy-cluster-optimize/">Scientific Python: Using SciPy for Optimization</a>.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"></use></svg></span>Remove ads</a></div><section class="section3"><h3 id="install-scipy-and-matplotlib">Install SciPy and Matplotlib<a class="headerlink" href="#install-scipy-and-matplotlib" title="Permanent link"></a></h3>
+<p>Before you can get started, you&rsquo;ll need to install SciPy and <a href="https://realpython.com/python-matplotlib-guide/">Matplotlib</a>. You can do this one of two ways:</p>
+<ol>
+<li>
+<p><strong>Install with Anaconda:</strong> Download and install the <a href="https://www.anaconda.com/products/individual">Anaconda Individual Edition</a>. It comes with SciPy and Matplotlib, so once you follow the steps in the installer, you&rsquo;re done!</p>
+</li>
+<li>
+<p><strong>Install with <code>pip</code>:</strong> If you already have <a href="https://realpython.com/what-is-pip/"><code>pip</code></a> installed, then you can install the libraries with the following command:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="console" data-is-repl="true">
+  <div class="codeblock__header d-flex justify-content-between codeblock--yellow">
+    <span class="mr-2 noselect" aria-label="Language">Shell</span>
+    
+    <div class="noselect">
+      
+        <span class="codeblock__output-toggle" title="Toggle prompts and output"><span class="icon baseline js-codeblock-output-on codeblock__header--icon-lower"><svg><use href="/static/icons.55e8f03acfe3.svg#regular--rectangle-terminal"/></svg></span></span>
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="gp">$ </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>scipy<span class="w"> </span>matplotlib
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+</li>
+</ol>
+<p>You can verify the installation worked by <a href="https://realpython.com/interacting-with-python/#using-the-python-interpreter-interactively">typing <code>python</code> in your terminal</a> and running the following code:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="pycon" data-is-repl="true">
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+        <span class="codeblock__output-toggle" title="Toggle prompts and output"><span class="icon baseline js-codeblock-output-on codeblock__header--icon-lower"><svg><use href="/static/icons.55e8f03acfe3.svg#regular--rectangle-terminal"/></svg></span></span>
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">scipy</span><span class="o">,</span> <span class="nn">matplotlib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="go">/usr/local/lib/python3.6/dist-packages/scipy/__init__.py</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="go">/usr/local/lib/python3.6/dist-packages/matplotlib/__init__.py</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>This code imports SciPy and Matplotlib and prints the location of the modules. Your computer will probably show different paths, but as long as it prints a path, the installation worked.</p>
+<p>SciPy is now installed! Now it&rsquo;s time to take a look at the differences between <code>scipy.fft</code> and <code>scipy.fftpack</code>.</p>
+</section><section class="section3"><h3 id="scipyfft-vs-scipyfftpack"><code>scipy.fft</code> vs <code>scipy.fftpack</code><a class="headerlink" href="#scipyfft-vs-scipyfftpack" title="Permanent link"></a></h3>
+<p>When looking at the SciPy documentation, you may come across two modules that look very similar:</p>
+<ol>
+<li><code>scipy.fft</code></li>
+<li><code>scipy.fftpack</code></li>
+</ol>
+<p>The <code>scipy.fft</code> module is newer and should be preferred over <code>scipy.fftpack</code>. You can read more about the change in the <a href="https://docs.scipy.org/doc/scipy/reference/release.1.4.0.html#scipy-fft-added">release notes for SciPy 1.4.0</a>, but here&rsquo;s a quick summary:</p>
+<ul>
+<li><code>scipy.fft</code> has an improved API.</li>
+<li><code>scipy.fft</code> enables using <a href="https://realpython.com/intro-to-python-threading/">multiple workers</a>, which can provide a speed boost in some situations.</li>
+<li><code>scipy.fftpack</code> is considered legacy, and SciPy recommends using <code>scipy.fft</code> instead.</li>
+</ul>
+<p>Unless you have a good reason to use <code>scipy.fftpack</code>, you should stick with <code>scipy.fft</code>.</p>
+</section><section class="section3"><h3 id="scipyfft-vs-numpyfft"><code>scipy.fft</code> vs <code>numpy.fft</code><a class="headerlink" href="#scipyfft-vs-numpyfft" title="Permanent link"></a></h3>
+<p>SciPy&rsquo;s <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">fast Fourier transform (FFT)</a> implementation contains more features and is more likely to get bug fixes than NumPy&rsquo;s implementation. If given a choice, you should use the SciPy implementation.</p>
+<p>NumPy maintains an FFT implementation for backward compatibility even though the authors believe that functionality like Fourier transforms is best placed in SciPy. See the <a href="https://www.scipy.org/scipylib/faq.html#what-is-the-difference-between-numpy-and-scipy">SciPy FAQ</a> for more details.</p>
+</section></section><section class="section2"><h2 id="the-fourier-transform">The Fourier Transform<a class="headerlink" href="#the-fourier-transform" title="Permanent link"></a></h2>
+<p><a href="https://en.wikipedia.org/wiki/Fourier_analysis">Fourier analysis</a> is a field that studies how a <strong>mathematical function</strong> can be decomposed into a series of simpler <strong>trigonometric functions</strong>. The Fourier transform is a tool from this field for decomposing a function into its component frequencies.</p>
+<p>Okay, that definition is pretty dense. For the purposes of this tutorial, the Fourier transform is a tool that allows you to take a signal and see the power of each frequency in it. Take a look at the important terms in that sentence:</p>
+<ul>
+<li>A <strong>signal</strong> is information that changes over time. For example, audio, video, and voltage traces are all examples of signals.</li>
+<li>A <strong>frequency</strong> is the speed at which something repeats. For example, clocks tick at a frequency of one hertz (Hz), or one repetition per second.</li>
+<li><strong>Power</strong>, in this case, just means the strength of each frequency.</li>
+</ul>
+<p>The following image is a visual demonstration of frequency and power on some <a href="https://en.wikipedia.org/wiki/Sine_wave">sine waves</a>:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/freqpower2.f3dbf5bddc29.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/freqpower2.f3dbf5bddc29.png" width="1130" height="584" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqpower2.f3dbf5bddc29.png&amp;w=282&amp;sig=10b9fbffc2024373541d8d27f330a740cda37387 282w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqpower2.f3dbf5bddc29.png&amp;w=376&amp;sig=a1ba6cc166f86d6874fd2a79cc24f683e733acee 376w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqpower2.f3dbf5bddc29.png&amp;w=565&amp;sig=fbc09fe908cccfd925754304902fdc582edcdef5 565w, https://files.realpython.com/media/freqpower2.f3dbf5bddc29.png 1130w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Low frequency, high frequency and low power sine waves" data-asset="2822"/></a></figure>
+
+<p>The peaks of the <strong>high-frequency</strong> sine wave are closer together than those of the <strong>low-frequency</strong> sine wave since they repeat more frequently. The <strong>low-power</strong> sine wave has smaller peaks than the other two sine waves.</p>
+<p>To make this more concrete, imagine you used the Fourier transform on a recording of someone playing three notes on the piano at the same time. The resulting <strong>frequency spectrum</strong> would show three peaks, one for each of the notes. If the person played one note more softly than the others, then the power of that note&rsquo;s frequency would be lower than the other two.</p>
+<p>Here&rsquo;s what that piano example would look like visually:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/pianofreqblue.ff266a14503f.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/pianofreqblue.ff266a14503f.png" width="1750" height="701" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/pianofreqblue.ff266a14503f.png&amp;w=437&amp;sig=7e09e12e4a5f2a1ab87a5c210298b1afd5c7fed8 437w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/pianofreqblue.ff266a14503f.png&amp;w=583&amp;sig=433e960fa6928e14c9f6429f82c54312f923398f 583w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/pianofreqblue.ff266a14503f.png&amp;w=875&amp;sig=15d13cbf8bbfce339bedb40297c8ac161db867bc 875w, https://files.realpython.com/media/pianofreqblue.ff266a14503f.png 1750w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Piano keys corresponding to peaks in a frequency spectrum" data-asset="2823"/></a></figure>
+
+<p>The highest note on the piano was played quieter than the other two notes, so the resulting frequency spectrum for that note has a lower peak.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"></use></svg></span>Remove ads</a></div><section class="section3"><h3 id="why-would-you-need-the-fourier-transform">Why Would You Need the Fourier Transform?<a class="headerlink" href="#why-would-you-need-the-fourier-transform" title="Permanent link"></a></h3>
+<p>The Fourier transform is useful in many applications. For example, <a href="https://www.shazam.com/company">Shazam</a> and other music identification services use the Fourier transform to identify songs. JPEG compression uses a variant of the Fourier transform to remove the high-frequency components of images. <a href="https://realpython.com/python-speech-recognition/">Speech recognition</a> uses the Fourier transform and related transforms to recover the spoken words from raw audio.</p>
+<p>In general, you need the Fourier transform if you need to look at the frequencies in a signal. If working with a signal in the time domain is difficult, then using the Fourier transform to move it into the frequency domain is worth trying. In the next section, you&rsquo;ll look at the differences between the time and frequency domains.</p>
+</section><section class="section3"><h3 id="time-domain-vs-frequency-domain">Time Domain vs Frequency Domain<a class="headerlink" href="#time-domain-vs-frequency-domain" title="Permanent link"></a></h3>
+<p>Throughout the rest of the tutorial, you&rsquo;ll see the terms <strong>time domain</strong> and <strong>frequency domain</strong>. These two terms refer to two different ways of looking at a signal, either as its component frequencies or as information that varies over time.</p>
+<p>In the time domain, a signal is a wave that varies in amplitude (y-axis) over time (x-axis). You&rsquo;re most likely used to seeing graphs in the time domain, such as this one:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/timedomain.cc67471385a2.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/timedomain.cc67471385a2.png" width="1130" height="584" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/timedomain.cc67471385a2.png&amp;w=282&amp;sig=cbbc6b75637368ee4d003e2f188568158fcf15f9 282w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/timedomain.cc67471385a2.png&amp;w=376&amp;sig=7632cad4d862c84978dc30914aa6cb335e108e22 376w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/timedomain.cc67471385a2.png&amp;w=565&amp;sig=0ce88a52ccda3c353d2280b9cb69e310dc005244 565w, https://files.realpython.com/media/timedomain.cc67471385a2.png 1130w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="An audio signal in the time domain" data-asset="2825"/></a></figure>
+
+<p>This is an image of some audio, which is a <strong>time-domain</strong> signal. The horizontal axis represents time, and the vertical axis represents amplitude.</p>
+<p>In the frequency domain, a signal is represented as a series of frequencies (x-axis) that each have an associated power (y-axis). The following image is the above audio signal after being Fourier transformed:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/freqdomain.fdeba267dfda.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/freqdomain.fdeba267dfda.png" width="1196" height="635" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqdomain.fdeba267dfda.png&amp;w=299&amp;sig=4fd31e0133071b7247b7f862fac2f494d48c31c7 299w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqdomain.fdeba267dfda.png&amp;w=398&amp;sig=b95721334c91140d968b5a6b4377cf613a99b812 398w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqdomain.fdeba267dfda.png&amp;w=598&amp;sig=8bb236afb38acf7005337acd3bf001e766285ef8 598w, https://files.realpython.com/media/freqdomain.fdeba267dfda.png 1196w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="An audio signal in the frequency domain" data-asset="2824"/></a></figure>
+
+<p>Here, the audio signal from before is represented by its constituent frequencies. Each frequency along the bottom has an associated power, producing the spectrum that you see.</p>
+<p>For more information on the frequency domain, check out the <a href="https://deepai.org/machine-learning-glossary-and-terms/frequency-domain">DeepAI glossary entry</a>.</p>
+</section><section class="section3"><h3 id="types-of-fourier-transforms">Types of Fourier Transforms<a class="headerlink" href="#types-of-fourier-transforms" title="Permanent link"></a></h3>
+<p>The Fourier transform can be subdivided into different types of transform. The most basic subdivision is based on the kind of data the transform operates on: continuous functions or discrete functions. This tutorial will deal with only the <strong>discrete Fourier transform (DFT)</strong>.</p>
+<p>You&rsquo;ll often see the terms DFT and FFT used interchangeably, even in this tutorial. However, they aren&rsquo;t quite the same thing. The <strong>fast Fourier transform (FFT)</strong> is an algorithm for computing the discrete Fourier transform (DFT), whereas the DFT is the transform itself.</p>
+<p>Another distinction that you&rsquo;ll see made in the <code>scipy.fft</code> library is between different types of input. <code>fft()</code> accepts complex-valued input, and <code>rfft()</code> accepts real-valued input. Skip ahead to the section <a href="#using-the-fast-fourier-transform-fft">Using the Fast Fourier Transform (FFT)</a> for an explanation of <a href="https://realpython.com/python-complex-numbers/">complex</a> and real numbers.</p>
+<p>Two other transforms are closely related to the DFT: the <strong>discrete cosine transform (DCT)</strong> and the <strong>discrete sine transform (DST)</strong>. You&rsquo;ll learn about those in the section <a href="#the-discrete-cosine-and-sine-transforms">The Discrete Cosine and Sine Transforms</a>.</p>
+</section></section><section class="section2"><h2 id="practical-example-remove-unwanted-noise-from-audio">Practical Example: Remove Unwanted Noise From Audio<a class="headerlink" href="#practical-example-remove-unwanted-noise-from-audio" title="Permanent link"></a></h2>
+<p>To help build your understanding of the Fourier transform and what you can do with it, you&rsquo;re going to filter some audio. First, you&rsquo;ll create an audio signal with a high pitched buzz in it, and then you&rsquo;ll remove the buzz using the Fourier transform.</p>
+<section class="section3"><h3 id="creating-a-signal">Creating a Signal<a class="headerlink" href="#creating-a-signal" title="Permanent link"></a></h3>
+<p>Sine waves are sometimes called <strong>pure tones</strong> because they represent a single frequency. You&rsquo;ll use sine waves to generate the audio since they will form distinct peaks in the resulting frequency spectrum.</p>
+<p>Another great thing about sine waves is that they&rsquo;re straightforward to generate using NumPy. If you haven&rsquo;t used NumPy before, then you can check out <a href="https://realpython.com/tutorials/numpy/">What Is NumPy?</a></p>
+<p>Here&rsquo;s some code that generates a sine wave:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">SAMPLE_RATE</span> <span class="o">=</span> <span class="mi">44100</span>  <span class="c1"># Hertz</span>
+<span class="n">DURATION</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Seconds</span>
+
+<span class="k">def</span> <span class="nf">generate_sine_wave</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="n">duration</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">sample_rate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">frequencies</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="c1"># 2pi because np.sin takes radians</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">frequencies</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="c1"># Generate a 2 hertz sine wave that lasts for 5 seconds</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">generate_sine_wave</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">SAMPLE_RATE</span><span class="p">,</span> <span class="n">DURATION</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>After you <a href="https://realpython.com/python-import/">import</a> NumPy and Matplotlib, you define two constants:</p>
+<ol>
+<li><strong><code>SAMPLE_RATE</code></strong> determines how many data points the signal uses to represent the sine wave per second. So if the signal had a sample rate of 10 Hz and was a five-second sine wave, then it would have <code>10 * 5 = 50</code> data points.</li>
+<li><strong><code>DURATION</code></strong> is the length of the generated sample.</li>
+</ol>
+<p>Next, you define a function to generate a sine wave since you&rsquo;ll use it multiple times later on. The function takes a frequency, <code>freq</code>, and then <a href="https://realpython.com/python-return-statement/">returns</a> the <code>x</code> and <code>y</code> values that you&rsquo;ll use to plot the wave.</p>
+<p>The x-coordinates of the sine wave are evenly spaced between <code>0</code> and <code>DURATION</code>, so the code uses NumPy&rsquo;s <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html"><code>linspace()</code></a> to generate them. It takes a start value, an end value, and the number of samples to generate. Setting <code>endpoint=False</code> is important for the Fourier transform to work properly because it assumes a signal is <a href="http://msp.ucsd.edu/techniques/latest/book-html/node171.html">periodic</a>.</p>
+<p><a href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html"><code>np.sin()</code></a> calculates the values of the sine function at each of the x-coordinates. The result is multiplied by the frequency to make the sine wave oscillate at that frequency, and the product is multiplied by 2π to convert the input values to <a href="https://en.wikipedia.org/wiki/Radian">radians</a>.</p>
+<div class="alert alert-primary" role="alert">
+<p><strong>Note:</strong> If you haven&rsquo;t done much trigonometry before, or if you need a refresher, then check out <a href="https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:trig">Khan Academy&rsquo;s trigonometry course</a>.</p>
+</div>
+<p>After you define the function, you use it to generate a two-hertz sine wave that lasts five seconds and plot it using Matplotlib. Your sine wave plot should look something like this:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/firstsin.edca17cbaa5b.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/firstsin.edca17cbaa5b.png" width="1229" height="609" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/firstsin.edca17cbaa5b.png&amp;w=307&amp;sig=7e75be9e218b2c959dd893380a73c047a91448c4 307w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/firstsin.edca17cbaa5b.png&amp;w=409&amp;sig=4d83b191d5faa163379118d4a7679def7e5c26a5 409w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/firstsin.edca17cbaa5b.png&amp;w=614&amp;sig=1fef6263d8e2a9624ddf9c6ff72fd97ef78fa2fa 614w, https://files.realpython.com/media/firstsin.edca17cbaa5b.png 1229w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="A 2Hz sine wave" data-asset="2826"/></a></figure>
+
+<p>The x-axis represents time in seconds, and since there are two peaks for each second of time, you can see that the sine wave oscillates twice per second. This sine wave is too low a frequency to be audible, so in the next section, you&rsquo;ll generate some higher-frequency sine waves, and you&rsquo;ll see how to mix them.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"></use></svg></span>Remove ads</a></div></section><section class="section3"><h3 id="mixing-audio-signals">Mixing Audio Signals<a class="headerlink" href="#mixing-audio-signals" title="Permanent link"></a></h3>
+<p>The good news is that mixing audio signals consists of just two steps:</p>
+<ol>
+<li>Adding the signals together</li>
+<li><strong>Normalizing</strong> the result</li>
+</ol>
+<p>Before you can mix the signals together, you need to generate them:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="n">_</span><span class="p">,</span> <span class="n">nice_tone</span> <span class="o">=</span> <span class="n">generate_sine_wave</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="n">SAMPLE_RATE</span><span class="p">,</span> <span class="n">DURATION</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">noise_tone</span> <span class="o">=</span> <span class="n">generate_sine_wave</span><span class="p">(</span><span class="mi">4000</span><span class="p">,</span> <span class="n">SAMPLE_RATE</span><span class="p">,</span> <span class="n">DURATION</span><span class="p">)</span>
+<span class="n">noise_tone</span> <span class="o">=</span> <span class="n">noise_tone</span> <span class="o">*</span> <span class="mf">0.3</span>
+
+<span class="n">mixed_tone</span> <span class="o">=</span> <span class="n">nice_tone</span> <span class="o">+</span> <span class="n">noise_tone</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>There&rsquo;s nothing new in this code example. It generates a medium-pitch tone and a high-pitch tone assigned to the <a href="https://realpython.com/python-variables/">variables</a> <code>nice_tone</code> and <code>noise_tone</code>, respectively. You&rsquo;ll use the high-pitch tone as your unwanted noise, so it gets multiplied by <code>0.3</code> to reduce its power. The code then adds these tones together. Note that you use the underscore (<code>_</code>) to discard the <code>x</code> values returned by <code>generate_sine_wave()</code>.</p>
+<p>The next step is <strong>normalization</strong>, or scaling the signal to fit into the target format. Due to how you&rsquo;ll store the audio later, your target format is a 16-bit integer, which has a range from -32768 to 32767:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="n">normalized_tone</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">((</span><span class="n">mixed_tone</span> <span class="o">/</span> <span class="n">mixed_tone</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">*</span> <span class="mi">32767</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">normalized_tone</span><span class="p">[:</span><span class="mi">1000</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>Here, the code scales <code>mixed_tone</code> to make it fit snugly into a 16-bit integer and then cast it to that data type using NumPy&rsquo;s <code>np.int16</code>. Dividing <code>mixed_tone</code> by its maximum value scales it to between <code>-1</code> and <code>1</code>. When this signal is multiplied by <code>32767</code>, it is scaled between <code>-32767</code> and <code>32767</code>, which is roughly the range of <code>np.int16</code>. The code plots only the first <code>1000</code> samples so you can see the structure of the signal more clearly.</p>
+<p>Your plot should look something like this:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/mixedsignal.ff1130345c3a.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/mixedsignal.ff1130345c3a.png" width="1226" height="585" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/mixedsignal.ff1130345c3a.png&amp;w=306&amp;sig=a559c44002bda26ae569e48f44b87d4431bbbf09 306w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/mixedsignal.ff1130345c3a.png&amp;w=408&amp;sig=30f2ab07f820c4f7d388cc62ea2964310ddb6ac2 408w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/mixedsignal.ff1130345c3a.png&amp;w=613&amp;sig=fabc7141cf8677c239b02b02aa5ebe98d19db24d 613w, https://files.realpython.com/media/mixedsignal.ff1130345c3a.png 1226w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="A 4000Hz sine wave superimposed on a 400Hz sine wave" data-asset="2827"/></a></figure>
+
+<p>The signal looks like a distorted sine wave. The sine wave you see is the 400 Hz tone you generated, and the distortion is the 4000 Hz tone. If you look closely, then you can see the distortion has the shape of a sine wave.</p>
+<p>To listen to the audio, you need to store it in a format that an audio player can read. The easiest way to do that is to use SciPy&rsquo;s <a href="https://docs.scipy.org/doc/scipy/reference/io.html">wavfile.write</a> method to store it in a WAV file. 16-bit integers are a standard data type for WAV files, so you&rsquo;ll normalize your signal to 16-bit integers:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.io.wavfile</span> <span class="kn">import</span> <span class="n">write</span>
+
+<span class="c1"># Remember SAMPLE_RATE = 44100 Hz is our playback rate</span>
+<span class="n">write</span><span class="p">(</span><span class="s2">&quot;mysinewave.wav&quot;</span><span class="p">,</span> <span class="n">SAMPLE_RATE</span><span class="p">,</span> <span class="n">normalized_tone</span><span class="p">)</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>This code will write to a file <code>mysinewave.wav</code> in the directory where you run your Python script. You can then listen to this file using any audio player or even <a href="https://realpython.com/playing-and-recording-sound-python/">with Python</a>. You&rsquo;ll hear a lower tone and a higher-pitch tone. These are the 400 Hz and 4000 Hz sine waves that you mixed.</p>
+<p>Once you&rsquo;ve completed this step, you have your audio sample ready. The next step is removing the high-pitch tone using the Fourier transform!</p>
+</section><section class="section3"><h3 id="using-the-fast-fourier-transform-fft">Using the Fast Fourier Transform (FFT)<a class="headerlink" href="#using-the-fast-fourier-transform-fft" title="Permanent link"></a></h3>
+<p>It&rsquo;s time to use the FFT on your generated audio. The FFT is an algorithm that implements the Fourier transform and can calculate a frequency spectrum for a signal in the time domain, like your audio:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">fft</span><span class="p">,</span> <span class="n">fftfreq</span>
+
+<span class="c1"># Number of samples in normalized_tone</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">SAMPLE_RATE</span> <span class="o">*</span> <span class="n">DURATION</span>
+
+<span class="n">yf</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">normalized_tone</span><span class="p">)</span>
+<span class="n">xf</span> <span class="o">=</span> <span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">SAMPLE_RATE</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yf</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>This code will calculate the Fourier transform of your generated audio and plot it. Before breaking it down, take a look at the plot that it produces:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/firstfft.b1983096fafd.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/firstfft.b1983096fafd.png" width="1207" height="585" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/firstfft.b1983096fafd.png&amp;w=301&amp;sig=bb215bcbff735be403c0a2d121d0e1640ec250bd 301w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/firstfft.b1983096fafd.png&amp;w=402&amp;sig=545ac53f5886c7b9aaa1aa43d720d762e5ace301 402w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/firstfft.b1983096fafd.png&amp;w=603&amp;sig=c117a9022dd4f29d573e99742b7443d7b3ff6029 603w, https://files.realpython.com/media/firstfft.b1983096fafd.png 1207w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Frequency spectrum with spikes at 400 and 4000Hz" data-asset="2828"/></a></figure>
+
+<p>You can see two peaks in the positive frequencies and mirrors of those peaks in the negative frequencies. The positive-frequency peaks are at 400 Hz and 4000 Hz, which corresponds to the frequencies that you put into the audio.</p>
+<p>The Fourier transform has taken your complicated, wibbly signal and turned it into just the frequencies it contains. Since you put in only two frequencies, only two frequencies have come out. The negative-positive symmetry is a side effect of putting <strong>real-valued input</strong> into the Fourier transform, but you&rsquo;ll hear more about that later.</p>
+<p>In the first couple of lines, you import the functions from <code>scipy.fft</code> that you&rsquo;ll use later and define a variable, <code>N</code>, that stores the total number of samples in the signal.</p>
+<p>After this comes the most important section, calculating the Fourier transform:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="n">yf</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">normalized_tone</span><span class="p">)</span>
+<span class="n">xf</span> <span class="o">=</span> <span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">SAMPLE_RATE</span><span class="p">)</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>The code calls two very important functions:</p>
+<ol>
+<li>
+<p><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.fft.html"><strong><code>fft()</code></strong></a> calculates the transform itself.</p>
+</li>
+<li>
+<p><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.fftfreq.html"><strong><code>fftfreq()</code></strong></a> calculates the frequencies in the center of each <strong>bin</strong> in the output of <code>fft()</code>. Without this, there would be no way to plot the x-axis on your frequency spectrum.</p>
+</li>
+</ol>
+<p>A <strong>bin</strong> is a range of values that have been grouped, like in a <a href="https://realpython.com/python-histograms/">histogram</a>. For more information on <strong>bins</strong>, see this <a href="https://dsp.stackexchange.com/questions/26927/what-is-a-frequency-bin">Signal Processing Stack Exchange question</a>. For the purposes of this tutorial, you can think of them as just single values.</p>
+<p>Once you have the resulting values from the Fourier transform and their corresponding frequencies, you can plot them:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yf</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>The interesting part of this code is the processing you do to <code>yf</code> before plotting it. You call <a href="https://numpy.org/doc/stable/reference/generated/numpy.absolute.html"><code>np.abs()</code></a> on <code>yf</code> because its values are <strong>complex</strong>.</p>
+<p>A <strong>complex number</strong> is a <a href="https://realpython.com/python-numbers/">number</a> that has two parts, a <strong>real</strong> part and an <strong>imaginary</strong> part. There are many reasons why it&rsquo;s useful to define numbers like this, but all you need to know right now is that they exist.</p>
+<p>Mathematicians generally write complex numbers in the form <em>a</em> + <em>bi</em>, where <em>a</em> is the real part and <em>b</em> is the imaginary part. The <em>i</em> after <em>b</em> means that <em>b</em> is an imaginary number.</p>
+<div class="alert alert-primary" role="alert">
+<p><strong>Note:</strong> Sometimes you&rsquo;ll see complex numbers written using <em>i</em>, and sometimes you&rsquo;ll see them written using <em>j</em>, such as 2 + 3<em>i</em> and 2 + 3<em>j</em>. The two are the same, but <em>i</em> is used more by mathematicians, and <em>j</em> more by engineers.</p>
+</div>
+<p>For more on complex numbers, take a look at <a href="https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:complex">Khan Academy&rsquo;s course</a> or the <a href="https://www.mathsisfun.com/numbers/complex-numbers.html">Maths is Fun page</a>.</p>
+<p>Since complex numbers have two parts, graphing them against frequency on a two-dimensional axis requires you to calculate a single value from them. This is where <code>np.abs()</code> comes in. It calculates √(a² + b²) for complex numbers, which is an overall magnitude for the two numbers together and importantly a single value.</p>
+<div class="alert alert-primary" role="alert">
+<p><strong>Note:</strong> As an aside, you may have noticed that <code>fft()</code> returns a maximum frequency of just over 20 thousand Hertz, 22050Hz, to be exact. This value is exactly half of our sampling rate and is called the <a href="https://en.wikipedia.org/wiki/Nyquist_frequency">Nyquist frequency</a>.</p>
+<p>It&rsquo;s a fundamental concept in signal processing and means that your sampling rate has to be at least twice the highest frequency in your signal.</p>
+</div>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"></use></svg></span>Remove ads</a></div></section><section class="section3"><h3 id="making-it-faster-with-rfft">Making It Faster With <code>rfft()</code><a class="headerlink" href="#making-it-faster-with-rfft" title="Permanent link"></a></h3>
+<p>The frequency spectrum that <code>fft()</code> outputted was reflected about the y-axis so that the negative half was a mirror of the positive half. This symmetry was caused by inputting <strong>real numbers</strong> (not complex numbers) to the transform.</p>
+<p>You can use this symmetry to make your Fourier transform faster by computing only half of it. <code>scipy.fft</code> implements this speed hack in the form of <a href="https://numpy.org/doc/stable/reference/generated/numpy.fft.rfft.html"><code>rfft()</code></a>.</p>
+<p>The great thing about <code>rfft()</code> is that it&rsquo;s a drop-in replacement for <code>fft()</code>. Remember the FFT code from before:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="n">yf</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">normalized_tone</span><span class="p">)</span>
+<span class="n">xf</span> <span class="o">=</span> <span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">SAMPLE_RATE</span><span class="p">)</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>Swapping in <code>rfft()</code>, the code remains mostly the same, just with a couple of key changes:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">rfftfreq</span>
+
+<span class="c1"># Note the extra &#39;r&#39; at the front</span>
+<span class="n">yf</span> <span class="o">=</span> <span class="n">rfft</span><span class="p">(</span><span class="n">normalized_tone</span><span class="p">)</span>
+<span class="n">xf</span> <span class="o">=</span> <span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">SAMPLE_RATE</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yf</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>Since <code>rfft()</code> returns only half the output that <code>fft()</code> does, it uses a different function to get the frequency mapping, <code>rfftfreq()</code> instead of <code>fftfreq()</code>.</p>
+<p><code>rfft()</code> still produces complex output, so the code to plot its result remains the same. The plot, however, should look like the following since the negative frequencies will have disappeared:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/rfftplot.8e16850b2dde.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/rfftplot.8e16850b2dde.png" width="1172" height="603" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/rfftplot.8e16850b2dde.png&amp;w=293&amp;sig=180e592dc8c665bfd4a9301127950f335cfd8f1a 293w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/rfftplot.8e16850b2dde.png&amp;w=390&amp;sig=75d9f1cbbd3b8e73f6777ff6f26acaef65459f03 390w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/rfftplot.8e16850b2dde.png&amp;w=586&amp;sig=570c601bd0f7882847819f3ec0afbb8763217f6f 586w, https://files.realpython.com/media/rfftplot.8e16850b2dde.png 1172w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Frequency spectrum obtained with scipt.fft.rfft" data-asset="2829"/></a></figure>
+
+<p>You can see that the image above is just the positive side of the frequency spectrum that <code>fft()</code> produces. <code>rfft()</code> never calculates the negative half of the frequency spectrum, which makes it faster than using <code>fft()</code>.</p>
+<p>Using <code>rfft()</code> can be up to twice as fast as using <code>fft()</code>, but some input lengths are faster than others. If you know you&rsquo;ll be working only with real numbers, then it&rsquo;s a speed hack worth knowing.</p>
+<p>Now that you have the frequency spectrum of the signal, you can move on to filtering it.</p>
+</section><section class="section3"><h3 id="filtering-the-signal">Filtering the Signal<a class="headerlink" href="#filtering-the-signal" title="Permanent link"></a></h3>
+<p>One great thing about the Fourier transform is that it&rsquo;s reversible, so any changes you make to the signal in the frequency domain will apply when you transform it back to the time domain. You&rsquo;ll take advantage of this to filter your audio and get rid of the high-pitched frequency.</p>
+<div class="alert alert-primary" role="alert">
+<p><strong>Warning:</strong> The filtering technique demonstrated in this section isn&rsquo;t suitable for real-world signals. See the section <a href="#avoiding-filtering-pitfalls">Avoiding Filtering Pitfalls</a> for an explanation of why.</p>
+</div>
+<p>The values returned by <code>rfft()</code> represent the power of each frequency bin. If you set the power of a given bin to zero, then the frequencies in that bin will no longer be present in the resulting time-domain signal.</p>
+<p>Using the length of <code>xf</code>, the maximum frequency, and the fact that the frequency bins are evenly spaced, you can work out the target frequency&rsquo;s index:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="c1"># The maximum frequency is half the sample rate</span>
+<span class="n">points_per_freq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">SAMPLE_RATE</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Our target frequency is 4000 Hz</span>
+<span class="n">target_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">points_per_freq</span> <span class="o">*</span> <span class="mi">4000</span><span class="p">)</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>You can then set <code>yf</code> to <code>0</code> at indices around the target frequency to get rid of it:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="n">yf</span><span class="p">[</span><span class="n">target_idx</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">target_idx</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yf</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>Your code should produce the following plot:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/freqremoved.51f079cdfcf8.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/freqremoved.51f079cdfcf8.png" width="1172" height="603" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqremoved.51f079cdfcf8.png&amp;w=293&amp;sig=37d09865c3a1035efb8c98c9f9fdba463c358495 293w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqremoved.51f079cdfcf8.png&amp;w=390&amp;sig=37d1608aa610d8e402cabc4719be698907cd206c 390w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/freqremoved.51f079cdfcf8.png&amp;w=586&amp;sig=b8b17eb0faa2ae1e1e1400881129b52f1fa3fbcb 586w, https://files.realpython.com/media/freqremoved.51f079cdfcf8.png 1172w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Frequency spectrum with a spike at 400Hz" data-asset="2830"/></a></figure>
+
+<p>Since there&rsquo;s only one peak, it looks like it worked! Next, you&rsquo;ll apply the inverse Fourier transform to get back to the time domain.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"></use></svg></span>Remove ads</a></div></section><section class="section3"><h3 id="applying-the-inverse-fft">Applying the Inverse FFT<a class="headerlink" href="#applying-the-inverse-fft" title="Permanent link"></a></h3>
+<p>Applying the inverse FFT is similar to applying the FFT:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">irfft</span>
+
+<span class="n">new_sig</span> <span class="o">=</span> <span class="n">irfft</span><span class="p">(</span><span class="n">yf</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_sig</span><span class="p">[:</span><span class="mi">1000</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>Since you are using <code>rfft()</code>, you need to use <code>irfft()</code> to apply the inverse. However, if you had used <code>fft()</code>, then the inverse function would have been <code>ifft()</code>. Your plot should now look like this:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/cleansig.a30a1b9f6591.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/cleansig.a30a1b9f6591.png" width="1226" height="585" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/cleansig.a30a1b9f6591.png&amp;w=306&amp;sig=fff292505caeaa416f0374a8a451f887ef994960 306w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/cleansig.a30a1b9f6591.png&amp;w=408&amp;sig=9e4faabf71f35854290917e3fefa049eab060d92 408w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/cleansig.a30a1b9f6591.png&amp;w=613&amp;sig=089b97229aa75734cd0cb1f0ea34892ccd3aea34 613w, https://files.realpython.com/media/cleansig.a30a1b9f6591.png 1226w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="A 400Hz sine wave" data-asset="2831"/></a></figure>
+
+<p>As you can see, you now have a single sine wave oscillating at 400 Hz, and you&rsquo;ve successfully removed the 4000 Hz noise.</p>
+<p>Once again, you need to normalize the signal before writing it to a file. You can do it the same way as last time:</p>
+<div class="codeblock mb-3 w-100" aria-label="Code block" data-syntax-language="python" >
+  <div class="codeblock__header d-flex justify-content-between codeblock--blue">
+    <span class="mr-2 noselect" aria-label="Language">Python</span>
+    
+    <div class="noselect">
+      
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="highlight highlight--with-header"><pre><span></span><code><span class="n">norm_new_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">(</span><span class="n">new_sig</span> <span class="o">*</span> <span class="p">(</span><span class="mi">32767</span> <span class="o">/</span> <span class="n">new_sig</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+
+<span class="n">write</span><span class="p">(</span><span class="s2">&quot;clean.wav&quot;</span><span class="p">,</span> <span class="n">SAMPLE_RATE</span><span class="p">,</span> <span class="n">norm_new_sig</span><span class="p">)</span>
+</code></pre></div>
+    
+    <button class="codeblock__copy btn btn-outline-secondary border m-1 px-1 d-hover-only" title="Copy to clipboard"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#@copy"/></svg></span></button>
+    <template class="codeblock__copied-template">
+      <span class="small"><span class="icon baseline mr-1 text-success"><svg><use href="/static/icons.55e8f03acfe3.svg#@check"/></svg></span>Copied!</span>
+    </template>
+    
+  </div>
+</div>
+<p>When you listen to this file, you&rsquo;ll hear that the annoying noise has gone away!</p>
+</section><section class="section3"><h3 id="avoiding-filtering-pitfalls">Avoiding Filtering Pitfalls<a class="headerlink" href="#avoiding-filtering-pitfalls" title="Permanent link"></a></h3>
+<p>The above example is more for educational purposes than real-world use. Replicating the process on a real-world signal, such as a piece of music, <a href="https://dsp.stackexchange.com/questions/6220/why-is-it-a-bad-idea-to-filter-by-zeroing-out-fft-bins">could introduce more buzz than it removes</a>.</p>
+<p>In the real world, you should filter signals using the filter design functions in the <a href="https://docs.scipy.org/doc/scipy/reference/signal.html"><code>scipy.signal</code></a> package. Filtering is a complex topic that involves a lot of math. For a good introduction, take a look at <a href="https://www.dspguide.com/ch14.htm">The Scientist and Engineer&rsquo;s Guide to Digital Signal Processing</a>.</p>
+</section></section><section class="section2"><h2 id="the-discrete-cosine-and-sine-transforms">The Discrete Cosine and Sine Transforms<a class="headerlink" href="#the-discrete-cosine-and-sine-transforms" title="Permanent link"></a></h2>
+<p>A tutorial on the <code>scipy.fft</code> module wouldn&rsquo;t be complete without looking at the <a href="https://en.wikipedia.org/wiki/Discrete_cosine_transform">discrete cosine transform (DCT)</a> and the <a href="https://en.wikipedia.org/wiki/Discrete_sine_transform">discrete sine transform (DST)</a>. These two transforms are closely related to the Fourier transform but operate entirely on real numbers. That means they take a real-valued function as an input and produce another real-valued function as an output.</p>
+<p>SciPy implements these transforms as <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.dct.html#scipy.fft.dct"><code>dct()</code></a> and <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.dst.html#scipy.fft.dst"><code>dst()</code></a>. The <code>i*</code> and <code>*n</code> variants are the inverse and <em>n</em>-dimensional versions of the functions, respectively.</p>
+<p>The DCT and DST are a bit like two halves that together make up the Fourier transform. This isn&rsquo;t quite true since the math is a lot more complicated, but it&rsquo;s a useful mental model.</p>
+<p>So if the DCT and DST are like halves of a Fourier transform, then why are they useful?</p>
+<p>For one thing, they&rsquo;re faster than a full Fourier transform since they effectively do half the work. They can be even faster than <code>rfft()</code>. On top of this, they work entirely in real numbers, so you never have to worry about complex numbers.</p>
+<p>Before you can learn how to choose between them, you need to understand even and odd functions. <strong>Even functions</strong> are symmetrical about the y-axis, whereas <strong>odd functions</strong> are symmetrical about the origin. To imagine this visually, take a look at the following diagrams:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/evenandodd.8410a9717f96.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/evenandodd.8410a9717f96.png" width="1174" height="611" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/evenandodd.8410a9717f96.png&amp;w=293&amp;sig=38a6a5c8204e6c1dab6469ff68dfbf910c35ea90 293w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/evenandodd.8410a9717f96.png&amp;w=391&amp;sig=c20e1783a04ccd41724b8ed55a3e3822aacda6fe 391w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/evenandodd.8410a9717f96.png&amp;w=587&amp;sig=564d858f7f625c4ace4425be7e2e2ed0d1f539c2 587w, https://files.realpython.com/media/evenandodd.8410a9717f96.png 1174w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="An example of even and odd functions" data-asset="2835"/></a></figure>
+
+<p>You can see that the even function is symmetrical about the y-axis. The odd function is symmetrical about <em>y</em> = -<em>x</em>, which is described as being <strong>symmetrical about the origin</strong>.</p>
+<p>When you calculate a Fourier transform, you pretend that the function you&rsquo;re calculating it on is infinite. The full Fourier transform (DFT) assumes the input function repeats itself infinitely. However, the DCT and DST assume the function is extended through symmetry. The DCT assumes the function is extended with even symmetry, and the DST assumes it&rsquo;s extended with odd symmetry.</p>
+<p>The following image illustrates how each transform imagines the function extends to infinity:</p>
+<figure class="js-lightbox"><a href="https://files.realpython.com/media/funcextension.8794e9dc3154.png" target="_blank"><img loading="lazy" class="img-fluid mx-auto d-block " src="https://files.realpython.com/media/funcextension.8794e9dc3154.png" width="1130" height="1018" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/funcextension.8794e9dc3154.png&amp;w=282&amp;sig=fc7f8e0d80ce6bfd36ac55b41fd6f550ca1241bb 282w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/funcextension.8794e9dc3154.png&amp;w=376&amp;sig=f52885109afd712bd19517d8d3d9dec157ea1f7e 376w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/funcextension.8794e9dc3154.png&amp;w=565&amp;sig=144ed2f2d78ff511cb8c046dbc440f4e032e02b0 565w, https://files.realpython.com/media/funcextension.8794e9dc3154.png 1130w" sizes="(min-width: 1200px) 690px, (min-width: 780px) calc(-5vw + 669px), (min-width: 580px) 510px, calc(100vw - 30px)" alt="Diagram of how different discrete transforms extend functions" data-asset="2836"/></a></figure>
+
+<p>In the above image, the DFT repeats the function as is. The DCT mirrors the function vertically to extend it, and the DST mirrors it horizontally.</p>
+<p>Note that the symmetry implied by the DST leads to big jumps in the function. These are called <strong>discontinuities</strong> and <a href="https://dsp.stackexchange.com/questions/46754/dct-vs-dst-for-image-compression">produce more high-frequency components</a> in the resulting frequency spectrum. So unless you know your data has odd symmetry, you should use the DCT instead of the DST.</p>
+<p>The DCT is very commonly used. There are many <a href="https://en.wikipedia.org/wiki/Discrete_cosine_transform">more examples</a>, but the JPEG, MP3, and WebM standards all use the DCT.</p>
+<div><div class="rounded border border-light" style="display:block;position:relative;"> <div style="display:block;width:100%;padding-top:12.5%;"></div> <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"> </div></div><a class="small text-muted" href="/account/join/" rel="nofollow"> <span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"></use></svg></span>Remove ads</a></div></section><section class="section2"><h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link"></a></h2>
+<p>The Fourier transform is a powerful concept that&rsquo;s used in a variety of fields, from pure math to audio engineering and even finance. You&rsquo;re now familiar with the <strong>discrete Fourier transform</strong> and are well equipped to apply it to filtering problems using the <code>scipy.fft</code> module. </p>
+<p><strong>In this tutorial, you learned:</strong></p>
+<ul>
+<li>How and when to use the <strong>Fourier transform</strong></li>
+<li>How to select the correct function from <strong><code>scipy.fft</code></strong> for your use case</li>
+<li>What the differences are between the <strong>time domain</strong> and the <strong>frequency domain</strong></li>
+<li>How to view and modify the <strong>frequency spectrum</strong> of a signal</li>
+<li>How using <strong><code>rfft()</code></strong> can speed up your code</li>
+</ul>
+<p>In the last section, you also learned about the <strong>discrete cosine transform</strong> and the <strong>discrete sine transform</strong>. You saw what functions to call to use them, and you learned when to use one over the other.</p>
+<p>If you&rsquo;d like a summary of this tutorial, then you can download the cheat sheet below. It has explanations of all the functions in the <code>scipy.fft</code> module as well as a breakdown of the different types of transform that are available:</p>
+<div class="alert alert-warning" role="alert">
+<p><strong markdown="1">scipy.fft Cheat Sheet:</strong> <a href="https://realpython.com/bonus/scipy-fft-cheatsheet/" class="alert-link" data-toggle="modal" data-target="#modal-scipy-fft-cheatsheet" data-focus="false" markdown="1">Click here to get access to a free scipy.fft cheat sheet</a> that summarizes the techniques explained in this tutorial.</p>
+</div>
+<p>Keep exploring this fascinating topic and experimenting with transforms, and be sure to share your discoveries in the comments below!</p>
+</section>
+
+    
+      
+      <div class="text-center my-3">
+        
+<div class="jsCompletionStatusWidget btn-group mb-0">
+  <button title="Click to mark as completed" class="jsBtnCompletion btn btn-secondary border-right " style="border-top-right-radius: 0; border-bottom-right-radius: 0;" disabled>Mark as Completed</button>
+  <button title="Add bookmark" class="jsBtnBookmark btn btn-secondary border-left" disabled><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#light--bookmark"/></svg></span></button>
+</div>
+
+        <span class="ml-2">
+<div class="btn-group mb-0">
+  <a class="btn btn-secondary border-right" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" title="Liked it" role="button" aria-label="Thumbs up (liked it)" href="/feedback/survey/article/python-scipy-fft/liked/?from=article-footer" target="_blank"><span class="icon"><svg><use href="/static/icons.55e8f03acfe3.svg#light--thumbs-up"/></svg></span></a> 
+  <a class="btn btn-secondary border-left" role="button" aria-label="Thumbs down (disliked it)" title="Disliked it" href="/feedback/survey/article/python-scipy-fft/disliked/?from=article-footer" target="_blank"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#light--thumbs-down"/></svg></span></a>
+</div>
+</span>
+      </div>
+    
+
+    
+  </div>
+
+  
+    
+
+<div class="card mt-4 mb-4 bg-secondary">
+  <p class="card-header h3 text-center bg-light">🐍 Python Tricks 💌</p>
+  <div class="card-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-7">
+          <p>Get a short &amp; sweet <strong>Python Trick</strong> delivered to your inbox every couple of days. No spam ever. Unsubscribe any time. Curated by the Real Python team.</p>
+        </div>
+        <div class="col-xs-12 col-sm-5">
+          <img loading="lazy" class="img-fluid rounded mb-3" src="/static/pytrick-dict-merge.4201a0125a5e.png" width="738" height="490" alt="Python Tricks Dictionary Merge">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <form class="col-12" action="/optins/process/" method="post">
+          <input type="hidden" name="csrfmiddlewaretoken" value="sDrfOc4QdeRIXBc3MooFTALen6U5IGwYyBhZE9XyGWPOFkDXEMqEE8NaaB3giAk7">
+          <input type="hidden" name="slug" value="static-python-tricks-footer">
+          <div class="form-group">
+            <input name="email" type="email" class="form-control form-control-lg" placeholder="Email Address" required>
+          </div>
+          <button name="submit" type="submit" class="btn btn-primary btn-lg btn-block">Send Me Python Tricks »</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  
+
+  
+
+
+
+<div class="card mt-3" id="author">
+  <p class="card-header h3">About <strong>Cameron MacLeod</strong></p>
+  <div class="card-body">
+    <div class="container p-0">
+      <div class="row">
+        <div class="col-12 col-md-3 align-self-center">
+          <a href="/team/cmacLeod/"><img loading="lazy" src="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=900&amp;h=900&amp;mode=crop&amp;sig=2d2d5b86a9e01fdc61545c699c3d9ce4e8cf6ed7" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=225&amp;h=225&amp;mode=crop&amp;sig=c87afb20f59085ac340b8359becd68e02baa5a66 225w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=300&amp;h=300&amp;mode=crop&amp;sig=8dd3301ca5a8b5ac0f28dc8ac4c4ea393c3cb612 300w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=450&amp;h=450&amp;mode=crop&amp;sig=2f7669cfa3aab478c56c85634472c8b131be88d3 450w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=900&amp;h=900&amp;mode=crop&amp;sig=2d2d5b86a9e01fdc61545c699c3d9ce4e8cf6ed7 900w" sizes="(min-width: 580px) 154px, calc(33.08vw - 24px)" width="900" height="900" style="background: #737574;" class="d-block d-md-none rounded-circle img-fluid w-33 mb-0 mx-auto" alt="Cameron MacLeod"></a>
+          <a href="/team/cmacLeod/"><img loading="lazy" src="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=900&amp;h=900&amp;mode=crop&amp;sig=2d2d5b86a9e01fdc61545c699c3d9ce4e8cf6ed7" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=225&amp;h=225&amp;mode=crop&amp;sig=c87afb20f59085ac340b8359becd68e02baa5a66 225w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=300&amp;h=300&amp;mode=crop&amp;sig=8dd3301ca5a8b5ac0f28dc8ac4c4ea393c3cb612 300w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=450&amp;h=450&amp;mode=crop&amp;sig=2f7669cfa3aab478c56c85634472c8b131be88d3 450w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile_small.045fa1d5252b.jpg&amp;w=900&amp;h=900&amp;mode=crop&amp;sig=2d2d5b86a9e01fdc61545c699c3d9ce4e8cf6ed7 900w" sizes="(min-width: 1200px) 140px, calc(-1.5vw + 137px)" width="900" height="900" style="background: #737574;" class="d-none d-md-block rounded-circle img-fluid w-100 mb-0" alt="Cameron MacLeod"></a>
+        </div>
+        <div class="col mt-3">
+          <p>Cameron is a product manager based in London who writes both Python and English in his spare time.</p>
+          <a href="/team/cmacLeod/" class="card-link">» More about Cameron</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <hr class="my-0">
+  <div class="card-body pb-0">
+    <div class="container">
+      <div class="row">
+        <p><em>Each tutorial at Real Python is created by a team of developers so that it meets our high quality standards. The team members who worked on this tutorial are:</em></p>
+      </div>
+
+      
+        
+          <div class="row align-items-center w-100 mx-auto">
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/asantos/"><img loading="lazy" src="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/PP.9b8b026f75b8.jpg&amp;w=959&amp;h=959&amp;mode=crop&amp;sig=70bedc2eab90a227eb9a657c415689c3eb1eca4f" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/PP.9b8b026f75b8.jpg&amp;w=239&amp;h=239&amp;mode=crop&amp;sig=11667a6dd5c29e4c9363f18be59360551af5eddc 239w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/PP.9b8b026f75b8.jpg&amp;w=319&amp;h=319&amp;mode=crop&amp;sig=3b626fde72a314418766c7d4a14e58ec6f67da7b 319w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/PP.9b8b026f75b8.jpg&amp;w=479&amp;h=479&amp;mode=crop&amp;sig=1541e1ec541357813def826d8507c0565164b701 479w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/PP.9b8b026f75b8.jpg&amp;w=959&amp;h=959&amp;mode=crop&amp;sig=70bedc2eab90a227eb9a657c415689c3eb1eca4f 959w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" width="959" height="959" style="background: #dadad8;" class="rounded-circle img-fluid w-100" alt="Aldren Santos"></a>
+          
+        </div>
+        <div class="col pl-0 d-none d-sm-block">
+          <a href="/team/asantos/" class="card-link small"><p>Aldren</p></a>
+        </div>
+
+        
+
+        
+      
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/damos/"><img loading="lazy" src="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/me-small.f5f49f1c48e1.jpg&amp;w=400&amp;h=400&amp;mode=crop&amp;sig=522ebc378492fd2228f8a9980bf89544b51aba2c" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/me-small.f5f49f1c48e1.jpg&amp;w=100&amp;h=100&amp;mode=crop&amp;sig=4e832705873c990ccc3fe2459dcd2b081613ecb1 100w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/me-small.f5f49f1c48e1.jpg&amp;w=133&amp;h=133&amp;mode=crop&amp;sig=fa76af48f5292f75f931d2dc0eb223cc49113518 133w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/me-small.f5f49f1c48e1.jpg&amp;w=200&amp;h=200&amp;mode=crop&amp;sig=ecc773a7a56114ed2831d281156669f0d7f1ab68 200w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/me-small.f5f49f1c48e1.jpg&amp;w=400&amp;h=400&amp;mode=crop&amp;sig=522ebc378492fd2228f8a9980bf89544b51aba2c 400w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" width="400" height="400" style="background: #7c7e7d;" class="rounded-circle img-fluid w-100" alt="David Amos"></a>
+          
+        </div>
+        <div class="col pl-0 d-none d-sm-block">
+          <a href="/team/damos/" class="card-link small"><p>David</p></a>
+        </div>
+
+        
+
+        
+      
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/gahjelle/"><img loading="lazy" src="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/gahjelle.470149ee709e.jpg&amp;w=800&amp;h=800&amp;mode=crop&amp;sig=e9b761c6cf1359953014dba05554f5424eb116e1" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/gahjelle.470149ee709e.jpg&amp;w=200&amp;h=200&amp;mode=crop&amp;sig=c6390201e73d3e09429d73da5bb29c17ab10403a 200w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/gahjelle.470149ee709e.jpg&amp;w=266&amp;h=266&amp;mode=crop&amp;sig=7df7c39b123c3f9d8a4597311d09c3bd947f5fac 266w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/gahjelle.470149ee709e.jpg&amp;w=400&amp;h=400&amp;mode=crop&amp;sig=fcea459ee24a7b320573cadee324cf75509dc1d6 400w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/gahjelle.470149ee709e.jpg&amp;w=800&amp;h=800&amp;mode=crop&amp;sig=e9b761c6cf1359953014dba05554f5424eb116e1 800w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" width="800" height="800" style="background: #080a09;" class="rounded-circle img-fluid w-100" alt="Geir Arne Hjelle"></a>
+          
+        </div>
+        <div class="col pl-0 d-none d-sm-block">
+          <a href="/team/gahjelle/" class="card-link small"><p>Geir Arne</p></a>
+        </div>
+
+        
+
+        
+          </div>
+        
+      
+        
+          <div class="row align-items-center w-100 mx-auto">
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/jjablonski/"><img loading="lazy" src="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg&amp;w=800&amp;h=800&amp;mode=crop&amp;sig=c363b704eeccb35f2247db13baff3d4383459858" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg&amp;w=200&amp;h=200&amp;mode=crop&amp;sig=706b16de3cb88a8f353f4a98d7c7bc7234229bd0 200w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg&amp;w=266&amp;h=266&amp;mode=crop&amp;sig=3003d96c12fd06ac995e52fcac8d9094a4a557b5 266w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg&amp;w=400&amp;h=400&amp;mode=crop&amp;sig=6d7aa672ca3f1ac5f7cd62ed1641b60f98d04d8b 400w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/jjablonksi-avatar.e37c4f83308e.jpg&amp;w=800&amp;h=800&amp;mode=crop&amp;sig=c363b704eeccb35f2247db13baff3d4383459858 800w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" width="800" height="800" style="background: #b8b9bb;" class="rounded-circle img-fluid w-100" alt="Joanna Jablonski"></a>
+          
+        </div>
+        <div class="col pl-0 d-none d-sm-block">
+          <a href="/team/jjablonski/" class="card-link small"><p>Joanna</p></a>
+        </div>
+
+        
+
+        
+      
+        
+
+        <div class="col-4 col-sm-2 align-self-center">
+          
+            <a href="/team/jschmitt/"><img loading="lazy" src="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg&amp;w=400&amp;h=400&amp;mode=crop&amp;sig=d10d9fc35ba4a6608969e71b4c24c1e61176ee2d" srcset="https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg&amp;w=100&amp;h=100&amp;mode=crop&amp;sig=ef40d1115d3b4c306b16314b5555d5dc55361da9 100w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg&amp;w=133&amp;h=133&amp;mode=crop&amp;sig=82bd90e51eb5f48f8fe84ab4c528a9fb587e3aae 133w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg&amp;w=200&amp;h=200&amp;mode=crop&amp;sig=e1df2f238effe79f5750fc75258642036de498c3 200w, https://robocrop.realpython.net/?url=https%3A//files.realpython.com/media/profile-small_js.2f4d0d8da1ca.jpg&amp;w=400&amp;h=400&amp;mode=crop&amp;sig=d10d9fc35ba4a6608969e71b4c24c1e61176ee2d 400w" sizes="(min-width: 1200px) 73px, (min-width: 780px) calc(-0.75vw + 69px), (min-width: 580px) 43px, calc(33.46vw - 64px)" width="400" height="400" style="background: #c0c0c0;" class="rounded-circle img-fluid w-100" alt="Jacob Schmitt"></a>
+          
+        </div>
+        <div class="col pl-0 d-none d-sm-block">
+          <a href="/team/jschmitt/" class="card-link small"><p>Jacob</p></a>
+        </div>
+
+        
+          
+          
+            <div class="col-4 col-sm-2 align-self-center"></div>
+            <div class="col pl-0 d-none d-sm-block"></div>
+          
+        
+
+        
+          </div>
+        
+      
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+  
+    
+
+<div class="bg-light rounded py-4 my-4 shadow shadow-sm mx-n2">
+  
+  <div class="col-12 text-center d-block d-md-none">
+    <p class="h2 mb-3">Master <u><span class="marker-highlight">Real-World Python Skills</mark></u> With Unlimited Access to Real&nbsp;Python</p>
+    <p class="mb-1"><img loading="lazy" class="w-75" src="/static/videos/lesson-locked.f5105cfd26db.svg" width="510" height="260"></p>
+    <p class="mx-auto w-75 mb-3 small"><strong>Join us and get access to thousands of tutorials, hands-on video courses, and a community of expert&nbsp;Pythonistas:</strong></p>
+    <p class="mb-0"><a href="/account/join/?utm_source=rp_article_footer&utm_content=python-scipy-fft" class="btn btn-primary btn-sm px-4 mb-0">Level Up Your Python Skills »</a>
+  </div>
+
+  
+  <div class="col-12 text-center d-none d-md-block">
+    <p class="h2 mb-2">Master <u><span class="marker-highlight">Real-World Python Skills</span></u><br>With Unlimited Access to Real&nbsp;Python</p>
+    <p class="mb-2"><img loading="lazy" class="w-50 mb-2" src="/static/videos/lesson-locked.f5105cfd26db.svg" width="510" height="260"></p>
+    <p class="mx-auto w-50 mb-3"><strong>Join us and get access to thousands of tutorials, hands-on video courses, and a community of expert Pythonistas:</strong></p>
+    <p><a href="/account/join/?utm_source=rp_article_footer&utm_content=python-scipy-fft" class="btn btn-primary btn-lg px-4">Level Up Your Python Skills »</a>
+  </div>
+</div>
+
+  
+
+  
+  <div class="card mt-4" id="reader-comments">
+    <p class="card-header h3">What Do You Think?</p>
+    
+    <div class="text-center mt-3 mb-0 p-0">
+      <div class="mb-2">
+        <strong class="mr-2">Rate this article:</strong>
+        
+<div class="btn-group mb-0">
+  <a class="btn btn-secondary border-right" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" title="Liked it" role="button" aria-label="Thumbs up (liked it)" href="/feedback/survey/article/python-scipy-fft/liked/?from=article-comments" target="_blank"><span class="icon"><svg><use href="/static/icons.55e8f03acfe3.svg#light--thumbs-up"/></svg></span></a> 
+  <a class="btn btn-secondary border-left" role="button" aria-label="Thumbs down (disliked it)" title="Disliked it" href="/feedback/survey/article/python-scipy-fft/disliked/?from=article-comments" target="_blank"><span class="icon baseline"><svg><use href="/static/icons.55e8f03acfe3.svg#light--thumbs-down"/></svg></span></a>
+</div>
+
+      </div>
+      
+
+
+
+<div class="text-center my-3">
+  <span>
+    
+    
+    <a target="_blank" rel="nofollow" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Frealpython.com%2Fpython-scipy-fft%2F" class="mr-1 btn btn-sm badge-linkedin text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--linkedin"/></svg></span>LinkedIn</a>
+    
+    
+    <a target="_blank" rel="nofollow" href="https://twitter.com/intent/tweet/?text=Interesting%20Python%20article%20on%20%40realpython%3A%20Fourier%20Transforms%20With%20scipy.fft%3A%20Python%20Signal%20Processing&url=https%3A%2F%2Frealpython.com%2Fpython-scipy-fft%2F" class="mr-1 btn btn-sm badge-x-twitter text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--x-twitter"/></svg></span>Twitter</a>
+    
+    
+    <a target="_blank" rel="nofollow" href="https://facebook.com/sharer/sharer.php?u=https%3A%2F%2Frealpython.com%2Fpython-scipy-fft%2F" class="mr-1 btn btn-sm badge-facebook text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#brands--facebook"/></svg></span>Facebook</a>
+    
+    
+    <a target="_blank" rel="nofollow" href="mailto:?subject=Python%20article%20for%20you&body=Fourier%20Transforms%20With%20scipy.fft%3A%20Python%20Signal%20Processing%20on%20Real%20Python%0A%0Ahttps%3A%2F%2Frealpython.com%2Fpython-scipy-fft%2F%0A" class="mr-1 btn btn-sm badge-dark text-light mb-1"><span class="icon baseline mr-1 text-light"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--envelope"/></svg></span>Email</a>
+    
+    
+  </span>
+</div>
+
+    </div>
+    
+    <div class="card-body">
+      <p>What’s your #1 takeaway or favorite thing you learned? How are you going to put your newfound skills to use? Leave a comment below and let us know.</p>
+
+      <div class="alert alert-dark">
+        <p class="mb-0"><strong>Commenting Tips:</strong> The most useful comments are those written with the goal of learning from or helping out other students. <a href="https://realpython.com/python-beginner-tips/#tip-9-ask-good-questions" target="_blank">Get tips for asking good questions</a> and <a href="https://support.realpython.com" target="_blank">get answers to common questions in our support portal</a>.<hr>Looking for a real-time conversation? Visit the <a href="/community/" target="_blank">Real Python Community Chat</a> or join the next <a href="/office-hours/" target="_blank">&ldquo;Office&nbsp;Hours&rdquo; Live Q&A Session</a>. Happy Pythoning!</p>
+
+      </div>
+
+      <div class="mb-4" id="disqus_thread">
+      
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="card mt-4 mb-4">
+    <p class="card-header h3">Keep Learning</p>
+    <div class="card-body">
+      <p class="mb-0">Related Tutorial Categories:
+      
+        <a href="/tutorials/advanced/" class="badge badge-light text-muted">advanced</a>
+      
+        <a href="/tutorials/data-science/" class="badge badge-light text-muted">data-science</a>
+      
+      </p>
+      
+    </div>
+  </div>
+
+  
+    
+
+<div class="modal fade" tabindex="-1" role="dialog" id="rprw">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header border-0">
+        <div class="col-12 col-lg-9 mx-auto modal-title text-center my-2">
+          <h2 class="my-0">Keep reading Real&nbsp;Python by creating a free account or signing&nbsp;in:</h2>
+        </div>
+      </div>
+
+      
+      <div class="modal-body bg-light">
+        <div class="col-12 text-center">
+
+          <div class="col-12 col-lg-8 mx-auto mb-2 mt-3">
+            <a href="/account/signup/?intent=continue_reading&utm_source=rp&utm_medium=web&utm_campaign=rwn&utm_content=v1&next=%2Fpython-scipy-fft%2F"><img loading="lazy" class="w-100" src="/static/videos/lesson-locked.f5105cfd26db.svg"  width="510" height="260" alt="Keep reading"></a>
+          </div>
+
+          <p><a href="/account/signup/?intent=continue_reading&utm_source=rp&utm_medium=web&utm_campaign=rwn&utm_content=v1&next=%2Fpython-scipy-fft%2F" class="btn btn-primary btn-lg px-5"></i>Continue »</a></p>
+
+        </div>
+      </div>
+      
+
+      <div class="modal-footer border-0">
+        <p class="text-center text-muted mt-2 mb-1">Already have an account? <a href="/account/login/?next=/python-scipy-fft/">Sign-In</a></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+    <script src="/static/frontend/reader/rw.bea76ad0e23f.js" async></script>
+  
+
+
+    </div>
+
+  </div>
+
+    </div>
+
+    
+    
+
+    
+    
+      
+        
+          <div class="modal fade" id="modal-scipy-fft-cheatsheet" tabindex="-1" aria-labelledby="modal-scipy-fft-cheatsheet-title" aria-describedby="modal-scipy-fft-cheatsheet-desc">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header bg-light pt-3 pb-2">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="progress" style="height: .5rem;" aria-hidden="true">
+                <div class="progress-bar progress-bar-striped progress-bar-animated w-75" role="progressbar"></div>
+              </div>
+            </div>
+            <div class="col-12">
+              <p id="modal-scipy-fft-cheatsheet-desc" class="text-muted text-center mb-0 mt-2">Almost there! Complete this form and click the button below to gain instant&nbsp;access:</p>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body m-4">
+        <div class="container-fluid">
+          <div class="row align-items-center text-center">
+            <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+              
+              
+                <img loading="lazy" class="img-fluid rounded" src="https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg" width="1920" height="1080" srcset="/cdn-cgi/image/width=480,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 480w, /cdn-cgi/image/width=640,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 640w, /cdn-cgi/image/width=960,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 960w, /cdn-cgi/image/width=1920,format=auto/https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg 1920w" sizes="(min-width: 1000px) 207px, (min-width: 580px) 382px, calc(100vw - 134px)" alt="Fourier Transforms With scipy.fft: Python Signal Processing">
+              
+            </div>
+            <div class="col">
+              <p id="modal-scipy-fft-cheatsheet-title" class="text-center h3 mb-4">scipy.fft Cheat Sheet (PDF)</p>
+
+              <form class="col-12" action="/optins/process/" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="sDrfOc4QdeRIXBc3MooFTALen6U5IGwYyBhZE9XyGWPOFkDXEMqEE8NaaB3giAk7">
+                <input type="hidden" name="slug" value="scipy-fft-cheatsheet">
+                <input type="hidden" name="source_path" value="/python-scipy-fft/"> 
+                <div class="form-group">
+                  <input type="email" name="email" class="form-control" placeholder="Email Address" required autofocus>
+                </div>
+                <button name="submit" type="submit" class="btn btn-primary btn-block text-wrap">Send Cheat Sheet »</button>
+                <p class="mb-0 mt-2 text-muted text-center"><small>🔒 No spam. We take your privacy seriously.</small></p>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+        
+      
+    
+
+    
+      
+<footer class="footer">
+  <div class="container">
+    
+      <div class="mx-auto mt-4 mb-0" style="max-width: 768px;">
+        
+
+<div style="display:block;position:relative;">
+  <div style="display:block;width:100%;padding-top:12.5%;"></div>
+  <div class="rpad rounded border" data-unit="8x1" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;"></div>
+</div>
+<a class="small text-muted" href="/account/join/" rel="nofollow"><span class="icon baseline mr-1"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--circle-info"/></svg></span>Remove ads</a>
+
+
+      </div>
+    
+
+    <p class="text-center text-muted w-75 mx-auto">© 2012–2024 Real&nbsp;Python&nbsp;⋅ <a href="/newsletter/">Newsletter</a>&nbsp;⋅ <a href="/podcasts/rpp/">Podcast</a>&nbsp;⋅ <a href="https://www.youtube.com/realpython">YouTube</a>&nbsp;⋅ <a href="https://twitter.com/realpython">Twitter</a>&nbsp;⋅ <a href="https://facebook.com/LearnRealPython">Facebook</a>&nbsp;⋅ <a href="https://www.instagram.com/realpython/">Instagram</a>&nbsp;⋅ <a href="/">Python&nbsp;Tutorials</a>&nbsp;⋅ <a href="/search">Search</a>&nbsp;⋅ <a href="/privacy-policy/">Privacy Policy</a>&nbsp;⋅ <a href="/energy-policy/">Energy Policy</a>&nbsp;⋅ <a href="/sponsorships/">Advertise</a>&nbsp;⋅ <a href="/contact/">Contact</a><br><span class="icon baseline text-color-red"><svg><use href="/static/icons.55e8f03acfe3.svg#solid--heart"/></svg></span> Happy Pythoning!</p>
+  </div>
+</footer>
+
+    
+
+    
+    
+    <script>
+      (function(document, history, location) {
+        var HISTORY_SUPPORT = !!(history && history.pushState);
+
+        var anchorScrolls = {
+          ANCHOR_REGEX: /^#[^ ]+$/,
+          OFFSET_HEIGHT_PX: 120,
+
+          /**
+           * Establish events, and fix initial scroll position if a hash is provided.
+           */
+          init: function() {
+            this.scrollToCurrent();
+            window.addEventListener('hashchange', this.scrollToCurrent.bind(this));
+            document.body.addEventListener('click', this.delegateAnchors.bind(this));
+          },
+
+          /**
+           * Return the offset amount to deduct from the normal scroll position.
+           * Modify as appropriate to allow for dynamic calculations
+           */
+          getFixedOffset: function() {
+            return this.OFFSET_HEIGHT_PX;
+          },
+
+          /**
+           * If the provided href is an anchor which resolves to an element on the
+           * page, scroll to it.
+           * @param  {String} href
+           * @return {Boolean} - Was the href an anchor.
+           */
+          scrollIfAnchor: function(href, pushToHistory) {
+            var match, rect, anchorOffset;
+
+            if(!this.ANCHOR_REGEX.test(href)) {
+              return false;
+            }
+
+            match = document.getElementById(href.slice(1));
+
+            if(match) {
+              rect = match.getBoundingClientRect();
+              anchorOffset = window.pageYOffset + rect.top - this.getFixedOffset();
+              window.scrollTo(window.pageXOffset, anchorOffset);
+
+              // Add the state to history as-per normal anchor links
+              if(HISTORY_SUPPORT && pushToHistory) {
+                history.pushState({}, document.title, location.pathname + href);
+              }
+            }
+
+            return !!match;
+          },
+
+          /**
+           * Attempt to scroll to the current location's hash.
+           */
+          scrollToCurrent: function() {
+            this.scrollIfAnchor(window.location.hash);
+          },
+
+          /**
+           * If the click event's target was an anchor, fix the scroll position.
+           */
+          delegateAnchors: function(e) {
+            var elem = e.target;
+
+            // 
+            if (elem.dataset.toggle === "tab") {
+              return;
+            }
+
+            if(
+              elem.nodeName === 'A' &&
+              this.scrollIfAnchor(elem.getAttribute('href'), true)
+            ) {
+              e.preventDefault();
+            }
+          }
+        };
+
+        window.addEventListener(
+          'DOMContentLoaded', anchorScrolls.init.bind(anchorScrolls)
+        );
+      })(window.document, window.history, window.location);
+    </script>
+    
+
+    
+    <script>
+      (function() {
+        var isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+        if (!isAndroid) {
+          return;
+        }
+
+        var styles = `
+        @font-face {
+          font-family: 'DejaVu Sans Mono';
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+          src: url('/static/mfonts/dejavu-sans-mono.33f00225f915.woff2') format('woff2'),
+               url('/static/mfonts/dejavu-sans-mono.0da77d3739f3.woff') format('woff'),
+               url('/static/mfonts/dejavu-sans-mono.c2356fc49835.ttf') format('truetype');
+        }
+        code, kbd, pre, samp {
+          font-family: 'DejaVu Sans Mono', monospace;
+        }
+        `
+
+        var styleSheet = document.createElement("style")
+        styleSheet.type = "text/css"
+        styleSheet.innerText = styles
+        document.head.appendChild(styleSheet)
+      })();
+    </script>
+
+    
+    
+    <script src="/static/jquery.min.00727d1d5d9c.js"></script>
+    <script src="/static/popper.min.47dc3aaf2942.js"></script>
+    <script src="/static/bootstrap.min.a3b2689424c3.js"></script>
+
+    
+    
+
+    <script>
+    (function() {
+      document.querySelectorAll(".js-search-form-submit").forEach(function(el) {
+        el.addEventListener("click", function(e) {
+          e.preventDefault();
+          e.currentTarget.parentElement.submit();
+        })
+      });
+    })();
+    </script>
+    <script src="/static/frontend/reader/codeblock.5c8399b698d9.js" async></script>
+    <script src="/static/frontend/reader/lightbox.bab438c0f968.js" async></script>
+    <script src="/static/frontend/reader/platforms-ui.b11202dc6079.js" async></script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<script>window.rp_prop_id = '58946116052';</script>
+<script src="https://srv.realpython.net/tag.js" async></script>
+
+
+
+<script src="/static/frontend/reader/toc-refresh.f019e7905d90.js" async></script>
+
+<script id="js-context" type="application/json">{"is_completed": false, "is_bookmarked": false, "api_article_bookmark_url": "/api/v1/articles/python-scipy-fft/bookmark/", "api_article_completion_status_url": "/api/v1/articles/python-scipy-fft/completion_status/"}</script>
+<script src="/static/frontend/reader/completion-status.f33e88e4e723.js" async></script>
+
+
+
+
+
+
+  
+    <script id="dsq-count-scr" src="https://realpython.disqus.com/count.js" async></script>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://realpython.com/python-scipy-fft/';
+        this.page.identifier = 'https://realpython.com/python-scipy-fft/';
+        this.callbacks.onReady = [function() {
+          if (window.onDisqusReady) {
+            window.onDisqusReady();
+          }
+        }];
+      };
+      var disqus_script_url = 'https://realpython.disqus.com/embed.js';
+    </script>
+    <script src="/static/frontend/reader/lazy-disqus.07ee9079f4a3.js" defer></script>
+  
+
+
+  
+  
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+  <script>
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: "c0081e20-a523-42bb-b0ac-04c5a9e8bf40"
+      });
+    });
+  </script>
+  
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Fourier Transforms With scipy.fft: Python Signal Processing",
+    
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://files.realpython.com/media/Fourier-Transforms-With-scipyfft_Watermarked.9c2f0f1615f1.jpg",
+      "width": 1920,
+      "height": 1080
+    },
+    
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://realpython.com/python-scipy-fft/"
+    },
+    "datePublished": "2020-11-02T14:00:00+00:00",
+    "dateModified": "2022-09-01T07:44:27.168558+00:00",
+     "publisher": {
+      "@type": "Organization",
+      "name": "Real Python",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/static/real-python-logo-square-tiny.b2452b6d3823.png",
+        "width": 60,
+        "height": 60
+      }
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Real Python",
+      "url": "https://realpython.com",
+      "logo": "/static/real-python-logo-square.146e987bf77c.png"
+    },
+    "description": "In this tutorial, you\u0027ll learn how to use the Fourier transform, a powerful tool for analyzing signals with applications ranging from audio processing to image compression. You\u0027ll explore several different transforms provided by Python\u0027s scipy.fft module."
+  }
+  </script>
+  
+
+
+    
+    <script src="/static/frontend/search/autocomplete.95e5945849f5.js" async></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '2220911568135371');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=2220911568135371&ev=PageView&noscript=1"
+/></noscript>
+
+
+    
+
+    
+
+  <script>(function(){var js = "window['__CF$cv$params']={r:'84370c5ac8ae0a39',t:'MTcwNDkxMjAyNS4xMzYwMDA='};_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js',document.getElementsByTagName('head')[0].appendChild(_cpo);";var _0xh = document.createElement('iframe');_0xh.height = 1;_0xh.width = 1;_0xh.style.position = 'absolute';_0xh.style.top = 0;_0xh.style.left = 0;_0xh.style.border = 'none';_0xh.style.visibility = 'hidden';document.body.appendChild(_0xh);function handler() {var _0xi = _0xh.contentDocument || _0xh.contentWindow.document;if (_0xi) {var _0xj = _0xi.createElement('script');_0xj.innerHTML = js;_0xi.getElementsByTagName('head')[0].appendChild(_0xj);}}if (document.readyState !== 'loading') {handler();} else if (window.addEventListener) {document.addEventListener('DOMContentLoaded', handler);} else {var prev = document.onreadystatechange || function () {};document.onreadystatechange = function (e) {prev(e);if (document.readyState !== 'loading') {document.onreadystatechange = prev;handler();}};}})();</script></body>
+</html>

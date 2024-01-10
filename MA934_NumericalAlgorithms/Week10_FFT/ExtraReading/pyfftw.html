@@ -1,0 +1,1358 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="brought to you by the ITS Research team at QMUL">
+      
+      
+        <meta name="author" content="ITS-Research">
+      
+      
+        <link rel="canonical" href="https://blog.hpc.qmul.ac.uk/pyfftw/">
+      
+      
+        <link rel="prev" href="../intel-release-2020/">
+      
+      
+        <link rel="next" href="../scratch-guide/">
+      
+      
+        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../feed_rss_created.xml">
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../feed_rss_updated.xml">
+      
+      <link rel="icon" href="/images/theme/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.14">
+    
+    
+      
+        <title>Faster Fast Fourier Transforms in Python - QMUL ITS Research Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.fad675c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+  
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+  
+  <style>:root{--md-admonition-icon--bug:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 12h-4v-2h4m0 6h-4v-2h4m6-6h-2.81a5.985 5.985 0 0 0-1.82-1.96L17 4.41 15.59 3l-2.17 2.17a6.002 6.002 0 0 0-2.83 0L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8Z"/></svg>');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M50.7 58.5 0 160h208V32H93.7c-18.2 0-34.8 10.3-43 26.5zM240 160h208L397.3 58.5c-8.2-16.2-24.8-26.5-43-26.5H240v128zm208 32H0v224c0 35.3 28.7 64 64 64h320c35.3 0 64-28.7 64-64V192z"/></svg>');--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>');--md-admonition-icon--quote:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M219.3.5c3.1-.6 6.3-.6 9.4 0l200 40C439.9 42.7 448 52.6 448 64s-8.1 21.3-19.3 23.5L352 102.9V160c0 70.7-57.3 128-128 128S96 230.7 96 160v-57.1l-48-9.6v65.1l15.7 78.4c.9 4.7-.3 9.6-3.3 13.3S52.8 256 48 256H16c-4.8 0-9.3-2.1-12.4-5.9s-4.3-8.6-3.3-13.3L16 158.4V86.6C6.5 83.3 0 74.3 0 64c0-11.4 8.1-21.3 19.3-23.5l200-40zM111.9 327.7c10.5-3.4 21.8.4 29.4 8.5l71 75.5c6.3 6.7 17 6.7 23.3 0l71-75.5c7.6-8.1 18.9-11.9 29.4-8.5 65 20.9 112 81.7 112 153.6 0 17-13.8 30.7-30.7 30.7H30.7C13.8 512 0 498.2 0 481.3c0-71.9 47-132.7 111.9-153.6z"/></svg>');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4V3m0 18v-4h4v4h-4Z"/></svg>');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/images.css">
+    
+      <link rel="stylesheet" href="../css/figures.css">
+    
+      <link rel="stylesheet" href="../css/table.css">
+    
+      <link rel="stylesheet" href="../css/switch.css">
+    
+      <link rel="stylesheet" href="../font_awesome/css/all.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+        html.glightbox-open { overflow: initial; height: 100%; }
+        .gslide-title { margin-top: 0px; user-select: text; }
+        .gslide-desc { color: #666; user-select: text; }
+        .gslide-image img { background: white; }
+        
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+            </style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="red">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#faster-fast-fourier-transforms-in-python" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="QMUL ITS Research Blog" class="md-header__button md-logo" aria-label="QMUL ITS Research Blog" data-md-component="logo">
+      
+  <img src="/images/theme/qm.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QMUL ITS Research Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Faster Fast Fourier Transforms in Python
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="QMUL ITS Research Blog" class="md-nav__button md-logo" aria-label="QMUL ITS Research Blog" data-md-component="logo">
+      
+  <img src="/images/theme/qm.png" alt="logo">
+
+    </a>
+    QMUL ITS Research Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome to the QMUL HPC blog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2023/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2022/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2022
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2021/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2021
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2020/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2020
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2019/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2019
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2018/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2018
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2017/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2017
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/article/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    article
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/featured/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    featured
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    misc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/news/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    news
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/rse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    rse
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    <span class="md-ellipsis">
+      Background
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-simplified-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      A simplified model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#array-length" class="md-nav__link">
+    <span class="md-ellipsis">
+      Array length
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-vs-complex-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real vs complex data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyfftw-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyFFTW interfaces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-fftw-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      The FFTW class
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyfftw-for-the-win" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyFFTW, For The Win
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href=".." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="/images/authors/iainstenson.webp" alt="Iain Stenson">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          Iain Stenson
+                        
+                      </strong>
+                      <br>
+                      Former RSE (no longer at QMUL)
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5v-5Z"/></svg>
+                        <time datetime="2021-06-11 00:00:00" class="md-ellipsis">June 11, 2021</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3H9m3 2 4 13 3-1-4-13-3 1M5 5v13h3V5H5M3 19v2h18v-2H3Z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../category/rse/">rse</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7h1.5Z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              10 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+  
+
+<nav class="md-tags" >
+  
+    
+    
+    
+      <a href="../tags/#rse" class="md-tag">rse</a>
+    
+  
+    
+    
+    
+      <a href="../tags/#tutorial" class="md-tag">tutorial</a>
+    
+  
+    
+    
+    
+      <a href="../tags/#python" class="md-tag">python</a>
+    
+  
+</nav>
+
+
+
+<h1 id="faster-fast-fourier-transforms-in-python">Faster Fast Fourier Transforms in Python<a class="headerlink" href="#faster-fast-fourier-transforms-in-python" title="Permanent link">&para;</a></h1>
+<p><a class="glightbox" href="/images/posts/headers//stadium_billiard_3.webp" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="" class="centre-image" src="/images/posts/headers//stadium_billiard_3.webp" /></a></p>
+<p>A little while ago, we were approached by a researcher from the School of
+Mathematical Sciences with the classic request of "I'd like my code to run
+more quickly".  They were simulating a ball bouncing around a billiard table
+over the course of millions of collisions and analysing patterns in the path
+of the ball (this type of problem is known generally as dynamical billiards).</p>
+<!-- more -->
+
+<p>Fortunately for me, as is often the case when researchers are already HPC
+users, I didn't need to write, or even greatly rewrite, very much of the
+code. What landed in my lap already worked, had been partially compiled
+with Cython and profiled to find the bottlenecks. The main culprits in
+the long run times were the frequent fast Fourier transforms and inverse
+fast Fourier transforms that were a key part of the analysis (to calculate
+auto-correlation via the Wiener-Kinchin theorem).</p>
+<h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">&para;</a></h2>
+<p>As a quick reminder, a Fourier transform takes a signal that varies with
+time (or space) and shows you the temporal (or spatial) frequencies contained
+in that signal. If, as with our case, the signal is an array of samples
+(rather than a truly continuous function) then we use a discrete Fourier
+transform (DFT), though you will often find the "discrete" dropped when it
+is obvious from the context. The DFT formula is</p>
+<script src="/js/polyfill.min.js"></script>
+<script src="/js/tex-mml-chtml.js"></script>
+
+<div class="arithmatex">\[ X_{k} = \sum _{n=0} ^{N-1}x_{n}e^{-i2\pi kn /N} \hspace{1cm} k = 0, ..., N - 1 \]</div>
+<p>A direct/naive approach to calculating a DFT will give you an
+<em>O</em>(<em>N</em><sup>2</sup>) algorithm (doubling the number of samples will quadruple
+the length of time taken to complete the algorithm). Fortunately, there are
+a family of algorithms known as fast Fourier transforms (FFTs) that are
+<em>O</em>(<em>N</em> log <em>N</em>), which make DFTs on very long samples computationally feasible.</p>
+<p>Since FFTs are so useful and ubiquitous, they are included in the major
+Python numerical and scientific libraries, Numpy and Scipy. The billiard
+codebase already used Numpy for FFTs so that will be our basis for comparison
+when we try to improve upon it, below.</p>
+<h2 id="a-simplified-model">A simplified model<a class="headerlink" href="#a-simplified-model" title="Permanent link">&para;</a></h2>
+<p>We shall imagine, for the sake of argument, that our temporal signal is an
+array of values representing the direction of travel of an ideal billiard,
+bouncing around a confined space, sampled at regular intervals. To keep things
+very simple, we could map the points of the compass to the values 0-1 so that
+<code>[0, 0, 0.25, 0.25, 0.88]</code> would be two samples where the billiard was moving
+due west, two samples where the billiard was moving due north and a sample
+moving south-east.</p>
+<p>In reality, the array of samples came from Cython code that simulated the
+billiard's movement. For our examples, though, we will use Numpy's <code>rand()</code>
+function as it is a more convenient source of input data.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><span class="c1"># In practice, we may have called</span>
+</span><span id="__span-0-2"><span class="kn">from</span> <span class="nn">functions</span> <span class="kn">import</span> <span class="n">simulate_billiard</span>
+</span><span id="__span-0-3"><span class="n">sample_array</span> <span class="o">=</span> <span class="n">simulate_billiard</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">7</span><span class="p">)</span>
+</span><span id="__span-0-4">
+</span><span id="__span-0-5"><span class="c1"># For speed comparisons, it is simpler to get 10^7 samples from 0.0 to 1.0 with</span>
+</span><span id="__span-0-6"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-0-7"><span class="n">sample_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">7</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Note that the speed of our Fourier transform shouldn't be affected by the
+values themselves, though the number and precision of values do matter (as
+we shall see later).</p>
+<h2 id="array-length">Array length<a class="headerlink" href="#array-length" title="Permanent link">&para;</a></h2>
+<p>The most commonly used FFT is
+the <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform#Cooley–Tukey_algorithm">Cooley-Tukey algorithm</a>,
+which recursively breaks down an input of size N into smaller FFTs. The most
+straightforward case is when N is a power of 2. This first leads to two smaller
+FFTs on arrays of length N/2, which can be decomposed in the same fashion,
+leading to four FFTs on inputs of length N/4 and so on to arrays of length 1.</p>
+<p>Though FFTs don't require power-of-two inputs, Numpy does perform much better
+with them. If you run the following, you will find that the slightly longer
+array is much quicker than the slightly shorter one because it is an exact
+power of 2 in length.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-1-2"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-1-3">
+</span><span id="__span-1-4"><span class="k">for</span> <span class="n">array_length</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">22</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">22</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-1-5">    <span class="n">total_time</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-1-6">
+</span><span id="__span-1-7">    <span class="c1"># Do the FFT 10 times, to allow for some random error</span>
+</span><span id="__span-1-8">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-1-9">        <span class="n">in_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">array_length</span><span class="p">)</span>
+</span><span id="__span-1-10">        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-1-11">        <span class="n">out_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-1-12">        <span class="n">total_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</span><span id="__span-1-13">
+</span><span id="__span-1-14">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;array_length:&quot;</span><span class="p">,</span> <span class="n">array_length</span><span class="p">,</span>
+</span><span id="__span-1-15">          <span class="s2">&quot;total_time:&quot;</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
+</span></code></pre></div>
+<p>This is easy to exploit in a situation like ours where we are conducting a
+simulation and are free to choose the sample length.</p>
+<p>This brings us more or less to the code as it was when I came across it: Numpy's
+<code>fft</code> function was being applied to arrays of length a power of 2. What else
+can we do to speed things up?</p>
+<h2 id="real-vs-complex-data">Real vs complex data<a class="headerlink" href="#real-vs-complex-data" title="Permanent link">&para;</a></h2>
+<p>FFTs can be done with complex numbers as input data, but you will find that
+they are faster if you can get away with using only real data. In our example
+case, we are using a single real-valued number to represent the direction of
+travel of our billiard so can happily switch to using a real FFT.</p>
+<p>If you run this snippet, you will notice two things:</p>
+<ol>
+<li>there is a significant speed up using <code>rfft</code></li>
+<li>the <code>rfft</code> output array is still complex but is half as long as the <code>fft</code>
+   output (the values in the missing half are redundant as they would
+   duplicate those in the first half)</li>
+</ol>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-2-2"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-2-3">
+</span><span id="__span-2-4"><span class="k">for</span> <span class="n">fft_func</span> <span class="ow">in</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">):</span>
+</span><span id="__span-2-5">    <span class="n">total_time</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-2-6">
+</span><span id="__span-2-7">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-2-8">        <span class="n">in_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">22</span><span class="p">)</span>
+</span><span id="__span-2-9">        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-2-10">        <span class="n">out_array</span> <span class="o">=</span> <span class="n">fft_func</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-2-11">        <span class="n">total_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</span><span id="__span-2-12">
+</span><span id="__span-2-13">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fft/rfft:&quot;</span><span class="p">,</span> <span class="n">fft_func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+</span><span id="__span-2-14">          <span class="s2">&quot;total_time:&quot;</span><span class="p">,</span> <span class="n">total_time</span><span class="p">,</span>
+</span><span id="__span-2-15">          <span class="s2">&quot;length(f):&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_array</span><span class="p">))</span>
+</span></code></pre></div>
+<h2 id="pyfftw-interfaces">pyFFTW interfaces<a class="headerlink" href="#pyfftw-interfaces" title="Permanent link">&para;</a></h2>
+<p>At this point, we have taken all of the reasonable steps that I can think of
+with Numpy. The next thing we can do is to look for a quicker library.
+Enter pyFFTW, a Python interface to the <a href="http://www.fftw.org">FFTW</a> library,
+written in C. FFTW is already installed on Apocrita but you may need to install
+it first on any other machine.</p>
+<p>The pyFFTW interfaces API provides a drop-in replacement to Numpy's FFT
+functions. I have found them to be marginally quicker for power-of-two cases
+and much quicker than Numpy for non-power-of-two cases.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-3-2"><span class="kn">import</span> <span class="nn">pyfftw</span>
+</span><span id="__span-3-3"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-3-4">
+</span><span id="__span-3-5"><span class="k">def</span> <span class="nf">np_rfft</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</span><span id="__span-3-6">    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span id="__span-3-7">
+</span><span id="__span-3-8"><span class="k">def</span> <span class="nf">interfaces_rfft</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</span><span id="__span-3-9">    <span class="k">return</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">interfaces</span><span class="o">.</span><span class="n">numpy_fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span id="__span-3-10">
+</span><span id="__span-3-11"><span class="c1"># Use our wrapper functions else function names will be &quot;rfft&quot; for both</span>
+</span><span id="__span-3-12"><span class="k">for</span> <span class="n">fft_func</span> <span class="ow">in</span> <span class="p">(</span><span class="n">np_rfft</span><span class="p">,</span> <span class="n">interfaces_rfft</span><span class="p">):</span>
+</span><span id="__span-3-13">
+</span><span id="__span-3-14">    <span class="k">for</span> <span class="n">array_length</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">22</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">22</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-3-15">        <span class="n">total_time</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-3-16">
+</span><span id="__span-3-17">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-3-18">            <span class="n">in_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">array_length</span><span class="p">)</span>
+</span><span id="__span-3-19">            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-3-20">            <span class="n">out_array</span> <span class="o">=</span> <span class="n">fft_func</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-3-21">            <span class="n">total_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</span><span id="__span-3-22">
+</span><span id="__span-3-23">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fft_func:&quot;</span><span class="p">,</span> <span class="n">fft_func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+</span><span id="__span-3-24">              <span class="s2">&quot;array_length:&quot;</span><span class="p">,</span> <span class="n">array_length</span><span class="p">,</span>
+</span><span id="__span-3-25">              <span class="s2">&quot;total_time:&quot;</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
+</span></code></pre></div>
+<p>After re-reading the manual, I noticed there was a caching option to keep
+the FFTW objects alive for longer. This saves them from being rebuilt if,
+as in our case, inputs of the same type and size are reused.</p>
+<p>This gives us our final pyFFTW interfaces option, which is about as quick as
+I have been able to get with this super-convenient (almost) drop-in Numpy
+replacement.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-4-2"><span class="kn">import</span> <span class="nn">pyfftw</span>
+</span><span id="__span-4-3"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-4-4">
+</span><span id="__span-4-5"><span class="n">array_length</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">22</span>
+</span><span id="__span-4-6">
+</span><span id="__span-4-7"><span class="k">for</span> <span class="n">caching</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="__span-4-8">    <span class="k">if</span> <span class="n">caching</span><span class="p">:</span>
+</span><span id="__span-4-9">        <span class="n">pyfftw</span><span class="o">.</span><span class="n">interfaces</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+</span><span id="__span-4-10">        <span class="n">pyfftw</span><span class="o">.</span><span class="n">interfaces</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set_keepalive_time</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+</span><span id="__span-4-11">    <span class="n">total_time</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-4-12">
+</span><span id="__span-4-13">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-4-14">        <span class="n">in_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">array_length</span><span class="p">)</span>
+</span><span id="__span-4-15">        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-4-16">        <span class="n">out_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">interfaces</span><span class="o">.</span><span class="n">numpy_fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-4-17">        <span class="n">total_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</span><span id="__span-4-18">
+</span><span id="__span-4-19">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total_time:&quot;</span><span class="p">,</span> <span class="n">total_time</span><span class="p">,</span>
+</span><span id="__span-4-20">          <span class="s2">&quot;caching:&quot;</span><span class="p">,</span> <span class="n">caching</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="the-fftw-class">The FFTW class<a class="headerlink" href="#the-fftw-class" title="Permanent link">&para;</a></h2>
+<p>At this point, there is still plenty that can be done to speed up our
+real-valued FFT by switching to the less convenient but more customisable
+FFTW class.</p>
+<p>The basic idea is to create an object that knows details of the input and output
+vectors and of the machine it is running on. Below, we tell the FFTW object
+to estimate the best FFT method with <code>"FFTW_ESTIMATE"</code> and compare it with
+Numpy's <code>rfft</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-5-2"><span class="kn">import</span> <span class="nn">pyfftw</span>
+</span><span id="__span-5-3"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-5-4">
+</span><span id="__span-5-5"><span class="n">array_length</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">22</span>
+</span><span id="__span-5-6">
+</span><span id="__span-5-7"><span class="c1"># Byte-aligned inputs are supposedly faster</span>
+</span><span id="__span-5-8"><span class="n">in_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-5-9"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;size:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">in_array</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="s2">&quot;MB&quot;</span><span class="p">)</span>
+</span><span id="__span-5-10">
+</span><span id="__span-5-11"><span class="c1"># Required, even if we don&#39;t explicitly reference it again</span>
+</span><span id="__span-5-12"><span class="n">out_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+</span><span id="__span-5-13">
+</span><span id="__span-5-14"><span class="n">fftw_object</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">FFTW</span><span class="p">(</span><span class="n">in_array</span><span class="p">,</span>
+</span><span id="__span-5-15">                          <span class="n">out_array</span><span class="p">,</span>
+</span><span id="__span-5-16">                          <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;FFTW_FORWARD&quot;</span><span class="p">,</span>
+</span><span id="__span-5-17">                          <span class="n">flags</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;FFTW_ESTIMATE&quot;</span><span class="p">,</span> <span class="p">),</span>
+</span><span id="__span-5-18">                          <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-5-19"><span class="n">np_total</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-5-20"><span class="n">fftw_total</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-5-21">
+</span><span id="__span-5-22"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-5-23">    <span class="c1"># Copy random data into our empty input array</span>
+</span><span id="__span-5-24">    <span class="n">in_array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">array_length</span><span class="p">)</span>
+</span><span id="__span-5-25">
+</span><span id="__span-5-26">    <span class="c1"># Numpy</span>
+</span><span id="__span-5-27">    <span class="n">np_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-5-28">    <span class="n">np_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-5-29">    <span class="n">np_total</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">np_start</span>
+</span><span id="__span-5-30">
+</span><span id="__span-5-31">    <span class="c1"># FFTW</span>
+</span><span id="__span-5-32">    <span class="n">fftw_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-5-33">    <span class="n">fftw_output</span> <span class="o">=</span> <span class="n">fftw_object</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-5-34">    <span class="n">fftw_total</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">fftw_start</span>
+</span><span id="__span-5-35">
+</span><span id="__span-5-36">    <span class="c1"># Show that Numpy and FFTW give the same answers</span>
+</span><span id="__span-5-37">    <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">np_output</span><span class="p">,</span> <span class="n">fftw_output</span><span class="p">)</span>
+</span><span id="__span-5-38">
+</span><span id="__span-5-39">    <span class="c1"># Remind ourselves that FFTW has modified and returned out_array</span>
+</span><span id="__span-5-40">    <span class="k">assert</span> <span class="n">fftw_output</span> <span class="ow">is</span> <span class="n">out_array</span>
+</span><span id="__span-5-41">
+</span><span id="__span-5-42"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;np total:&quot;</span><span class="p">,</span> <span class="n">np_total</span><span class="p">)</span>
+</span><span id="__span-5-43"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fftw total:&quot;</span><span class="p">,</span> <span class="n">fftw_total</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Of particular note here:</p>
+<ol>
+<li>there is now a fair bit more setup</li>
+<li>there is some opportunity for confusion as the output array, which you
+   have to manually create with the correct dimensions, is modified and
+   returned by the call to the FFTW object</li>
+<li>though we haven't taken into account the extra CPU or memory overhead for
+   creating input/output arrays and copying random values into the
+   input, you do get a satisfying speed up over Numpy (~x2) for your
+   extra work</li>
+</ol>
+<p>The extra work becomes more worthwhile when you can dedicate more cores
+to the FFT. In my case using <code>threads=4</code> gives a ~x2 speedup over <code>threads=1</code>.
+There is no guarantee that any speed up will outweigh the extra multi-threading
+overhead (or that your FFTW is capable of it), so you should perform tests with
+representative data and on your machine before following suit.</p>
+<p>We already have some appreciable speed increases over Numpy. Does that leave us
+anywhere else to go? Well, this next approach comes at a cost. Instead of
+<code>"FFTW_ESTIMATE"</code>, we can tell FFTW to make actual performance measurements
+during the planning stage. Doing so means that the planning with take a long
+time (routinely up to 5 minutes for me) so is probably only worth it for
+long-running programs (those with very large arrays or very many FFTs).</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-6-2"><span class="kn">import</span> <span class="nn">pyfftw</span>
+</span><span id="__span-6-3"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-6-4">
+</span><span id="__span-6-5"><span class="n">array_length</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">22</span>
+</span><span id="__span-6-6">
+</span><span id="__span-6-7"><span class="c1"># Byte-aligned inputs are supposedly faster</span>
+</span><span id="__span-6-8"><span class="n">in_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-6-9">
+</span><span id="__span-6-10"><span class="c1"># Required, even if we don&#39;t explicitly reference it again</span>
+</span><span id="__span-6-11"><span class="n">out_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+</span><span id="__span-6-12">
+</span><span id="__span-6-13"><span class="c1"># Estimate before measuring as wisdom is cached</span>
+</span><span id="__span-6-14"><span class="k">for</span> <span class="n">wisdom</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;FFTW_ESTIMATE&quot;</span><span class="p">,</span> <span class="s2">&quot;FFTW_MEASURE&quot;</span><span class="p">):</span>
+</span><span id="__span-6-15">    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-6-16">    <span class="n">fftw_object</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">FFTW</span><span class="p">(</span><span class="n">in_array</span><span class="p">,</span>
+</span><span id="__span-6-17">                              <span class="n">out_array</span><span class="p">,</span>
+</span><span id="__span-6-18">                              <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;FFTW_FORWARD&quot;</span><span class="p">,</span>
+</span><span id="__span-6-19">                              <span class="n">flags</span><span class="o">=</span><span class="p">(</span><span class="n">wisdom</span><span class="p">,</span> <span class="p">),</span>
+</span><span id="__span-6-20">                              <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-6-21">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;planning took&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</span><span id="__span-6-22">    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-6-23">
+</span><span id="__span-6-24">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-6-25">        <span class="c1"># Copy random data into our empty input array</span>
+</span><span id="__span-6-26">        <span class="n">in_array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">array_length</span><span class="p">)</span>
+</span><span id="__span-6-27">
+</span><span id="__span-6-28">        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-6-29">        <span class="n">fftw_object</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-6-30">        <span class="n">total</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</span><span id="__span-6-31">
+</span><span id="__span-6-32">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;wisdom:&quot;</span><span class="p">,</span> <span class="n">wisdom</span><span class="p">,</span>
+</span><span id="__span-6-33">          <span class="s2">&quot;total:&quot;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The information gained about your system during <code>"FFTW_MEASURE"</code> is known as
+<em>wisdom</em>. A nice feature of this wisdom is that it can be inexpensively
+written to disk. If you find that you are doing many runs on the same
+machine with the same length and type of input, you might want to write
+the wisdom to disk at the end of the first run and read it in subsequent runs.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-7-2"><span class="kn">import</span> <span class="nn">pickle</span>
+</span><span id="__span-7-3"><span class="kn">import</span> <span class="nn">pyfftw</span>
+</span><span id="__span-7-4"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-7-5">
+</span><span id="__span-7-6"><span class="n">array_length</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">22</span>
+</span><span id="__span-7-7">
+</span><span id="__span-7-8"><span class="n">in_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-7-9"><span class="n">out_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+</span><span id="__span-7-10">
+</span><span id="__span-7-11"><span class="c1"># Try to load FFTW wisdom but don&#39;t panic if we can&#39;t</span>
+</span><span id="__span-7-12"><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-7-13">    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;fft.wisdom&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">the_file</span><span class="p">:</span>
+</span><span id="__span-7-14">        <span class="n">wisdom</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">the_file</span><span class="p">)</span>
+</span><span id="__span-7-15">        <span class="n">pyfftw</span><span class="o">.</span><span class="n">import_wisdom</span><span class="p">(</span><span class="n">wisdom</span><span class="p">)</span>
+</span><span id="__span-7-16">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wisdom imported&quot;</span><span class="p">)</span>
+</span><span id="__span-7-17"><span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+</span><span id="__span-7-18">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: wisdom could not be imported&quot;</span><span class="p">)</span>
+</span><span id="__span-7-19">
+</span><span id="__span-7-20"><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-7-21">    <span class="c1"># Try to plan our transforms with the wisdom we have already</span>
+</span><span id="__span-7-22">    <span class="n">fftw_object</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">FFTW</span><span class="p">(</span><span class="n">in_array</span><span class="p">,</span>
+</span><span id="__span-7-23">                              <span class="n">out_array</span><span class="p">,</span>
+</span><span id="__span-7-24">                              <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;FFTW_FORWARD&quot;</span><span class="p">,</span>
+</span><span id="__span-7-25">                              <span class="n">flags</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;FFTW_WISDOM_ONLY&quot;</span><span class="p">,))</span>
+</span><span id="__span-7-26">
+</span><span id="__span-7-27"><span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-7-28">    <span class="c1"># If we don&#39;t have enough wisdom, print a warning and proceed.</span>
+</span><span id="__span-7-29">    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</span><span id="__span-7-30">    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-7-31">    <span class="n">fftw_object</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">FFTW</span><span class="p">(</span><span class="n">in_array</span><span class="p">,</span>
+</span><span id="__span-7-32">                              <span class="n">out_array</span><span class="p">,</span>
+</span><span id="__span-7-33">                              <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;FFTW_FORWARD&quot;</span><span class="p">,</span>
+</span><span id="__span-7-34">                              <span class="n">flags</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;FFTW_MEASURE&quot;</span><span class="p">,))</span>
+</span><span id="__span-7-35">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating wisdom took </span><span class="si">{}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+</span><span id="__span-7-36">
+</span><span id="__span-7-37"><span class="c1"># Use the fftw_object as per usual</span>
+</span><span id="__span-7-38"><span class="c1"># ...</span>
+</span><span id="__span-7-39">
+</span><span id="__span-7-40"><span class="c1"># Save the wisdom for next time</span>
+</span><span id="__span-7-41"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;fft.wisdom&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">the_file</span><span class="p">:</span>
+</span><span id="__span-7-42">    <span class="n">wisdom</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">export_wisdom</span><span class="p">()</span>
+</span><span id="__span-7-43">    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">wisdom</span><span class="p">,</span> <span class="n">the_file</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Note that the wisdom gained on one Apocrita node type is probably not applicable
+on another. One option would be to save node-specific wisdom, another is to
+restrict job submissions to one node type.</p>
+<p>Our final trick saves on memory and time but should be used with more caution
+than the others. By default, Numpy and Python default to using 64-bit floating
+point numbers so, for example, we see:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span>
+</span><span id="__span-8-2"><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>However, we can specify different precisions when declaring arrays with Numpy
+or pyFFTW. In my tests, pyFFTW is quicker with the less precise 32-bit floating
+point type than with the default 64-bit. We might presume that this is because
+there is half as much data to move between RAM and the CPU or because the CPU
+we tested with has more optimal instructions for the shorter type. The shorter
+type was slower when using Numpy's <code>rfft</code> functions because Numpy converts them
+to 64-bit internally (see
+<a href="https://numpy.org/doc/stable/reference/routines.fft.html#type-promotion">Type Promotion</a>).</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span id="__span-9-2"><span class="kn">import</span> <span class="nn">pyfftw</span>
+</span><span id="__span-9-3"><span class="kn">import</span> <span class="nn">time</span>
+</span><span id="__span-9-4">
+</span><span id="__span-9-5"><span class="n">array_length</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">22</span>
+</span><span id="__span-9-6">
+</span><span id="__span-9-7"><span class="k">for</span> <span class="n">in_type</span><span class="p">,</span> <span class="n">out_type</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">),</span>
+</span><span id="__span-9-8">                          <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)]:</span>
+</span><span id="__span-9-9">    <span class="n">in_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="p">,</span> <span class="n">in_type</span><span class="p">)</span>
+</span><span id="__span-9-10">    <span class="n">out_array</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">empty_aligned</span><span class="p">(</span><span class="n">array_length</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out_type</span><span class="p">)</span>
+</span><span id="__span-9-11">
+</span><span id="__span-9-12">    <span class="n">fftw_object</span> <span class="o">=</span> <span class="n">pyfftw</span><span class="o">.</span><span class="n">FFTW</span><span class="p">(</span><span class="n">in_array</span><span class="p">,</span>
+</span><span id="__span-9-13">                              <span class="n">out_array</span><span class="p">,</span>
+</span><span id="__span-9-14">                              <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;FFTW_FORWARD&quot;</span><span class="p">,</span>
+</span><span id="__span-9-15">                              <span class="n">flags</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;FFTW_ESTIMATE&quot;</span><span class="p">,</span> <span class="p">),</span>
+</span><span id="__span-9-16">                              <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-9-17">
+</span><span id="__span-9-18">    <span class="k">for</span> <span class="n">fft_callable</span><span class="p">,</span> <span class="n">callable_name</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">,</span> <span class="s2">&quot;Numpy rfft&quot;</span><span class="p">),</span>
+</span><span id="__span-9-19">                                        <span class="p">(</span><span class="n">fftw_object</span><span class="p">,</span> <span class="s2">&quot;FFTW object&quot;</span><span class="p">)]:</span>
+</span><span id="__span-9-20">        <span class="n">total_time</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-9-21">
+</span><span id="__span-9-22">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-9-23">            <span class="n">in_array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">array_length</span><span class="p">)</span>
+</span><span id="__span-9-24">            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-9-25">            <span class="n">fft_callable</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span>
+</span><span id="__span-9-26">            <span class="n">total_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</span><span id="__span-9-27">
+</span><span id="__span-9-28">        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total_time:&quot;</span><span class="p">,</span> <span class="n">total_time</span><span class="p">,</span>
+</span><span id="__span-9-29">              <span class="s2">&quot;in_type:&quot;</span><span class="p">,</span> <span class="n">in_type</span><span class="p">,</span>
+</span><span id="__span-9-30">              <span class="s2">&quot;callable:&quot;</span><span class="p">,</span> <span class="n">callable_name</span><span class="p">,</span>
+</span><span id="__span-9-31">              <span class="s2">&quot;array size (MB):&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">in_array</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Ultimately, we didn't use this approach because the nature of the experiment
+meant that it was sensitive to initial conditions and accumulated rounding
+errors.</p>
+<h2 id="pyfftw-for-the-win">pyFFTW, For The Win<a class="headerlink" href="#pyfftw-for-the-win" title="Permanent link">&para;</a></h2>
+<p>Overall, pyFFTW makes you think a little harder about your FFTs since you
+have to pre-allocate arrays, avoid overwriting the output array before you've
+used it and handle the wisdom files. In return, you get decent speedups
+without having to switch to a lower level language.</p>
+<p>This isn't, by any means, a criticism of Numpy's implementation, and we haven't
+done a rigorous comparison. We have seen, though, that continuous incremental
+improvements are to be had if you want to look for them.</p>
+<p>I have deliberately avoided giving timings for the code snippets thus far.
+Performance measurements are hard, and they're liable to change with different
+library versions, operating systems and hardware so what works for me might
+not for you. What I can say is that, for our dynamical billiards problem,
+using FFTW objects (with real input values, multi-threading and the
+<code>"FFTW_MEASURE"</code> flag) was about 10x quicker than Numpy's FFT function. Since
+the simulation wasn't solely doing FFTs, this meant that it was about 2x quicker
+overall using pyFFTW instead of Numpy. This is a worthwhile improvement if it
+means you can do two experiments in a day instead of one.</p>
+<hr />
+<p>All of the code snippets should run on Python 3.8 as long as pyFFTW and
+Numpy are installed.</p>
+<p>Credit to George Datseris for the title image, available under the
+<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">Creative Commons Attribution-Share Alike 4.0 International</a>
+license.</p>
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.cd18aaf1.min.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
